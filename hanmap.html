@@ -595,5 +595,556 @@
   <div id="toast"></div>
 
   <script src="app.js"></script>
+  <script>
+    // ============================================================
+    //  LOGICA HanMap
+    // ============================================================
+
+    // Проверяем наличие базы
+    if (typeof DB === 'undefined' || DB.length === 0) {
+        console.error('❌ HanMap: app.js не загружен!');
+        document.getElementById('statHz').textContent = '❌ Ошибка';
+        document.getElementById('statWord').textContent = 'Загрузите app.js';
+    } else {
+        console.log('✅ HanMap: загружено ' + DB.length + ' иероглифов');
+    }
+
+    // ============================================================
+    //  ПЕРЕМЕННЫЕ
+    // ============================================================
+    var favs = new Set();
+    var order = [];
+    var pos = 0;
+    var dark = false;
+
+    // Загружаем избранное
+    try {
+        var saved = JSON.parse(localStorage.getItem('hanmap_favs') || '[]');
+        favs = new Set(saved);
+    } catch (e) {
+        favs = new Set();
+    }
+
+    // ============================================================
+    //  ВСПОМОГАТЕЛЬНЫЕ
+    // ============================================================
+    function shuffle(arr) {
+        for (var i = arr.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+        return arr;
+    }
+
+    function buildOrder() {
+        if (favs.size > 0) {
+            order = [];
+            for (var i = 0; i < DB.length; i++) {
+                if (favs.has(DB[i][0])) {
+                    order.push(i);
+                }
+            }
+        } else {
+            order = DB.map(function(_, i) { return i; });
+        }
+        if (pos >= order.length) pos = 0;
+        updateFavCount();
+    }
+
+    function updateFavCount() {
+        document.getElementById('favCount').textContent = favs.size;
+        document.getElementById('favBtn').innerHTML = (favs.size > 0 ? '❤️' : '🤍') + ' <span id="favCount">' + favs.size + '</span>';
+        // Пересоздаём span
+        var fc = document.getElementById('favCount');
+        if (fc) fc.textContent = favs.size;
+    }
+
+    // ============================================================
+    //  ОТРИСОВКА
+    // ============================================================
+    function render() {
+        if (!DB || DB.length === 0 || order.length === 0) {
+            document.getElementById('mainHz').textContent = '⚠️';
+            document.getElementById('mainPy').textContent = 'Нет данных';
+            document.getElementById('mainRu').textContent = 'Загрузите app.js';
+            return;
+        }
+
+        var idx = order[pos];
+        var d = DB[idx];
+        if (!d) return;
+
+        document.getElementById('mainHz').textContent = d[0];
+        document.getElementById('mainPy').textContent = d[1];
+        document.getElementById('mainRu').textContent = d[2];
+
+        var wordsHtml = '';
+        var words = d[3] || [];
+        for (var i = 0; i < words.length; i++) {
+            var w = words[i];
+            var chars = w[0].split('');
+            var colored = chars.map(function(c) {
+                return '<span class="' + (c === d[0] ? 'c-red' : 'c-blue') + '">' + c + '</span>';
+            }).join('');
+            wordsHtml += '<div class="word" data-i="' + i + '" style="animation-delay:' + (i * 70) + 'ms">' +
+                '<div class="py">' + w[1] + '</div>' +
+                '<div class="hz">' + colored + '</div>' +
+                '<div class="ru">' + w[2] + '</div>' +
+                '</div>';
+        }
+        document.getElementById('words').innerHTML = wordsHtml;
+
+        document.getElementById('posLabel').textContent = (pos + 1) + ' / ' + order.length;
+        document.getElementById('statHz').textContent = DB.length + ' иероглифов';
+        document.getElementById('statWord').textContent = DB.reduce(function(sum, item) {
+            return sum + (item[3] ? item[3].length : 0);
+        }, 0) + ' слов';
+
+        var likeBtn = document.getElementById('likeBtn');
+        if (favs.has(d[0])) {
+            likeBtn.innerHTML = '❤️ В избранном';
+            likeBtn.style.color = '#e03131';
+        } else {
+            likeBtn.innerHTML = '🤍 В избранное';
+            likeBtn.style.color = '';
+        }
+
+        drawLines();
+    }
+
+    // ============================================================
+    //  ЛИНИИ (связи между словами)
+    // ============================================================
+    function drawLines() {
+        var svg = document.getElementById('lines');
+        var map = document.getElementById('map');
+        var rect = map.getBoundingClientRect();
+        var centerX = rect.width / 2;
+        var centerY = rect.height / 2;
+
+        var mainNode = document.querySelector('.main-node');
+        var words = document.querySelectorAll('.word');
+        if (!mainNode || words.length === 0) {
+            svg.innerHTML = '';
+            return;
+        }
+
+        var mainRect = mainNode.getBoundingClientRect();
+        var mainCX = mainRect.left - rect.left + mainRect.width / 2;
+        var mainCY = mainRect.top - rect.top + mainRect.height / 2;
+
+        var lines = '';
+        for (var i = 0; i < words.length; i++) {
+            var w = words[i];
+            var wRect = w.getBoundingClientRect();
+            var wCX = wRect.left - rect.left + wRect.width / 2;
+            var wCY = wRect.top - rect.top + wRect.height / 2;
+
+            lines += '<line x1="' + mainCX + '" y1="' + mainCY + 
+                     '" x2="' + wCX + '" y2="' + wCY + 
+                     '" stroke="var(--line)" stroke-width="2" opacity="0.3" class="ln" ' +
+                     'stroke-dasharray="' + getDistance(mainCX, mainCY, wCX, wCY) + '" ' +
+                     'stroke-dashoffset="0"/>';
+        }
+
+        svg.innerHTML = lines;
+    }
+
+    function getDistance(x1, y1, x2, y2) {
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    }
+
+    // ============================================================
+    //  НАВИГАЦИЯ
+    // ============================================================
+    function go(delta) {
+        if (order.length === 0) return;
+        pos = (pos + delta + order.length) % order.length;
+        render();
+        if (typeof speak === 'function') speak();
+    }
+
+    function goTo(idx) {
+        pos = order.indexOf(idx);
+        if (pos === -1) pos = 0;
+        render();
+        if (typeof speak === 'function') speak();
+    }
+
+    // ============================================================
+    //  ПОИСК
+    // ============================================================
+    function search(query) {
+        if (!query || query.trim() === '') {
+            buildOrder();
+            render();
+            return;
+        }
+        query = query.toLowerCase().trim();
+        var results = [];
+        for (var i = 0; i < DB.length; i++) {
+            var d = DB[i];
+            var match = d[0].includes(query) ||
+                       d[1].toLowerCase().includes(query) ||
+                       d[2].toLowerCase().includes(query);
+            if (!match && d[3]) {
+                for (var j = 0; j < d[3].length; j++) {
+                    var w = d[3][j];
+                    if (w[0].includes(query) || 
+                        w[1].toLowerCase().includes(query) || 
+                        w[2].toLowerCase().includes(query)) {
+                        match = true;
+                        break;
+                    }
+                }
+            }
+            if (match) results.push(i);
+        }
+        order = results;
+        pos = 0;
+        render();
+    }
+
+    // ============================================================
+    //  ТЕМА
+    // ============================================================
+    function toggleTheme() {
+        dark = !dark;
+        document.body.classList.toggle('dark', dark);
+        document.getElementById('themeBtn').textContent = dark ? '☀️' : '🌙';
+        localStorage.setItem('hanmap_theme', dark ? 'dark' : 'light');
+        setTimeout(drawLines, 300);
+    }
+
+    // ============================================================
+    //  ОЗВУЧКА
+    // ============================================================
+    function speak() {
+        var hz = document.getElementById('mainHz').textContent;
+        if (!hz || hz === '⚠️') return;
+        if (typeof speechSynthesis !== 'undefined') {
+            var utter = new SpeechSynthesisUtterance(hz);
+            utter.lang = 'zh-CN';
+            utter.rate = 0.8;
+            speechSynthesis.speak(utter);
+        }
+    }
+
+    // ============================================================
+    //  ИЗБРАННОЕ
+    // ============================================================
+    function toggleFavorite() {
+        if (order.length === 0) return;
+        var idx = order[pos];
+        var d = DB[idx];
+        var char = d[0];
+        if (favs.has(char)) {
+            favs.delete(char);
+            showToast('❌ Удалено из избранного: ' + char);
+        } else {
+            favs.add(char);
+            showToast('❤️ Добавлено в избранное: ' + char);
+        }
+        localStorage.setItem('hanmap_favs', JSON.stringify(Array.from(favs)));
+        buildOrder();
+        updateFavCount();
+        render();
+    }
+
+    // ============================================================
+    //  ТОСТ
+    // ============================================================
+    function showToast(msg) {
+        var el = document.getElementById('toast');
+        el.textContent = msg;
+        el.classList.add('show');
+        clearTimeout(el._timer);
+        el._timer = setTimeout(function() {
+            el.classList.remove('show');
+        }, 2000);
+    }
+
+    // ============================================================
+    //  БАЗА (сетка)
+    // ============================================================
+    function showGrid() {
+        var grid = document.getElementById('grid');
+        grid.innerHTML = '';
+        for (var i = 0; i < DB.length; i++) {
+            var d = DB[i];
+            var tile = document.createElement('div');
+            tile.className = 'tile';
+            tile.innerHTML = '<div class="t-hz">' + d[0] + '</div>' +
+                            '<div class="t-py">' + d[1] + '</div>' +
+                            '<div style="font-size:10px;color:var(--mut)">' + d[2] + '</div>';
+            tile.onclick = (function(idx) {
+                return function() {
+                    document.getElementById('gridModal').classList.remove('open');
+                    goTo(idx);
+                };
+            })(i);
+            grid.appendChild(tile);
+        }
+        document.getElementById('gridModal').classList.add('open');
+    }
+
+    // ============================================================
+    //  ПРОПИСЬ
+    // ============================================================
+    var canvas, ctx, drawing = false, lastX, lastY;
+
+    function initWrite() {
+        canvas = document.getElementById('pad');
+        ctx = canvas.getContext('2d');
+        var wrap = document.getElementById('canvasWrap');
+        canvas.width = wrap.clientWidth;
+        canvas.height = wrap.clientHeight;
+
+        ctx.fillStyle = 'rgba(255,255,255,0.02)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = 'var(--red)';
+        ctx.lineWidth = 6;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        var guide = document.getElementById('guide');
+        var hz = document.getElementById('mainHz').textContent;
+        guide.textContent = hz;
+        guide.className = '';
+
+        // События
+        canvas.addEventListener('mousedown', startDraw);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', endDraw);
+        canvas.addEventListener('mouseleave', endDraw);
+
+        canvas.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            var t = e.touches[0];
+            var rect = canvas.getBoundingClientRect();
+            startDraw({ clientX: t.clientX, clientY: t.clientY });
+        });
+        canvas.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+            var t = e.touches[0];
+            draw({ clientX: t.clientX, clientY: t.clientY });
+        });
+        canvas.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            endDraw();
+        });
+
+        document.getElementById('writeModal').classList.add('open');
+        document.getElementById('writeTitle').textContent = '✍️ Пропись: ' + hz;
+    }
+
+    function startDraw(e) {
+        drawing = true;
+        var rect = canvas.getBoundingClientRect();
+        lastX = (e.clientX - rect.left) * (canvas.width / rect.width);
+        lastY = (e.clientY - rect.top) * (canvas.height / rect.height);
+    }
+
+    function draw(e) {
+        if (!drawing) return;
+        var rect = canvas.getBoundingClientRect();
+        var x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        var y = (e.clientY - rect.top) * (canvas.height / rect.height);
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        lastX = x;
+        lastY = y;
+    }
+
+    function endDraw() {
+        drawing = false;
+    }
+
+    function clearWrite() {
+        if (!ctx) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(255,255,255,0.02)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function toggleGuide() {
+        var guide = document.getElementById('guide');
+        guide.classList.toggle('hidden');
+    }
+
+    // ============================================================
+    //  ТЕСТ
+    // ============================================================
+    var quizData = [];
+    var quizIdx = 0;
+    var quizScore = 0;
+
+    function startQuiz() {
+        var shuffled = DB.slice();
+        shuffle(shuffled);
+        quizData = shuffled.slice(0, 10);
+        quizIdx = 0;
+        quizScore = 0;
+        document.getElementById('qScore').textContent = '0 / ' + quizData.length;
+        document.getElementById('qNext').hidden = true;
+        document.getElementById('quizModal').classList.add('open');
+        showQuizQuestion();
+    }
+
+    function showQuizQuestion() {
+        if (quizIdx >= quizData.length) {
+            document.getElementById('qRu').textContent = '🎉 Тест завершён!';
+            document.getElementById('qOpts').innerHTML = '';
+            document.getElementById('qScore').textContent = quizScore + ' / ' + quizData.length;
+            document.getElementById('qNext').hidden = false;
+            document.getElementById('qNext').textContent = '🔄 Заново';
+            return;
+        }
+
+        var d = quizData[quizIdx];
+        document.getElementById('qRu').textContent = d[2]; // перевод
+
+        // Выбираем 4 варианта
+        var opts = [d];
+        var others = DB.filter(function(item) { return item[0] !== d[0]; });
+        shuffle(others);
+        for (var i = 0; i < 3 && i < others.length; i++) {
+            opts.push(others[i]);
+        }
+        shuffle(opts);
+
+        var container = document.getElementById('qOpts');
+        container.innerHTML = '';
+        for (var i = 0; i < opts.length; i++) {
+            var btn = document.createElement('button');
+            btn.className = 'q-opt';
+            btn.innerHTML = opts[i][0] + '<small>' + opts[i][1] + '</small>';
+            btn.onclick = (function(item) {
+                return function() {
+                    checkQuizAnswer(item);
+                };
+            })(opts[i]);
+            container.appendChild(btn);
+        }
+        document.getElementById('qScore').textContent = quizScore + ' / ' + quizData.length;
+    }
+
+    function checkQuizAnswer(selected) {
+        var correct = quizData[quizIdx];
+        var btns = document.querySelectorAll('.q-opt');
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].disabled = true;
+            var isCorrect = btns[i].innerHTML.includes(correct[0]);
+            if (isCorrect) btns[i].classList.add('ok');
+            if (btns[i] === selected && !isCorrect) {
+                btns[i].classList.add('bad');
+            }
+        }
+        if (selected[0] === correct[0]) {
+            quizScore++;
+            showToast('✅ Правильно!');
+        } else {
+            showToast('❌ Правильно: ' + correct[0] + ' (' + correct[1] + ')');
+        }
+        document.getElementById('qScore').textContent = quizScore + ' / ' + quizData.length;
+        document.getElementById('qNext').hidden = false;
+        document.getElementById('qNext').textContent = quizIdx < quizData.length - 1 ? 'Дальше →' : '📊 Результат';
+    }
+
+    function nextQuestion() {
+        quizIdx++;
+        document.getElementById('qNext').hidden = true;
+        if (quizIdx >= quizData.length) {
+            showQuizQuestion();
+        } else {
+            showQuizQuestion();
+        }
+    }
+
+    // ============================================================
+    //  ИНИЦИАЛИЗАЦИЯ
+    // ============================================================
+    function init() {
+        // Тема
+        var savedTheme = localStorage.getItem('hanmap_theme');
+        if (savedTheme === 'dark') {
+            dark = true;
+            document.body.classList.add('dark');
+            document.getElementById('themeBtn').textContent = '☀️';
+        }
+
+        // Статистика
+        buildOrder();
+        render();
+
+        // События
+        document.getElementById('prevBtn').addEventListener('click', function() { go(-1); });
+        document.getElementById('nextBtn').addEventListener('click', function() { go(1); });
+        document.getElementById('mainNode').addEventListener('click', speak);
+        document.getElementById('speakBtn').addEventListener('click', speak);
+        document.getElementById('likeBtn').addEventListener('click', toggleFavorite);
+        document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+        document.getElementById('randBtn').addEventListener('click', function() {
+            shuffle(order);
+            pos = 0;
+            render();
+            showToast('🎲 Перемешано!');
+        });
+        document.getElementById('gridBtn').addEventListener('click', showGrid);
+        document.getElementById('writeBtn').addEventListener('click', initWrite);
+        document.getElementById('clearBtn').addEventListener('click', clearWrite);
+        document.getElementById('guideBtn').addEventListener('click', toggleGuide);
+        document.getElementById('quizBtn').addEventListener('click', startQuiz);
+        document.getElementById('qNext').addEventListener('click', nextQuestion);
+
+        // Поиск
+        var searchInput = document.getElementById('q');
+        var searchTimeout;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function() {
+                search(searchInput.value);
+            }, 300);
+        });
+
+        // Закрытие модалок
+        document.querySelectorAll('[data-close]').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                this.closest('.modal').classList.remove('open');
+            });
+        });
+
+        // Обработка resize для линий
+        var resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(drawLines, 300);
+        });
+
+        // Клавиши
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') go(-1);
+            if (e.key === 'ArrowRight') go(1);
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.open').forEach(function(m) {
+                    m.classList.remove('open');
+                });
+            }
+        });
+
+        console.log('✅ HanMap загружен!');
+    }
+
+    // Запуск
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+  </script>
 </body>
 </html>
