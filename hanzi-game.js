@@ -1,81 +1,60 @@
 // ============================================================
-//  ЛОГИКА ИГРЫ — ИСПРАВЛЕННАЯ
+//  ПОЛНАЯ ЛОГИКА ИГРЫ — ОБЪЕДИНЁННАЯ ВЕРСИЯ
+//  ИСПОЛЬЗУЕТ DB из app.js (138 иероглифов)
+//  + ВСЕ ФУНКЦИИ ИЗ ПРИМЕРА (туториал, бомба, наборы)
 // ============================================================
 
+// ============================================================
+//  ПРОВЕРКА НАЛИЧИЯ БАЗЫ
+// ============================================================
 if (typeof DB === 'undefined' || DB.length === 0) {
-    console.error('❌ app.js не загружен!');
-    throw new Error('База данных не загружена');
+    console.error('❌ ОШИБКА: app.js не загружен!');
+    throw new Error('База данных не загружена. Игра остановлена.');
 }
 
 console.log('✅ hanzi-game.js: загружено ' + DB.length + ' иероглифов');
 
 // ============================================================
-//  ПРЕОБРАЗОВАНИЕ БАЗЫ
+//  СОЗДАЁМ 5 НАБОРОВ ПО 6 ИЕРОГЛИФОВ ИЗ DB
 // ============================================================
-var ALL_CHARS = DB.map(function(item) {
-    return {
-        h: item[0],
-        p: item[1],
-        r: item[2],
-        e: item[3] || '🀄'
-    };
-});
+var ALL_LEVELS = [];
+var totalSets = 5;
+var charsPerSet = 6;
 
-for (var i = ALL_CHARS.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var t = ALL_CHARS[i];
-    ALL_CHARS[i] = ALL_CHARS[j];
-    ALL_CHARS[j] = t;
+for (var setIdx = 0; setIdx < totalSets; setIdx++) {
+    var set = [];
+    for (var i = 0; i < charsPerSet; i++) {
+        var idx = (setIdx * charsPerSet + i) % DB.length;
+        var item = DB[idx];
+        set.push({
+            h: item[0],
+            p: item[1],
+            r: item[2],
+            e: item[3] || '🀄'
+        });
+    }
+    ALL_LEVELS.push(set);
 }
+
+console.log('✅ Создано ' + ALL_LEVELS.length + ' наборов по ' + charsPerSet + ' иероглифов');
 
 // ============================================================
 //  ПАРАМЕТРЫ ИГРЫ
 // ============================================================
-var NCOLORS = 6;
-var NR = 8;
-var NC = 6;
-var TOT = NR * NC;
-var GAP = 4;
-var PAD = 4;
-var board = [];
-var sel = -1;
-var score = 0;
-var combo = 0;
-var moves = 0;
-var level = 1;
-var goal = 200;
-var nShuf = 3;
-var nHint = 5;
-var nBomb = 0;
-var specials = 0;
-var streak = 0;
-var maxStreak = 0;
-var busy = false;
-var cellPx = 0;
+var NR = 8, NC = 6, TOT = NR * NC, NCOLORS = 6;
+var GAP = 5, PAD = 5;
+var board = [], sel = -1, score = 0, combo = 0, moves = 0, level = 1, goal = 200;
+var nShuf = 3, nHint = 5, nBomb = 0, specials = 0, streak = 0, maxStreak = 0, busy = false, cellPx = 0;
 var levelComplete = false;
-var victoryShown = false;
 var reshuffleAttempts = 0;
+var victoryShown = false;
 
 // ============================================================
-//  ФУНКЦИИ ДЛЯ РАБОТЫ С БАЗОЙ
+//  ФУНКЦИИ ДЛЯ РАБОТЫ С НАБОРАМИ
 // ============================================================
 function getCharsForLevel(lvl) {
-    var count = 6;
-    var start = ((lvl - 1) * count) % DB.length;
-    var chars = [];
-    for (var i = 0; i < count; i++) {
-        var idx = (start + i) % DB.length;
-        var item = DB[idx];
-        chars.push({
-            h: item[0],
-            p: item[1],
-            r: item[2],
-            e: item[3] || '🀄',
-            c: i % NCOLORS,
-            sp: null
-        });
-    }
-    return chars;
+    var idx = (lvl - 1) % ALL_LEVELS.length;
+    return ALL_LEVELS[idx];
 }
 
 function getCurrentChars() {
@@ -85,12 +64,13 @@ function getCurrentChars() {
 function randomChar() {
     var chars = getCurrentChars();
     var idx = Math.floor(Math.random() * chars.length);
+    var d = chars[idx];
     return {
-        h: chars[idx].h,
-        p: chars[idx].p,
-        r: chars[idx].r,
-        e: chars[idx].e || '🀄',
-        c: chars[idx].c,
+        h: d.h,
+        p: d.p,
+        r: d.r,
+        e: d.e || '🀄',
+        c: idx % NCOLORS,
         sp: null
     };
 }
@@ -103,9 +83,7 @@ function sleep(ms) {
 }
 
 function getNeighbors(idx) {
-    var r = Math.floor(idx / NC);
-    var c = idx % NC;
-    var res = [];
+    var r = Math.floor(idx / NC), c = idx % NC, res = [];
     if (r > 0) res.push(idx - NC);
     if (r < NR - 1) res.push(idx + NC);
     if (c > 0) res.push(idx - 1);
@@ -114,14 +92,11 @@ function getNeighbors(idx) {
 }
 
 function getAllNeighbors(idx) {
-    var r = Math.floor(idx / NC);
-    var c = idx % NC;
-    var res = [];
+    var r = Math.floor(idx / NC), c = idx % NC, res = [];
     for (var dr = -1; dr <= 1; dr++) {
         for (var dc = -1; dc <= 1; dc++) {
             if (dr === 0 && dc === 0) continue;
-            var nr = r + dr;
-            var nc = c + dc;
+            var nr = r + dr, nc = c + dc;
             if (nr >= 0 && nr < NR && nc >= 0 && nc < NC) {
                 res.push(nr * NC + nc);
             }
@@ -142,14 +117,12 @@ function isNeighbor(a, b) {
 //  ПОИСК КОМБИНАЦИЙ (ВКЛЮЧАЯ L, T, КВАДРАТЫ)
 // ============================================================
 function findAllCombinations(bd) {
-    var results = [];
-    var used = {};
+    var results = [], used = {};
 
     // Горизонтальные
     for (var r = 0; r < NR; r++) {
         for (var c = 0; c <= NC - 3; c++) {
-            var i = r * NC + c;
-            var ch = bd[i] ? bd[i].h : null;
+            var i = r * NC + c, ch = bd[i] ? bd[i].h : null;
             if (!ch) continue;
             var len = 1;
             while (c + len < NC && bd[i + len] && bd[i + len].h === ch) len++;
@@ -174,8 +147,7 @@ function findAllCombinations(bd) {
     // Вертикальные
     for (var c = 0; c < NC; c++) {
         for (var r = 0; r <= NR - 3; r++) {
-            var i = r * NC + c;
-            var ch = bd[i] ? bd[i].h : null;
+            var i = r * NC + c, ch = bd[i] ? bd[i].h : null;
             if (!ch) continue;
             var len = 1;
             while (r + len < NR && bd[i + len * NC] && bd[i + len * NC].h === ch) len++;
@@ -197,7 +169,7 @@ function findAllCombinations(bd) {
         }
     }
 
-    // L и T формы (как в примере)
+    // L и T формы
     for (var r = 0; r < NR - 2; r++) {
         for (var c = 0; c < NC - 2; c++) {
             var patterns = [
@@ -211,8 +183,7 @@ function findAllCombinations(bd) {
                 { ids: [r*NC+c+2, (r+1)*NC+c+2, (r+2)*NC+c+2, (r+1)*NC+c+1, (r+1)*NC+c], t: 'T' }
             ];
             for (var p = 0; p < patterns.length; p++) {
-                var ids = patterns[p].ids;
-                var ch = bd[ids[0]] ? bd[ids[0]].h : null;
+                var ids = patterns[p].ids, ch = bd[ids[0]] ? bd[ids[0]].h : null;
                 if (!ch) continue;
                 var ok = true;
                 for (var j = 0; j < ids.length; j++) {
@@ -271,23 +242,15 @@ function getBooster(shape) {
 }
 
 function findMatches(bd) {
-    var allShapes = findAllCombinations(bd);
-    var matched = {};
-    var shapes = [];
-
+    var allShapes = findAllCombinations(bd), matched = {}, shapes = [];
     for (var i = 0; i < allShapes.length; i++) {
-        var shape = allShapes[i];
-        var ids = shape.ids;
-
-        // Проверяем есть ли бомба в комбинации
-        var hasBomb = false;
+        var shape = allShapes[i], ids = shape.ids, hasBomb = false;
         for (var j = 0; j < ids.length; j++) {
             if (bd[ids[j]] && bd[ids[j]].sp === 'bomb') {
                 hasBomb = true;
                 break;
             }
         }
-
         if (hasBomb) {
             var bombIdx = -1;
             for (var j = 0; j < ids.length; j++) {
@@ -310,7 +273,6 @@ function findMatches(bd) {
             shapes.push(shape);
         }
     }
-
     var matchedArr = [];
     for (var key in matched) {
         matchedArr.push(parseInt(key));
@@ -339,8 +301,7 @@ function anyMove(bd) {
 }
 
 function bestMove(bd) {
-    var best = null;
-    var bestScore = -1;
+    var best = null, bestScore = -1;
     for (var i = 0; i < TOT; i++) {
         if (!bd[i]) continue;
         var ns = getNeighbors(i);
@@ -374,9 +335,7 @@ function bestMove(bd) {
 }
 
 function hasMatchAt(bd, idx) {
-    var r = Math.floor(idx / NC);
-    var c = idx % NC;
-    var ch = bd[idx] ? bd[idx].h : null;
+    var r = Math.floor(idx / NC), c = idx % NC, ch = bd[idx] ? bd[idx].h : null;
     if (!ch) return false;
     if (c >= 2 && bd[idx-1] && bd[idx-2] && bd[idx-1].h === ch && bd[idx-2].h === ch) return true;
     if (r >= 2 && bd[idx-NC] && bd[idx-2*NC] && bd[idx-NC].h === ch && bd[idx-2*NC].h === ch) return true;
@@ -453,9 +412,301 @@ function reshuffle(skipCheck) {
 }
 
 // ============================================================
+//  ТЕМЫ
+// ============================================================
+var THEMES = [
+    { id: 't1', name: '🌳 Дерево', bg: 't1' },
+    { id: 't2', name: '⚙️ Металл', bg: 't2' },
+    { id: 't3', name: '💡 Неон', bg: 't3' },
+    { id: 't4', name: '🧶 Бархат', bg: 't4' },
+    { id: 't5', name: '🎨 Пастель', bg: 't5' }
+];
+
+function getTheme() {
+    return THEMES[(level - 1) % THEMES.length];
+}
+
+function applyTheme() {
+    var theme = getTheme();
+    var boardEl = document.getElementById('board');
+    var bgEl = document.getElementById('bg');
+    var uHzEl = document.getElementById('uHz');
+    if (boardEl) boardEl.className = theme.id;
+    if (bgEl) bgEl.className = 'bg ' + theme.bg;
+    if (uHzEl) uHzEl.textContent = theme.name;
+}
+
+// ============================================================
+//  РЕНДЕРИНГ
+// ============================================================
+function calcSize() {
+    var wrap = document.querySelector('.ba');
+    if (!wrap) return;
+    var ww = wrap.clientWidth - 12, wh = wrap.clientHeight - 8;
+    var bw = ww, bh = bw * NR / NC;
+    if (bh > wh) {
+        bh = wh;
+        bw = bh * NC / NR;
+    }
+    var cw = Math.floor((bw - PAD * 2 - GAP * (NC - 1)) / NC);
+    var ch = Math.floor((bh - PAD * 2 - GAP * (NR - 1)) / NR);
+    cellPx = Math.min(cw, ch);
+    var bEl = document.getElementById('board');
+    if (!bEl) return;
+    bEl.style.width = (cellPx * NC + GAP * (NC - 1) + PAD * 2) + 'px';
+    bEl.style.height = (cellPx * NR + GAP * (NR - 1) + PAD * 2) + 'px';
+    bEl.style.gridTemplateColumns = 'repeat(' + NC + ',' + cellPx + 'px)';
+    bEl.style.gridTemplateRows = 'repeat(' + NR + ',' + cellPx + 'px)';
+    bEl.style.gap = GAP + 'px';
+    bEl.style.padding = PAD + 'px';
+}
+
+function render(fallSet) {
+    fallSet = fallSet || {};
+    var b = document.getElementById('board');
+    if (!b) return;
+    b.innerHTML = '';
+    var hzPx = Math.max(16, Math.floor(cellPx * .44));
+    var pyPx = Math.max(8, Math.floor(cellPx * .13));
+    var ruPx = Math.max(8, Math.floor(cellPx * .12));
+    var emPx = Math.max(8, Math.floor(cellPx * .12));
+    var bdPx = Math.max(8, Math.floor(cellPx * .16));
+
+    for (var i = 0; i < TOT; i++) {
+        var el = document.createElement('div');
+        el.setAttribute('data-i', String(i));
+        var d = board[i];
+        if (!d) {
+            el.className = 'c empty';
+        } else {
+            var cls = 'c c' + d.c;
+            if (d.sp === 'bomb') cls += ' sp-bomb';
+            else if (d.sp === 'laser') cls += ' sp-laser';
+            else if (d.sp === 'star') cls += ' sp-star';
+            else if (d.sp === 'rainbow') cls += ' sp-rainbow';
+            el.className = cls;
+            el.style.width = cellPx + 'px';
+            el.style.height = cellPx + 'px';
+            var badges = { bomb: '💥', laser: '⚡', star: '⭐', rainbow: '🌈' };
+            el.innerHTML = '<span class="hz" style="font-size:' + hzPx + 'px">' + d.h +
+                '</span><span class="py" style="font-size:' + pyPx + 'px">' + d.p +
+                '</span><span class="ru" style="font-size:' + ruPx + 'px">' + d.r +
+                '</span>' + (d.e ? '<span class="emo" style="font-size:' + emPx + 'px">' + d.e + '</span>' : '') +
+                (d.sp ? '<span class="badge" style="font-size:' + bdPx + 'px">' + (badges[d.sp] || '✨') + '</span>' : '');
+            if (sel === i) el.classList.add('sel');
+            if (fallSet[i]) {
+                el.classList.add('drop');
+                var row = Math.floor(i / NC);
+                el.style.setProperty('--dy', (-(row + 1) * 68) + 'px');
+                el.style.setProperty('--dd', (0.2 + row * 0.04) + 's');
+            }
+        }
+        b.appendChild(el);
+    }
+}
+
+function updateUI() {
+    var uSc = document.getElementById('uSc');
+    var uCo = document.getElementById('uCo');
+    var uLv = document.getElementById('uLv');
+    var uSp = document.getElementById('uSp');
+    var pFill = document.getElementById('pFill');
+    var uGl = document.getElementById('uGl');
+    var cSh = document.getElementById('cSh');
+    var cHi = document.getElementById('cHi');
+    var cBm = document.getElementById('cBm');
+    var bSh = document.getElementById('bSh');
+    var bHi = document.getElementById('bHi');
+    var uSet = document.getElementById('uSet');
+
+    if (uSc) uSc.textContent = score;
+    if (uCo) uCo.textContent = combo;
+    if (uLv) uLv.textContent = level;
+    if (uSp) uSp.textContent = specials;
+    if (pFill) pFill.style.width = Math.min(100, score / goal * 100) + '%';
+    if (uGl) uGl.textContent = goal;
+    if (cSh) cSh.textContent = nShuf;
+    if (cHi) cHi.textContent = nHint;
+    if (cBm) cBm.textContent = nBomb;
+    if (bSh) bSh.classList.toggle('off', nShuf <= 0);
+    if (bHi) bHi.classList.toggle('off', nHint <= 0);
+    if (uSet) {
+        var setNum = ((level - 1) % 5) + 1;
+        uSet.textContent = 'Набор ' + setNum;
+    }
+}
+
+// ============================================================
+//  ЭФФЕКТЫ
+// ============================================================
+function salute(idx, emos) {
+    emos = emos || ['✨', '⭐', '💥', '🌟'];
+    var cells = document.querySelectorAll('.c');
+    var el = cells[idx];
+    if (!el) return;
+    var rect = el.getBoundingClientRect();
+    var cx = rect.left + rect.width / 2;
+    var cy = rect.top + rect.height / 2;
+    for (var i = 0; i < 16; i++) {
+        var s = document.createElement('div');
+        s.className = 'salute';
+        s.textContent = emos[Math.floor(Math.random() * emos.length)];
+        s.style.fontSize = (16 + Math.random() * 20) + 'px';
+        var ang = Math.random() * Math.PI * 2;
+        var d1 = 60 + Math.random() * 140;
+        var d2 = 40 + Math.random() * 100;
+        s.style.left = cx + 'px';
+        s.style.top = cy + 'px';
+        s.style.setProperty('--t1x', (Math.cos(ang) * d1 * 0.5) + 'px');
+        s.style.setProperty('--t1y', (Math.sin(ang) * d1 * 0.5 - 40) + 'px');
+        s.style.setProperty('--t2x', (Math.cos(ang + 0.5) * d2) + 'px');
+        s.style.setProperty('--t2y', (Math.sin(ang + 0.5) * d2 - 80) + 'px');
+        s.style.setProperty('--dur', (1 + Math.random()) + 's');
+        document.body.appendChild(s);
+        (function(nd) {
+            setTimeout(function() { nd.remove(); }, 2000);
+        })(s);
+    }
+}
+
+function rainEmojis(cx, cy, count, emos) {
+    count = count || 12;
+    emos = emos || ['✨', '⭐', '💥', '🌟', '🌈', '🎆'];
+    for (var i = 0; i < count; i++) {
+        var el = document.createElement('div');
+        el.className = 'rain';
+        el.textContent = emos[Math.floor(Math.random() * emos.length)];
+        el.style.fontSize = (14 + Math.random() * 18) + 'px';
+        el.style.left = (cx + (Math.random() - 0.5) * 280) + 'px';
+        el.style.top = (cy - 20 + (Math.random() - 0.5) * 40) + 'px';
+        el.style.setProperty('--rd', (1.5 + Math.random() * 1.5) + 's');
+        document.body.appendChild(el);
+        (function(nd) {
+            setTimeout(function() { nd.remove(); }, 3000);
+        })(el);
+    }
+}
+
+function floatPts(idx, pts) {
+    var cells = document.querySelectorAll('.c');
+    var el = cells[idx];
+    if (!el) return;
+    var br = document.getElementById('board').getBoundingClientRect();
+    var cr = el.getBoundingClientRect();
+    var f = document.createElement('div');
+    f.className = 'fpts';
+    f.textContent = '+' + pts;
+    f.style.fontSize = Math.max(14, cellPx * 0.32) + 'px';
+    f.style.left = (cr.left - br.left + cr.width / 2 - 18) + 'px';
+    f.style.top = (cr.top - br.top - 5) + 'px';
+    document.getElementById('board').appendChild(f);
+    setTimeout(function() { f.remove(); }, 900);
+}
+
+function showCombo(c) {
+    var el = document.getElementById('cmb');
+    if (!el) return;
+    var emos = ['🔥', '⚡', '💥', '🌟', '✨', '🌈'];
+    el.textContent = emos[Math.min(c - 1, emos.length - 1)] + ' COMBO ×' + c + '!';
+    el.style.fontSize = Math.max(28, cellPx * 0.7) + 'px';
+    el.classList.remove('show');
+    void el.offsetWidth;
+    el.classList.add('show');
+    setTimeout(function() { el.classList.remove('show'); }, 1150);
+}
+
+function showStreak(text, color) {
+    var el = document.getElementById('streak');
+    if (!el) return;
+    el.textContent = text;
+    el.style.color = color || '#ffd700';
+    el.style.fontSize = Math.max(18, cellPx * 0.42) + 'px';
+    el.classList.remove('show');
+    void el.offsetWidth;
+    el.classList.add('show');
+    setTimeout(function() { el.classList.remove('show'); }, 1400);
+}
+
+// ============================================================
+//  ЗВУКИ
+// ============================================================
+var actx = null;
+
+function snd(f, d, tp, v, dl) {
+    try {
+        if (!actx) actx = new(window.AudioContext || window.webkitAudioContext)();
+        if (actx.state === 'suspended') actx.resume();
+        var t = actx.currentTime + (dl || 0);
+        var o = actx.createOscillator();
+        var g = actx.createGain();
+        o.type = tp || 'sine';
+        o.frequency.setValueAtTime(f, t);
+        g.gain.setValueAtTime(v || 0.06, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + (d || 0.1));
+        o.connect(g);
+        g.connect(actx.destination);
+        o.start(t);
+        o.stop(t + (d || 0.1));
+    } catch (e) {}
+}
+
+function sndMatch(n) {
+    for (var i = 0; i < Math.min(n, 7); i++) {
+        snd(460 + i * 65, 0.09, i % 2 ? 'triangle' : 'sine', 0.06, i * 0.035);
+    }
+}
+
+function sndCombo(c) {
+    for (var i = 0; i < Math.min(c + 2, 9); i++) {
+        snd(340 + i * 55 + c * 20, 0.1, 'sine', 0.07, i * 0.032);
+    }
+}
+
+function sndBoom() {
+    for (var i = 0; i < 8; i++) {
+        snd(180 + Math.random() * 280, 0.09, 'sawtooth', 0.04, i * 0.04);
+    }
+}
+
+function sndSpec() {
+    [523, 659, 784, 1047].forEach(function(f, i) {
+        snd(f, 0.11, 'sine', 0.07, i * 0.065);
+    });
+}
+
+function sndSwap() {
+    snd(520, 0.05);
+    snd(720, 0.04, 'sine', 0.04, 0.04);
+}
+
+function sndBad() {
+    snd(155, 0.12, 'sawtooth', 0.04);
+    snd(120, 0.12, 'sawtooth', 0.03, 0.07);
+}
+
+function sndLvl() {
+    [523, 659, 784, 1047, 1318].forEach(function(f, i) {
+        snd(f, 0.13, 'sine', 0.07, i * 0.08);
+    });
+}
+
+function sndShuf() {
+    for (var i = 0; i < 6; i++) {
+        snd(210 + i * 85, 0.05, 'sine', 0.04, i * 0.04);
+    }
+}
+
+function sndStreak() {
+    [523, 659, 784, 1047, 1318, 1568].forEach(function(f, i) {
+        snd(f, 0.09, 'sine', 0.08, i * 0.05);
+    });
+}
+
+// ============================================================
 //  АКТИВАЦИЯ СПЕЦИАЛЬНЫХ СПОСОБНОСТЕЙ
 // ============================================================
 function activateBomb(idx) {
+    sndBoom();
     var removed = {};
     removed[idx] = true;
     var neighbors = getAllNeighbors(idx);
@@ -467,15 +718,17 @@ function activateBomb(idx) {
         var ki = parseInt(key);
         if (cells[ki]) cells[ki].classList.add('boom');
     }
+    salute(idx, ['💥', '🔥', '🌟', '✨']);
     var pts = Object.keys(removed).length * 12 + 40;
     score += pts;
+    floatPts(idx, pts);
+    showStreak('💥 БОМБА! +' + pts, '#ff6b6b');
     return removed;
 }
 
 function activateLaser(idx, orient) {
-    var r = Math.floor(idx / NC);
-    var c = idx % NC;
-    var removed = {};
+    sndSpec();
+    var r = Math.floor(idx / NC), c = idx % NC, removed = {};
     removed[idx] = true;
     var cells = document.querySelectorAll('.c');
     if (orient === 'h' || !orient) {
@@ -492,12 +745,16 @@ function activateLaser(idx, orient) {
             if (cells[id]) cells[id].classList.add('lhit');
         }
     }
+    salute(idx, ['⚡', '✨', '💥']);
     var pts = Object.keys(removed).length * 10 + 35;
     score += pts;
+    floatPts(idx, pts);
+    showStreak('⚡ ЛАЗЕР! +' + pts, '#aa88ee');
     return removed;
 }
 
 function activateStar(idx) {
+    sndSpec();
     var ch = board[idx] ? board[idx].h : null;
     if (!ch) return {};
     var removed = {};
@@ -510,12 +767,16 @@ function activateStar(idx) {
         }
     }
     if (cells[idx]) cells[idx].classList.add('shit');
+    salute(idx, ['⭐', '🌟', '✨', '💫', '🌈']);
     var pts = Object.keys(removed).length * 15 + 55;
     score += pts;
+    floatPts(idx, pts);
+    showStreak('⭐ ЗВЕЗДА! +' + pts, '#88eebb');
     return removed;
 }
 
 function activateRainbow(idx) {
+    sndSpec();
     var colors = {};
     for (var i = 0; i < TOT; i++) {
         if (i !== idx && board[i]) {
@@ -524,8 +785,7 @@ function activateRainbow(idx) {
             colors[h].push(i);
         }
     }
-    var best = null;
-    var bestN = 0;
+    var best = null, bestN = 0;
     for (var h in colors) {
         if (colors[h].length > bestN) {
             bestN = colors[h].length;
@@ -543,8 +803,12 @@ function activateRainbow(idx) {
         }
     }
     if (cells[idx]) cells[idx].classList.add('rhit');
+    salute(idx, ['🌈', '✨', '⭐', '💫', '🌟', '🎆']);
+    rainEmojis(window.innerWidth / 2, window.innerHeight / 3, 20, ['🌈', '✨', '⭐', '💫']);
     var pts = Object.keys(removed).length * 18 + 80;
     score += pts;
+    floatPts(idx, pts);
+    showStreak('🌈 РАДУГА! +' + pts, '#ffd700');
     return removed;
 }
 
@@ -560,15 +824,18 @@ function activateCombo(idx1, idx2) {
     var sp1 = board[idx1] ? board[idx1].sp : null;
     var sp2 = board[idx2] ? board[idx2].sp : null;
     if (!sp1 || !sp2) return null;
+    sndBoom();
+    sndSpec();
     var removed = {};
     var cells = document.querySelectorAll('.c');
 
     if (sp1 === 'bomb' && sp2 === 'bomb') {
         for (var i = 0; i < TOT; i++) removed[i] = true;
+        showStreak('💥💥 МЕГА ВЗРЫВ!', '#ff4444');
+        rainEmojis(window.innerWidth / 2, window.innerHeight / 3, 40, ['💥', '🔥', '✨', '⭐']);
     } else if ((sp1 === 'bomb' && sp2 === 'laser') || (sp1 === 'laser' && sp2 === 'bomb')) {
         var bombIdx = sp1 === 'bomb' ? idx1 : idx2;
-        var r = Math.floor(bombIdx / NC);
-        var c = bombIdx % NC;
+        var r = Math.floor(bombIdx / NC), c = bombIdx % NC;
         for (var dr = -1; dr <= 1; dr++) {
             var rr = r + dr;
             if (rr >= 0 && rr < NR) {
@@ -581,18 +848,17 @@ function activateCombo(idx1, idx2) {
                 for (var i = 0; i < NR; i++) removed[i * NC + cc] = true;
             }
         }
+        showStreak('💥⚡ КРЕСТ ОГНЯ!', '#ff8800');
     } else if ((sp1 === 'bomb' && sp2 === 'star') || (sp1 === 'star' && sp2 === 'bomb')) {
         var starIdx = sp1 === 'star' ? idx1 : idx2;
         var ch = board[starIdx] ? board[starIdx].h : null;
         for (var i = 0; i < TOT; i++) {
             if (board[i] && board[i].h === ch) {
                 removed[i] = true;
-                var rr = Math.floor(i / NC);
-                var cc = i % NC;
+                var rr = Math.floor(i / NC), cc = i % NC;
                 for (var dr = -1; dr <= 1; dr++) {
                     for (var dc = -1; dc <= 1; dc++) {
-                        var nr = rr + dr;
-                        var nc = cc + dc;
+                        var nr = rr + dr, nc = cc + dc;
                         if (nr >= 0 && nr < NR && nc >= 0 && nc < NC) {
                             removed[nr * NC + nc] = true;
                         }
@@ -600,11 +866,10 @@ function activateCombo(idx1, idx2) {
                 }
             }
         }
+        showStreak('💥⭐ ЗВЁЗДНЫЙ ВЗРЫВ!', '#ffaa00');
     } else if (sp1 === 'laser' && sp2 === 'laser') {
-        var r1 = Math.floor(idx1 / NC);
-        var c1 = idx1 % NC;
-        var r2 = Math.floor(idx2 / NC);
-        var c2 = idx2 % NC;
+        var r1 = Math.floor(idx1 / NC), c1 = idx1 % NC;
+        var r2 = Math.floor(idx2 / NC), c2 = idx2 % NC;
         for (var i = 0; i < NC; i++) {
             removed[r1 * NC + i] = true;
             removed[r2 * NC + i] = true;
@@ -613,16 +878,17 @@ function activateCombo(idx1, idx2) {
             removed[i * NC + c1] = true;
             removed[i * NC + c2] = true;
         }
+        showStreak('⚡⚡ ДВОЙНОЙ ЛАЗЕР!', '#aa44ff');
     } else if ((sp1 === 'laser' && sp2 === 'star') || (sp1 === 'star' && sp2 === 'laser')) {
         var starIdx2 = sp1 === 'star' ? idx1 : idx2;
         var ch2 = board[starIdx2] ? board[starIdx2].h : null;
         for (var i = 0; i < TOT; i++) {
             if (board[i] && board[i].h === ch2) removed[i] = true;
         }
-        var r3 = Math.floor(idx1 / NC);
-        var c3 = idx1 % NC;
+        var r3 = Math.floor(idx1 / NC), c3 = idx1 % NC;
         for (var i = 0; i < NC; i++) removed[r3 * NC + i] = true;
         for (var i = 0; i < NR; i++) removed[i * NC + c3] = true;
+        showStreak('⚡⭐ ЛАЗЕРНАЯ ЗВЕЗДА!', '#88ddff');
     } else if (sp1 === 'star' && sp2 === 'star') {
         var ch1 = board[idx1] ? board[idx1].h : null;
         var ch2 = board[idx2] ? board[idx2].h : null;
@@ -631,6 +897,7 @@ function activateCombo(idx1, idx2) {
                 removed[i] = true;
             }
         }
+        showStreak('⭐⭐ ДВОЙНАЯ ЗВЕЗДА!', '#44ffaa');
     } else if (sp1 === 'rainbow' || sp2 === 'rainbow') {
         var other = sp1 === 'rainbow' ? idx2 : idx1;
         var ch3 = board[other] ? board[other].h : null;
@@ -639,33 +906,34 @@ function activateCombo(idx1, idx2) {
                 if (board[i] && board[i].h === ch3) removed[i] = true;
             }
         }
+        showStreak('🌈 РАДУГА+!', '#ffd700');
     } else {
-        var r4 = Math.floor(idx1 / NC);
-        var c4 = idx1 % NC;
-        var r5 = Math.floor(idx2 / NC);
-        var c5 = idx2 % NC;
+        var r4 = Math.floor(idx1 / NC), c4 = idx1 % NC;
+        var r5 = Math.floor(idx2 / NC), c5 = idx2 % NC;
         for (var dr = -1; dr <= 1; dr++) {
             for (var dc = -1; dc <= 1; dc++) {
-                var nr1 = r4 + dr;
-                var nc1 = c4 + dc;
+                var nr1 = r4 + dr, nc1 = c4 + dc;
                 if (nr1 >= 0 && nr1 < NR && nc1 >= 0 && nc1 < NC) {
                     removed[nr1 * NC + nc1] = true;
                 }
-                var nr2 = r5 + dr;
-                var nc2 = c5 + dc;
+                var nr2 = r5 + dr, nc2 = c5 + dc;
                 if (nr2 >= 0 && nr2 < NR && nc2 >= 0 && nc2 < NC) {
                     removed[nr2 * NC + nc2] = true;
                 }
             }
         }
+        showStreak('✨ КОМБО!', '#ffd700');
     }
 
     for (var key in removed) {
         var ki = parseInt(key);
         if (cells[ki]) cells[ki].classList.add('boom');
     }
+    salute(idx1, ['💥', '⚡', '⭐', '🌈', '✨']);
+    salute(idx2, ['💥', '⚡', '⭐', '🌈', '✨']);
     var pts = Object.keys(removed).length * 15 + 100;
     score += pts;
+    floatPts(idx1, pts);
     return removed;
 }
 
@@ -675,12 +943,33 @@ function activateCombo(idx1, idx2) {
 function updateStreak() {
     streak++;
     if (streak > maxStreak) maxStreak = streak;
-    var mult = 1;
-    var bonus = 0;
-    if (streak >= 7) { mult = 5; bonus = 60; }
-    else if (streak >= 5) { mult = 3; bonus = 35; }
-    else if (streak >= 3) { mult = 2; bonus = 18; }
-    if (bonus > 0) { score += bonus; }
+    var mult = 1, bonus = 0, text = '', color = '#ffd700';
+    if (streak >= 7) {
+        mult = 5;
+        bonus = 60;
+        text = '🔥 СУПЕР СТРЕЙК ×5!';
+        color = '#ff4444';
+        sndStreak();
+        rainEmojis(window.innerWidth / 2, window.innerHeight / 3, 25, ['🔥', '⚡', '💥', '🌟']);
+    } else if (streak >= 5) {
+        mult = 3;
+        bonus = 35;
+        text = '🔥 СТРЕЙК ×3!';
+        color = '#ff8800';
+        sndStreak();
+        rainEmojis(window.innerWidth / 2, window.innerHeight / 3, 12, ['🔥', '⚡', '✨']);
+    } else if (streak >= 3) {
+        mult = 2;
+        bonus = 18;
+        text = '🔥 СТРЕЙК ×2!';
+        color = '#ffaa00';
+        sndStreak();
+    }
+    if (text) showStreak(text, color);
+    if (bonus > 0) {
+        score += bonus;
+        floatPts(Math.floor(Math.random() * TOT), bonus);
+    }
     return mult;
 }
 
@@ -713,13 +1002,16 @@ function fillEmpty() {
 }
 
 // ============================================================
-//  ПРОВЕРКА ПОБЕДЫ
+//  ПРОВЕРКА ПОБЕДЫ И ПЕРЕХОД УРОВНЯ
 // ============================================================
 function checkWinCondition() {
     if (!levelComplete && !victoryShown && score >= goal) {
         victoryShown = true;
         levelComplete = true;
         busy = true;
+        sndLvl();
+        rainEmojis(window.innerWidth / 2, window.innerHeight / 3, 40, ['🎉', '🎊', '✨', '⭐', '🌈', '💖', '🔥']);
+        showStreak('🎉 УРОВЕНЬ ' + level + ' ПРОЙДЕН!', '#ffd700');
         setTimeout(function() {
             doNextLevel();
         }, 1500);
@@ -775,331 +1067,7 @@ function doNewGame() {
 }
 
 // ============================================================
-//  ТЕМЫ
-// ============================================================
-var THEMES = [
-    { id: 't1', name: '🌳 Дерево', bg: 't1' },
-    { id: 't2', name: '⚙️ Металл', bg: 't2' },
-    { id: 't3', name: '💡 Неон', bg: 't3' },
-    { id: 't4', name: '🧶 Бархат', bg: 't4' },
-    { id: 't5', name: '🎨 Пастель', bg: 't5' }
-];
-
-function getTheme() {
-    return THEMES[(level - 1) % THEMES.length];
-}
-
-function applyTheme() {
-    var theme = getTheme();
-    var boardEl = document.getElementById('board');
-    var bgEl = document.getElementById('bg');
-    var uHzEl = document.getElementById('uHz');
-    if (boardEl) boardEl.className = theme.id;
-    if (bgEl) bgEl.className = 'bg ' + theme.bg;
-    if (uHzEl) uHzEl.textContent = theme.name;
-}
-
-// ============================================================
-//  РЕНДЕРИНГ И UI (УМЕНЬШЕННЫЙ РАЗМЕР)
-// ============================================================
-function calcSize() {
-    var wrap = document.querySelector('.ba');
-    if (!wrap) return;
-    var ww = wrap.clientWidth - 8;
-    var wh = wrap.clientHeight - 8;
-    var bw = ww;
-    var bh = bw * NR / NC;
-    if (bh > wh) {
-        bh = wh;
-        bw = bh * NC / NR;
-    }
-    var cw = Math.floor((bw - PAD * 2 - GAP * (NC - 1)) / NC);
-    var ch = Math.floor((bh - PAD * 2 - GAP * (NR - 1)) / NR);
-    cellPx = Math.min(cw, ch);
-    var bEl = document.getElementById('board');
-    if (!bEl) return;
-    bEl.style.width = (cellPx * NC + GAP * (NC - 1) + PAD * 2) + 'px';
-    bEl.style.height = (cellPx * NR + GAP * (NR - 1) + PAD * 2) + 'px';
-    bEl.style.gridTemplateColumns = 'repeat(' + NC + ',' + cellPx + 'px)';
-    bEl.style.gridTemplateRows = 'repeat(' + NR + ',' + cellPx + 'px)';
-    bEl.style.gap = GAP + 'px';
-    bEl.style.padding = PAD + 'px';
-}
-
-function render(fallSet) {
-    fallSet = fallSet || {};
-    var b = document.getElementById('board');
-    if (!b) return;
-    b.innerHTML = '';
-    var hzPx = Math.max(14, Math.floor(cellPx * .40));
-    var pyPx = Math.max(7, Math.floor(cellPx * .12));
-    var ruPx = Math.max(7, Math.floor(cellPx * .11));
-    var emPx = Math.max(7, Math.floor(cellPx * .11));
-    var bdPx = Math.max(7, Math.floor(cellPx * .14));
-
-    for (var i = 0; i < TOT; i++) {
-        var el = document.createElement('div');
-        el.setAttribute('data-i', String(i));
-        var d = board[i];
-        if (!d) {
-            el.className = 'c empty';
-        } else {
-            var cls = 'c c' + d.c;
-            if (d.sp === 'bomb') cls += ' sp-bomb';
-            else if (d.sp === 'laser') cls += ' sp-laser';
-            else if (d.sp === 'star') cls += ' sp-star';
-            else if (d.sp === 'rainbow') cls += ' sp-rainbow';
-            el.className = cls;
-            el.style.width = cellPx + 'px';
-            el.style.height = cellPx + 'px';
-            var badges = { bomb: '💥', laser: '⚡', star: '⭐', rainbow: '🌈' };
-            el.innerHTML = '<span class="hz" style="font-size:' + hzPx + 'px">' + d.h +
-                '</span><span class="py" style="font-size:' + pyPx + 'px">' + d.p +
-                '</span><span class="ru" style="font-size:' + ruPx + 'px">' + d.r +
-                '</span>' + (d.e ? '<span class="emo" style="font-size:' + emPx + 'px">' + d.e + '</span>' : '') +
-                (d.sp ? '<span class="badge" style="font-size:' + bdPx + 'px">' + (badges[d.sp] || '✨') + '</span>' : '');
-            if (sel === i) el.classList.add('sel');
-            if (fallSet[i]) {
-                el.classList.add('drop');
-                var row = Math.floor(i / NC);
-                el.style.setProperty('--dy', (-(row + 1) * 60) + 'px');
-                el.style.setProperty('--dd', (0.2 + row * 0.04) + 's');
-            }
-        }
-        b.appendChild(el);
-    }
-}
-
-function updateUI() {
-    var uSc = document.getElementById('uSc');
-    var uCo = document.getElementById('uCo');
-    var uLv = document.getElementById('uLv');
-    var uSp = document.getElementById('uSp');
-    var pFill = document.getElementById('pFill');
-    var uGl = document.getElementById('uGl');
-    var cSh = document.getElementById('cSh');
-    var cHi = document.getElementById('cHi');
-    var cBm = document.getElementById('cBm');
-    var bSh = document.getElementById('bSh');
-    var bHi = document.getElementById('bHi');
-    var uSet = document.getElementById('uSet');
-
-    if (uSc) uSc.textContent = score;
-    if (uCo) uCo.textContent = combo;
-    if (uLv) uLv.textContent = level;
-    if (uSp) uSp.textContent = specials;
-    if (pFill) pFill.style.width = Math.min(100, score / goal * 100) + '%';
-    if (uGl) uGl.textContent = goal;
-    if (cSh) cSh.textContent = nShuf;
-    if (cHi) cHi.textContent = nHint;
-    if (cBm) cBm.textContent = nBomb;
-    if (bSh) bSh.classList.toggle('off', nShuf <= 0);
-    if (bHi) bHi.classList.toggle('off', nHint <= 0);
-    if (uSet) {
-        var setNum = ((level - 1) % 5) + 1;
-        uSet.textContent = 'Набор ' + setNum;
-    }
-}
-
-// ============================================================
-//  ВСПОМОГАТЕЛЬНЫЕ UI ФУНКЦИИ
-// ============================================================
-function floatPts(idx, pts) {
-    var cells = document.querySelectorAll('.c');
-    var el = cells[idx];
-    if (!el) return;
-    var br = document.getElementById('board').getBoundingClientRect();
-    var cr = el.getBoundingClientRect();
-    var f = document.createElement('div');
-    f.className = 'fpts';
-    f.textContent = '+' + pts;
-    f.style.fontSize = Math.max(12, cellPx * 0.3) + 'px';
-    f.style.left = (cr.left - br.left + cr.width / 2 - 14) + 'px';
-    f.style.top = (cr.top - br.top - 4) + 'px';
-    document.getElementById('board').appendChild(f);
-    setTimeout(function() { f.remove(); }, 900);
-}
-
-function showStreak(text, color) {
-    var el = document.getElementById('streak');
-    if (!el) return;
-    el.textContent = text;
-    el.style.color = color || '#ffd700';
-    el.style.fontSize = Math.max(16, cellPx * 0.4) + 'px';
-    el.classList.remove('show');
-    void el.offsetWidth;
-    el.classList.add('show');
-    setTimeout(function() { el.classList.remove('show'); }, 1400);
-}
-
-function showCombo(c) {
-    var el = document.getElementById('cmb');
-    if (!el) return;
-    var emos = ['🔥', '⚡', '💥', '🌟', '✨', '🌈'];
-    el.textContent = emos[Math.min(c - 1, emos.length - 1)] + ' COMBO ×' + c + '!';
-    el.style.fontSize = Math.max(24, cellPx * 0.6) + 'px';
-    el.classList.remove('show');
-    void el.offsetWidth;
-    el.classList.add('show');
-    setTimeout(function() { el.classList.remove('show'); }, 1150);
-}
-
-function salute(idx, emos) {
-    emos = emos || ['✨', '⭐', '💥', '🌟'];
-    var cells = document.querySelectorAll('.c');
-    var el = cells[idx];
-    if (!el) return;
-    var rect = el.getBoundingClientRect();
-    var cx = rect.left + rect.width / 2;
-    var cy = rect.top + rect.height / 2;
-    for (var i = 0; i < 12; i++) {
-        var s = document.createElement('div');
-        s.className = 'salute';
-        s.textContent = emos[Math.floor(Math.random() * emos.length)];
-        s.style.fontSize = (14 + Math.random() * 18) + 'px';
-        var ang = Math.random() * Math.PI * 2;
-        var d1 = 50 + Math.random() * 120;
-        var d2 = 30 + Math.random() * 80;
-        s.style.left = cx + 'px';
-        s.style.top = cy + 'px';
-        s.style.setProperty('--t1x', (Math.cos(ang) * d1 * 0.5) + 'px');
-        s.style.setProperty('--t1y', (Math.sin(ang) * d1 * 0.5 - 30) + 'px');
-        s.style.setProperty('--t2x', (Math.cos(ang + 0.5) * d2) + 'px');
-        s.style.setProperty('--t2y', (Math.sin(ang + 0.5) * d2 - 60) + 'px');
-        s.style.setProperty('--dur', (0.8 + Math.random() * 0.5) + 's');
-        document.body.appendChild(s);
-        (function(nd) {
-            setTimeout(function() { nd.remove(); }, 1500);
-        })(s);
-    }
-}
-
-function rainEmojis(cx, cy, count, emos) {
-    count = count || 10;
-    emos = emos || ['✨', '⭐', '💥', '🌟', '🌈', '🎆'];
-    for (var i = 0; i < count; i++) {
-        var el = document.createElement('div');
-        el.className = 'rain';
-        el.textContent = emos[Math.floor(Math.random() * emos.length)];
-        el.style.fontSize = (12 + Math.random() * 16) + 'px';
-        el.style.left = (cx + (Math.random() - 0.5) * 240) + 'px';
-        el.style.top = (cy - 20 + (Math.random() - 0.5) * 30) + 'px';
-        el.style.setProperty('--rd', (1.2 + Math.random() * 1.2) + 's');
-        document.body.appendChild(el);
-        (function(nd) {
-            setTimeout(function() { nd.remove(); }, 2500);
-        })(el);
-    }
-}
-
-// ============================================================
-//  ЗВУКИ
-// ============================================================
-var actx = null;
-
-function snd(f, d, tp, v, dl) {
-    try {
-        if (!actx) actx = new(window.AudioContext || window.webkitAudioContext)();
-        if (actx.state === 'suspended') actx.resume();
-        var t = actx.currentTime + (dl || 0);
-        var o = actx.createOscillator();
-        var g = actx.createGain();
-        o.type = tp || 'sine';
-        o.frequency.setValueAtTime(f, t);
-        g.gain.setValueAtTime(v || 0.05, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + (d || 0.1));
-        o.connect(g);
-        g.connect(actx.destination);
-        o.start(t);
-        o.stop(t + (d || 0.1));
-    } catch (e) {}
-}
-
-function sndMatch(n) {
-    for (var i = 0; i < Math.min(n, 6); i++) {
-        snd(440 + i * 60, 0.08, i % 2 ? 'triangle' : 'sine', 0.05, i * 0.03);
-    }
-}
-
-function sndCombo(c) {
-    for (var i = 0; i < Math.min(c + 2, 8); i++) {
-        snd(320 + i * 50 + c * 15, 0.09, 'sine', 0.06, i * 0.03);
-    }
-}
-
-function sndBoom() {
-    for (var i = 0; i < 6; i++) {
-        snd(160 + Math.random() * 250, 0.08, 'sawtooth', 0.035, i * 0.035);
-    }
-}
-
-function sndSpec() {
-    [523, 659, 784, 1047].forEach(function(f, i) {
-        snd(f, 0.1, 'sine', 0.06, i * 0.06);
-    });
-}
-
-function sndSwap() {
-    snd(500, 0.04);
-    snd(700, 0.035, 'sine', 0.035, 0.035);
-}
-
-function sndBad() {
-    snd(140, 0.1, 'sawtooth', 0.035);
-    snd(110, 0.1, 'sawtooth', 0.025, 0.06);
-}
-
-function sndLvl() {
-    [523, 659, 784, 1047, 1318].forEach(function(f, i) {
-        snd(f, 0.12, 'sine', 0.06, i * 0.07);
-    });
-}
-
-function sndShuf() {
-    for (var i = 0; i < 5; i++) {
-        snd(200 + i * 80, 0.04, 'sine', 0.035, i * 0.035);
-    }
-}
-
-function sndStreak() {
-    [523, 659, 784, 1047, 1318, 1568].forEach(function(f, i) {
-        snd(f, 0.08, 'sine', 0.07, i * 0.045);
-    });
-}
-
-// ============================================================
-//  АНИМАЦИИ
-// ============================================================
-function animSwap(a, b) {
-    var cells = document.querySelectorAll('.c');
-    var ea = cells[a];
-    var eb = cells[b];
-    if (!ea || !eb) return;
-    ea.classList.add('swp');
-    eb.classList.add('swp');
-    var ra = ea.getBoundingClientRect();
-    var rb = eb.getBoundingClientRect();
-    var dx = rb.left - ra.left;
-    var dy = rb.top - ra.top;
-    ea.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
-    eb.style.transform = 'translate(' + (-dx) + 'px,' + (-dy) + 'px)';
-    return sleep(250).then(function() {
-        ea.style.transform = '';
-        eb.style.transform = '';
-        ea.classList.remove('swp');
-        eb.classList.remove('swp');
-    });
-}
-
-function shakeCell(i) {
-    var el = document.querySelectorAll('.c')[i];
-    if (!el) return;
-    el.classList.add('shk');
-    setTimeout(function() { el.classList.remove('shk'); }, 350);
-}
-
-// ============================================================
-//  ТУТОРИАЛ
+//  ТУТОРИАЛ (из примера)
 // ============================================================
 var TUT = [
     { em: '🎯', ti: 'Как играть?', st: 'Меняй местами <span class="hl">соседние кубики</span>, чтобы собрать <span class="hl">3+ одинаковых</span> в ряд.', demo: [1, 1, 1, 0, 0] },
@@ -1129,8 +1097,7 @@ function renderTut() {
     demo.innerHTML = '';
     for (var i = 0; i < (s.demo ? s.demo.length : 5); i++) {
         var d = document.createElement('div');
-        d.className = 'dc' + (s.demo && s.demo[i] ? ' on' : '') +
-            (i === Math.floor((s.demo ? s.demo.length : 5) / 2) && tutStep > 0 ? ' hl' : '');
+        d.className = 'dc' + (s.demo && s.demo[i] ? ' on' : '') + (i === Math.floor((s.demo ? s.demo.length : 5) / 2) && tutStep > 0 ? ' hl' : '');
         demo.appendChild(d);
     }
     var dots = document.getElementById('tDots');
@@ -1155,117 +1122,30 @@ function doTutNext() {
 // ============================================================
 //  ОСНОВНАЯ ЛОГИКА ИГРЫ
 // ============================================================
-async function trySwap(a, b) {
-    if (busy || levelComplete || !isNeighbor(a, b)) return;
-    busy = true;
-    sel = -1;
-    sndSwap();
+async function animSwap(a, b) {
+    var cells = document.querySelectorAll('.c');
+    var ea = cells[a], eb = cells[b];
+    if (!ea || !eb) return;
+    ea.classList.add('swp');
+    eb.classList.add('swp');
+    var ra = ea.getBoundingClientRect();
+    var rb = eb.getBoundingClientRect();
+    var dx = rb.left - ra.left;
+    var dy = rb.top - ra.top;
+    ea.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+    eb.style.transform = 'translate(' + (-dx) + 'px,' + (-dy) + 'px)';
+    await sleep(280);
+    ea.style.transform = '';
+    eb.style.transform = '';
+    ea.classList.remove('swp');
+    eb.classList.remove('swp');
+}
 
-    var spA = board[a] ? board[a].sp : null;
-    var spB = board[b] ? board[b].sp : null;
-
-    await animSwap(a, b);
-
-    // Комбо спец-способностей
-    if (spA && spB) {
-        var removed = activateCombo(a, b);
-        if (removed) {
-            moves++;
-            combo = 0;
-            var mult = updateStreak();
-            await sleep(450);
-            for (var key in removed) board[parseInt(key)] = null;
-            var fall = gravity();
-            fillEmpty();
-            render(fall);
-            updateUI();
-            await sleep(350);
-            await resolveAll(mult);
-            busy = false;
-            updateUI();
-            checkWinCondition();
-            if (!levelComplete && !anyMove(board)) { reshuffle(); render(); }
-            updateUI();
-            return;
-        }
-    }
-
-    // Спец-способность + обычный
-    if (spA && !spB) {
-        var removed = activateSpecial(a, spA);
-        if (removed) {
-            moves++;
-            combo = 0;
-            var mult = updateStreak();
-            await sleep(400);
-            for (var key in removed) board[parseInt(key)] = null;
-            var fall = gravity();
-            fillEmpty();
-            render(fall);
-            updateUI();
-            await sleep(350);
-            await resolveAll(mult);
-            busy = false;
-            updateUI();
-            checkWinCondition();
-            if (!levelComplete && !anyMove(board)) { reshuffle(); render(); }
-            updateUI();
-            return;
-        }
-    }
-
-    if (spB && !spA) {
-        var removed = activateSpecial(b, spB);
-        if (removed) {
-            moves++;
-            combo = 0;
-            var mult = updateStreak();
-            await sleep(400);
-            for (var key in removed) board[parseInt(key)] = null;
-            var fall = gravity();
-            fillEmpty();
-            render(fall);
-            updateUI();
-            await sleep(350);
-            await resolveAll(mult);
-            busy = false;
-            updateUI();
-            checkWinCondition();
-            if (!levelComplete && !anyMove(board)) { reshuffle(); render(); }
-            updateUI();
-            return;
-        }
-    }
-
-    // Обычный обмен
-    var temp = board[a];
-    board[a] = board[b];
-    board[b] = temp;
-    var result = findMatches(board);
-
-    if (result.matched.length === 0) {
-        sndBad();
-        var temp2 = board[a];
-        board[a] = board[b];
-        board[b] = temp2;
-        await animSwap(a, b);
-        render();
-        shakeCell(a);
-        shakeCell(b);
-        busy = false;
-        return;
-    }
-
-    moves++;
-    combo = 0;
-    var mult = updateStreak();
-    render();
-    await resolveWithShapes(result, mult);
-    busy = false;
-    updateUI();
-    checkWinCondition();
-    if (!levelComplete && !anyMove(board)) { reshuffle(); render(); }
-    updateUI();
+function shakeCell(i) {
+    var el = document.querySelectorAll('.c')[i];
+    if (!el) return;
+    el.classList.add('shk');
+    setTimeout(function() { el.classList.remove('shk'); }, 400);
 }
 
 async function resolveWithShapes(initRes, mult) {
@@ -1304,7 +1184,10 @@ async function resolveLoop(matched, shapes, newBoosters, mult) {
         pts = Math.floor(pts);
         score += pts;
         sndMatch(n);
-        if (combo >= 2) { sndCombo(combo); showCombo(combo); }
+        if (combo >= 2) {
+            sndCombo(combo);
+            showCombo(combo);
+        }
 
         var mid = matched[Math.floor(matched.length / 2)];
         floatPts(mid, pts);
@@ -1336,23 +1219,23 @@ async function resolveLoop(matched, shapes, newBoosters, mult) {
                             var s = document.createElement('div');
                             s.className = 'salute';
                             s.textContent = em;
-                            s.style.fontSize = '16px';
+                            s.style.fontSize = '18px';
                             s.style.left = x + 'px';
                             s.style.top = y + 'px';
-                            s.style.setProperty('--t1x', ((Math.random() - 0.5) * 60) + 'px');
-                            s.style.setProperty('--t1y', (-30 - Math.random() * 50) + 'px');
-                            s.style.setProperty('--t2x', ((Math.random() - 0.5) * 100) + 'px');
-                            s.style.setProperty('--t2y', (-60 - Math.random() * 60) + 'px');
-                            s.style.setProperty('--dur', (0.7 + Math.random() * 0.4) + 's');
+                            s.style.setProperty('--t1x', ((Math.random() - 0.5) * 80) + 'px');
+                            s.style.setProperty('--t1y', (-40 - Math.random() * 60) + 'px');
+                            s.style.setProperty('--t2x', ((Math.random() - 0.5) * 120) + 'px');
+                            s.style.setProperty('--t2y', (-80 - Math.random() * 80) + 'px');
+                            s.style.setProperty('--dur', (0.8 + Math.random() * 0.5) + 's');
                             document.body.appendChild(s);
-                            setTimeout(function() { s.remove(); }, 1200);
-                        }, 40);
-                    })(d.e, rect.left + rect.width / 2 - 8, rect.top + rect.height / 2 - 8);
+                            setTimeout(function() { s.remove(); }, 1400);
+                        }, 50);
+                    })(d.e, rect.left + rect.width / 2 - 9, rect.top + rect.height / 2 - 9);
                 }
             }
         }
 
-        await sleep(isComplexShape ? 500 : 380);
+        await sleep(isComplexShape ? 600 : 440);
         if (levelComplete || victoryShown) return;
 
         for (var key in allRemoved) board[parseInt(key)] = null;
@@ -1361,9 +1244,12 @@ async function resolveLoop(matched, shapes, newBoosters, mult) {
         fillEmpty();
         render(fall);
         updateUI();
-        await sleep(350);
+        await sleep(380);
         if (levelComplete || victoryShown) return;
-        if (score >= goal) { checkWinCondition(); return; }
+        if (score >= goal) {
+            checkWinCondition();
+            return;
+        }
 
         var newRes = findMatches(board);
         matched = newRes.matched;
@@ -1389,7 +1275,7 @@ async function resolveLoop(matched, shapes, newBoosters, mult) {
             if (Object.keys(newBoosters).length > 0) {
                 render();
                 updateUI();
-                await sleep(350);
+                await sleep(380);
             }
         }
     }
@@ -1398,6 +1284,116 @@ async function resolveLoop(matched, shapes, newBoosters, mult) {
 async function resolveAll(mult) {
     var result = findMatches(board);
     await resolveLoop(result.matched, result.shapes, {}, mult);
+}
+
+async function trySwap(a, b) {
+    if (busy || levelComplete || !isNeighbor(a, b)) return;
+    busy = true;
+    sel = -1;
+    sndSwap();
+
+    var spA = board[a] ? board[a].sp : null;
+    var spB = board[b] ? board[b].sp : null;
+
+    await animSwap(a, b);
+
+    if (spA && spB) {
+        var removed = activateCombo(a, b);
+        if (removed) {
+            moves++;
+            combo = 0;
+            var mult = updateStreak();
+            await sleep(480);
+            for (var key in removed) board[parseInt(key)] = null;
+            var fall = gravity();
+            fillEmpty();
+            render(fall);
+            updateUI();
+            await sleep(380);
+            await resolveAll(mult);
+            busy = false;
+            updateUI();
+            checkWinCondition();
+            if (!levelComplete && !anyMove(board)) { reshuffle(); render(); }
+            updateUI();
+            return;
+        }
+    }
+
+    if (spA && !spB) {
+        var removed = activateSpecial(a, spA);
+        if (removed) {
+            moves++;
+            combo = 0;
+            var mult = updateStreak();
+            await sleep(450);
+            for (var key in removed) board[parseInt(key)] = null;
+            var fall = gravity();
+            fillEmpty();
+            render(fall);
+            updateUI();
+            await sleep(380);
+            await resolveAll(mult);
+            busy = false;
+            updateUI();
+            checkWinCondition();
+            if (!levelComplete && !anyMove(board)) { reshuffle(); render(); }
+            updateUI();
+            return;
+        }
+    }
+
+    if (spB && !spA) {
+        var removed = activateSpecial(b, spB);
+        if (removed) {
+            moves++;
+            combo = 0;
+            var mult = updateStreak();
+            await sleep(450);
+            for (var key in removed) board[parseInt(key)] = null;
+            var fall = gravity();
+            fillEmpty();
+            render(fall);
+            updateUI();
+            await sleep(380);
+            await resolveAll(mult);
+            busy = false;
+            updateUI();
+            checkWinCondition();
+            if (!levelComplete && !anyMove(board)) { reshuffle(); render(); }
+            updateUI();
+            return;
+        }
+    }
+
+    var temp = board[a];
+    board[a] = board[b];
+    board[b] = temp;
+    var result = findMatches(board);
+
+    if (result.matched.length === 0) {
+        sndBad();
+        var temp2 = board[a];
+        board[a] = board[b];
+        board[b] = temp2;
+        await animSwap(a, b);
+        render();
+        shakeCell(a);
+        shakeCell(b);
+        busy = false;
+        return;
+    }
+
+    moves++;
+    combo = 0;
+    var mult = updateStreak();
+    render();
+    await resolveWithShapes(result, mult);
+    busy = false;
+    updateUI();
+    checkWinCondition();
+    if (!levelComplete && !anyMove(board)) { reshuffle(); render(); }
+    updateUI();
 }
 
 // ============================================================
@@ -1426,7 +1422,9 @@ function doHint() {
                 var id = currentShapes[i].ids[k];
                 if (cells[id]) {
                     cells[id].classList.add('best');
-                    (function(nd) { setTimeout(function() { nd.classList.remove('best'); }, 2200); })(cells[id]);
+                    (function(nd) {
+                        setTimeout(function() { nd.classList.remove('best'); }, 2500);
+                    })(cells[id]);
                 }
             }
         }
@@ -1439,14 +1437,19 @@ function doHint() {
         return;
     }
     var mv = bestMove(board);
-    if (!mv) { showStreak('😅 Нет доступных ходов!', '#ff6b6b'); return; }
+    if (!mv) {
+        showStreak('😅 Нет доступных ходов!', '#ff6b6b');
+        return;
+    }
     nHint--;
     sndShuf();
     for (var i = 0; i < mv.length; i++) {
         var el = cells[mv[i]];
         if (el) {
             el.classList.add('best');
-            (function(nd) { setTimeout(function() { nd.classList.remove('best'); }, 2200); })(el);
+            (function(nd) {
+                setTimeout(function() { nd.classList.remove('best'); }, 2500);
+            })(el);
         }
     }
     showStreak('💡 ЛУЧШИЙ ХОД!', '#2ecc71');
@@ -1457,7 +1460,9 @@ function doUseBomb() {
     if (busy || levelComplete || nBomb <= 0) return;
     nBomb--;
     var valid = [];
-    for (var i = 0; i < TOT; i++) if (board[i] && !board[i].sp) valid.push(i);
+    for (var i = 0; i < TOT; i++) {
+        if (board[i] && !board[i].sp) valid.push(i);
+    }
     if (!valid.length) return;
     var idx = valid[Math.floor(Math.random() * valid.length)];
     board[idx].sp = 'bomb';
@@ -1468,9 +1473,6 @@ function doUseBomb() {
     showStreak('💥 БОМБА УСТАНОВЛЕНА!', '#ff6b6b');
 }
 
-// ============================================================
-//  КЛИК ПО ЯЧЕЙКЕ
-// ============================================================
 function onClick(i) {
     if (busy || levelComplete || !board[i]) return;
     if (sel < 0) {
@@ -1537,7 +1539,7 @@ document.addEventListener('DOMContentLoaded', function() {
     bEl.addEventListener('pointermove', function(e) {
         if (si < 0 || busy || levelComplete) return;
         var dx = e.clientX - sx, dy = e.clientY - sy;
-        if (Math.abs(dx) < 14 && Math.abs(dy) < 14) return;
+        if (Math.abs(dx) < 16 && Math.abs(dy) < 16) return;
         mv = true;
         var tgt = -1;
         if (Math.abs(dx) > Math.abs(dy)) {
@@ -1593,4 +1595,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-console.log('✅ hanzi-game.js загружен');
+console.log('✅ hanzi-game.js загружен!');
