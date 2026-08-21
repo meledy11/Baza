@@ -1,16 +1,16 @@
 // ============================================================
-//  ЛОГИКА ИГРЫ (использует DB из app.js)
+//  ЛОГИКА ИГРЫ — ИСПРАВЛЕННАЯ
 // ============================================================
 
 if (typeof DB === 'undefined' || DB.length === 0) {
-    console.error('❌ hanzi-game.js: app.js не загружен!');
-    throw new Error('База данных не загружена. Игра остановлена.');
+    console.error('❌ app.js не загружен!');
+    throw new Error('База данных не загружена');
 }
 
 console.log('✅ hanzi-game.js: загружено ' + DB.length + ' иероглифов');
 
 // ============================================================
-//  ПРЕОБРАЗУЕМ БАЗУ В НУЖНЫЙ ФОРМАТ
+//  ПРЕОБРАЗОВАНИЕ БАЗЫ
 // ============================================================
 var ALL_CHARS = DB.map(function(item) {
     return {
@@ -21,7 +21,6 @@ var ALL_CHARS = DB.map(function(item) {
     };
 });
 
-// Перемешиваем
 for (var i = ALL_CHARS.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
     var t = ALL_CHARS[i];
@@ -36,8 +35,8 @@ var NCOLORS = 6;
 var NR = 8;
 var NC = 6;
 var TOT = NR * NC;
-var GAP = 5;
-var PAD = 5;
+var GAP = 4;
+var PAD = 4;
 var board = [];
 var sel = -1;
 var score = 0;
@@ -61,23 +60,22 @@ var reshuffleAttempts = 0;
 //  ФУНКЦИИ ДЛЯ РАБОТЫ С БАЗОЙ
 // ============================================================
 function getCharsForLevel(lvl) {
-    var shuffled = ALL_CHARS.slice();
-    for (var i = shuffled.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var t = shuffled[i];
-        shuffled[i] = shuffled[j];
-        shuffled[j] = t;
-    }
-    return shuffled.slice(0, 6).map(function(char, idx) {
-        return {
-            h: char.h,
-            p: char.p,
-            r: char.r,
-            e: char.e || '🀄',
-            c: idx % NCOLORS,
+    var count = 6;
+    var start = ((lvl - 1) * count) % DB.length;
+    var chars = [];
+    for (var i = 0; i < count; i++) {
+        var idx = (start + i) % DB.length;
+        var item = DB[idx];
+        chars.push({
+            h: item[0],
+            p: item[1],
+            r: item[2],
+            e: item[3] || '🀄',
+            c: i % NCOLORS,
             sp: null
-        };
-    });
+        });
+    }
+    return chars;
 }
 
 function getCurrentChars() {
@@ -141,7 +139,7 @@ function isNeighbor(a, b) {
 }
 
 // ============================================================
-//  ПОИСК КОМБИНАЦИЙ
+//  ПОИСК КОМБИНАЦИЙ (ВКЛЮЧАЯ L, T, КВАДРАТЫ)
 // ============================================================
 function findAllCombinations(bd) {
     var results = [];
@@ -199,7 +197,7 @@ function findAllCombinations(bd) {
         }
     }
 
-    // L и T формы
+    // L и T формы (как в примере)
     for (var r = 0; r < NR - 2; r++) {
         for (var c = 0; c < NC - 2; c++) {
             var patterns = [
@@ -280,8 +278,9 @@ function findMatches(bd) {
     for (var i = 0; i < allShapes.length; i++) {
         var shape = allShapes[i];
         var ids = shape.ids;
-        var hasBomb = false;
 
+        // Проверяем есть ли бомба в комбинации
+        var hasBomb = false;
         for (var j = 0; j < ids.length; j++) {
             if (bd[ids[j]] && bd[ids[j]].sp === 'bomb') {
                 hasBomb = true;
@@ -319,9 +318,6 @@ function findMatches(bd) {
     return { matched: matchedArr, shapes: shapes };
 }
 
-// ============================================================
-//  ПРОВЕРКА ХОДОВ
-// ============================================================
 function anyMove(bd) {
     for (var i = 0; i < TOT; i++) {
         if (!bd[i]) continue;
@@ -717,7 +713,7 @@ function fillEmpty() {
 }
 
 // ============================================================
-//  ПРОВЕРКА ПОБЕДЫ И ПЕРЕХОД УРОВНЯ
+//  ПРОВЕРКА ПОБЕДЫ
 // ============================================================
 function checkWinCondition() {
     if (!levelComplete && !victoryShown && score >= goal) {
@@ -804,12 +800,12 @@ function applyTheme() {
 }
 
 // ============================================================
-//  РЕНДЕРИНГ И UI
+//  РЕНДЕРИНГ И UI (УМЕНЬШЕННЫЙ РАЗМЕР)
 // ============================================================
 function calcSize() {
     var wrap = document.querySelector('.ba');
     if (!wrap) return;
-    var ww = wrap.clientWidth - 12;
+    var ww = wrap.clientWidth - 8;
     var wh = wrap.clientHeight - 8;
     var bw = ww;
     var bh = bw * NR / NC;
@@ -835,11 +831,11 @@ function render(fallSet) {
     var b = document.getElementById('board');
     if (!b) return;
     b.innerHTML = '';
-    var hzPx = Math.max(16, Math.floor(cellPx * .44));
-    var pyPx = Math.max(8, Math.floor(cellPx * .13));
-    var ruPx = Math.max(8, Math.floor(cellPx * .12));
-    var emPx = Math.max(8, Math.floor(cellPx * .12));
-    var bdPx = Math.max(8, Math.floor(cellPx * .16));
+    var hzPx = Math.max(14, Math.floor(cellPx * .40));
+    var pyPx = Math.max(7, Math.floor(cellPx * .12));
+    var ruPx = Math.max(7, Math.floor(cellPx * .11));
+    var emPx = Math.max(7, Math.floor(cellPx * .11));
+    var bdPx = Math.max(7, Math.floor(cellPx * .14));
 
     for (var i = 0; i < TOT; i++) {
         var el = document.createElement('div');
@@ -866,7 +862,7 @@ function render(fallSet) {
             if (fallSet[i]) {
                 el.classList.add('drop');
                 var row = Math.floor(i / NC);
-                el.style.setProperty('--dy', (-(row + 1) * 68) + 'px');
+                el.style.setProperty('--dy', (-(row + 1) * 60) + 'px');
                 el.style.setProperty('--dd', (0.2 + row * 0.04) + 's');
             }
         }
@@ -917,9 +913,9 @@ function floatPts(idx, pts) {
     var f = document.createElement('div');
     f.className = 'fpts';
     f.textContent = '+' + pts;
-    f.style.fontSize = Math.max(14, cellPx * 0.32) + 'px';
-    f.style.left = (cr.left - br.left + cr.width / 2 - 18) + 'px';
-    f.style.top = (cr.top - br.top - 5) + 'px';
+    f.style.fontSize = Math.max(12, cellPx * 0.3) + 'px';
+    f.style.left = (cr.left - br.left + cr.width / 2 - 14) + 'px';
+    f.style.top = (cr.top - br.top - 4) + 'px';
     document.getElementById('board').appendChild(f);
     setTimeout(function() { f.remove(); }, 900);
 }
@@ -929,7 +925,7 @@ function showStreak(text, color) {
     if (!el) return;
     el.textContent = text;
     el.style.color = color || '#ffd700';
-    el.style.fontSize = Math.max(18, cellPx * 0.42) + 'px';
+    el.style.fontSize = Math.max(16, cellPx * 0.4) + 'px';
     el.classList.remove('show');
     void el.offsetWidth;
     el.classList.add('show');
@@ -941,7 +937,7 @@ function showCombo(c) {
     if (!el) return;
     var emos = ['🔥', '⚡', '💥', '🌟', '✨', '🌈'];
     el.textContent = emos[Math.min(c - 1, emos.length - 1)] + ' COMBO ×' + c + '!';
-    el.style.fontSize = Math.max(28, cellPx * 0.7) + 'px';
+    el.style.fontSize = Math.max(24, cellPx * 0.6) + 'px';
     el.classList.remove('show');
     void el.offsetWidth;
     el.classList.add('show');
@@ -956,42 +952,42 @@ function salute(idx, emos) {
     var rect = el.getBoundingClientRect();
     var cx = rect.left + rect.width / 2;
     var cy = rect.top + rect.height / 2;
-    for (var i = 0; i < 16; i++) {
+    for (var i = 0; i < 12; i++) {
         var s = document.createElement('div');
         s.className = 'salute';
         s.textContent = emos[Math.floor(Math.random() * emos.length)];
-        s.style.fontSize = (16 + Math.random() * 20) + 'px';
+        s.style.fontSize = (14 + Math.random() * 18) + 'px';
         var ang = Math.random() * Math.PI * 2;
-        var d1 = 60 + Math.random() * 140;
-        var d2 = 40 + Math.random() * 100;
+        var d1 = 50 + Math.random() * 120;
+        var d2 = 30 + Math.random() * 80;
         s.style.left = cx + 'px';
         s.style.top = cy + 'px';
         s.style.setProperty('--t1x', (Math.cos(ang) * d1 * 0.5) + 'px');
-        s.style.setProperty('--t1y', (Math.sin(ang) * d1 * 0.5 - 40) + 'px');
+        s.style.setProperty('--t1y', (Math.sin(ang) * d1 * 0.5 - 30) + 'px');
         s.style.setProperty('--t2x', (Math.cos(ang + 0.5) * d2) + 'px');
-        s.style.setProperty('--t2y', (Math.sin(ang + 0.5) * d2 - 80) + 'px');
-        s.style.setProperty('--dur', (1 + Math.random()) + 's');
+        s.style.setProperty('--t2y', (Math.sin(ang + 0.5) * d2 - 60) + 'px');
+        s.style.setProperty('--dur', (0.8 + Math.random() * 0.5) + 's');
         document.body.appendChild(s);
         (function(nd) {
-            setTimeout(function() { nd.remove(); }, 2000);
+            setTimeout(function() { nd.remove(); }, 1500);
         })(s);
     }
 }
 
 function rainEmojis(cx, cy, count, emos) {
-    count = count || 12;
+    count = count || 10;
     emos = emos || ['✨', '⭐', '💥', '🌟', '🌈', '🎆'];
     for (var i = 0; i < count; i++) {
         var el = document.createElement('div');
         el.className = 'rain';
         el.textContent = emos[Math.floor(Math.random() * emos.length)];
-        el.style.fontSize = (14 + Math.random() * 18) + 'px';
-        el.style.left = (cx + (Math.random() - 0.5) * 280) + 'px';
-        el.style.top = (cy - 20 + (Math.random() - 0.5) * 40) + 'px';
-        el.style.setProperty('--rd', (1.5 + Math.random() * 1.5) + 's');
+        el.style.fontSize = (12 + Math.random() * 16) + 'px';
+        el.style.left = (cx + (Math.random() - 0.5) * 240) + 'px';
+        el.style.top = (cy - 20 + (Math.random() - 0.5) * 30) + 'px';
+        el.style.setProperty('--rd', (1.2 + Math.random() * 1.2) + 's');
         document.body.appendChild(el);
         (function(nd) {
-            setTimeout(function() { nd.remove(); }, 3000);
+            setTimeout(function() { nd.remove(); }, 2500);
         })(el);
     }
 }
@@ -1010,7 +1006,7 @@ function snd(f, d, tp, v, dl) {
         var g = actx.createGain();
         o.type = tp || 'sine';
         o.frequency.setValueAtTime(f, t);
-        g.gain.setValueAtTime(v || 0.06, t);
+        g.gain.setValueAtTime(v || 0.05, t);
         g.gain.exponentialRampToValueAtTime(0.001, t + (d || 0.1));
         o.connect(g);
         g.connect(actx.destination);
@@ -1020,54 +1016,54 @@ function snd(f, d, tp, v, dl) {
 }
 
 function sndMatch(n) {
-    for (var i = 0; i < Math.min(n, 7); i++) {
-        snd(460 + i * 65, 0.09, i % 2 ? 'triangle' : 'sine', 0.06, i * 0.035);
+    for (var i = 0; i < Math.min(n, 6); i++) {
+        snd(440 + i * 60, 0.08, i % 2 ? 'triangle' : 'sine', 0.05, i * 0.03);
     }
 }
 
 function sndCombo(c) {
-    for (var i = 0; i < Math.min(c + 2, 9); i++) {
-        snd(340 + i * 55 + c * 20, 0.1, 'sine', 0.07, i * 0.032);
+    for (var i = 0; i < Math.min(c + 2, 8); i++) {
+        snd(320 + i * 50 + c * 15, 0.09, 'sine', 0.06, i * 0.03);
     }
 }
 
 function sndBoom() {
-    for (var i = 0; i < 8; i++) {
-        snd(180 + Math.random() * 280, 0.09, 'sawtooth', 0.04, i * 0.04);
+    for (var i = 0; i < 6; i++) {
+        snd(160 + Math.random() * 250, 0.08, 'sawtooth', 0.035, i * 0.035);
     }
 }
 
 function sndSpec() {
     [523, 659, 784, 1047].forEach(function(f, i) {
-        snd(f, 0.11, 'sine', 0.07, i * 0.065);
+        snd(f, 0.1, 'sine', 0.06, i * 0.06);
     });
 }
 
 function sndSwap() {
-    snd(520, 0.05);
-    snd(720, 0.04, 'sine', 0.04, 0.04);
+    snd(500, 0.04);
+    snd(700, 0.035, 'sine', 0.035, 0.035);
 }
 
 function sndBad() {
-    snd(155, 0.12, 'sawtooth', 0.04);
-    snd(120, 0.12, 'sawtooth', 0.03, 0.07);
+    snd(140, 0.1, 'sawtooth', 0.035);
+    snd(110, 0.1, 'sawtooth', 0.025, 0.06);
 }
 
 function sndLvl() {
     [523, 659, 784, 1047, 1318].forEach(function(f, i) {
-        snd(f, 0.13, 'sine', 0.07, i * 0.08);
+        snd(f, 0.12, 'sine', 0.06, i * 0.07);
     });
 }
 
 function sndShuf() {
-    for (var i = 0; i < 6; i++) {
-        snd(210 + i * 85, 0.05, 'sine', 0.04, i * 0.04);
+    for (var i = 0; i < 5; i++) {
+        snd(200 + i * 80, 0.04, 'sine', 0.035, i * 0.035);
     }
 }
 
 function sndStreak() {
     [523, 659, 784, 1047, 1318, 1568].forEach(function(f, i) {
-        snd(f, 0.09, 'sine', 0.08, i * 0.05);
+        snd(f, 0.08, 'sine', 0.07, i * 0.045);
     });
 }
 
@@ -1087,7 +1083,7 @@ function animSwap(a, b) {
     var dy = rb.top - ra.top;
     ea.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
     eb.style.transform = 'translate(' + (-dx) + 'px,' + (-dy) + 'px)';
-    return sleep(280).then(function() {
+    return sleep(250).then(function() {
         ea.style.transform = '';
         eb.style.transform = '';
         ea.classList.remove('swp');
@@ -1099,7 +1095,7 @@ function shakeCell(i) {
     var el = document.querySelectorAll('.c')[i];
     if (!el) return;
     el.classList.add('shk');
-    setTimeout(function() { el.classList.remove('shk'); }, 400);
+    setTimeout(function() { el.classList.remove('shk'); }, 350);
 }
 
 // ============================================================
@@ -1177,13 +1173,13 @@ async function trySwap(a, b) {
             moves++;
             combo = 0;
             var mult = updateStreak();
-            await sleep(480);
+            await sleep(450);
             for (var key in removed) board[parseInt(key)] = null;
             var fall = gravity();
             fillEmpty();
             render(fall);
             updateUI();
-            await sleep(380);
+            await sleep(350);
             await resolveAll(mult);
             busy = false;
             updateUI();
@@ -1201,13 +1197,13 @@ async function trySwap(a, b) {
             moves++;
             combo = 0;
             var mult = updateStreak();
-            await sleep(450);
+            await sleep(400);
             for (var key in removed) board[parseInt(key)] = null;
             var fall = gravity();
             fillEmpty();
             render(fall);
             updateUI();
-            await sleep(380);
+            await sleep(350);
             await resolveAll(mult);
             busy = false;
             updateUI();
@@ -1224,13 +1220,13 @@ async function trySwap(a, b) {
             moves++;
             combo = 0;
             var mult = updateStreak();
-            await sleep(450);
+            await sleep(400);
             for (var key in removed) board[parseInt(key)] = null;
             var fall = gravity();
             fillEmpty();
             render(fall);
             updateUI();
-            await sleep(380);
+            await sleep(350);
             await resolveAll(mult);
             busy = false;
             updateUI();
@@ -1340,23 +1336,23 @@ async function resolveLoop(matched, shapes, newBoosters, mult) {
                             var s = document.createElement('div');
                             s.className = 'salute';
                             s.textContent = em;
-                            s.style.fontSize = '18px';
+                            s.style.fontSize = '16px';
                             s.style.left = x + 'px';
                             s.style.top = y + 'px';
-                            s.style.setProperty('--t1x', ((Math.random() - 0.5) * 80) + 'px');
-                            s.style.setProperty('--t1y', (-40 - Math.random() * 60) + 'px');
-                            s.style.setProperty('--t2x', ((Math.random() - 0.5) * 120) + 'px');
-                            s.style.setProperty('--t2y', (-80 - Math.random() * 80) + 'px');
-                            s.style.setProperty('--dur', (0.8 + Math.random() * 0.5) + 's');
+                            s.style.setProperty('--t1x', ((Math.random() - 0.5) * 60) + 'px');
+                            s.style.setProperty('--t1y', (-30 - Math.random() * 50) + 'px');
+                            s.style.setProperty('--t2x', ((Math.random() - 0.5) * 100) + 'px');
+                            s.style.setProperty('--t2y', (-60 - Math.random() * 60) + 'px');
+                            s.style.setProperty('--dur', (0.7 + Math.random() * 0.4) + 's');
                             document.body.appendChild(s);
-                            setTimeout(function() { s.remove(); }, 1400);
-                        }, 50);
-                    })(d.e, rect.left + rect.width / 2 - 9, rect.top + rect.height / 2 - 9);
+                            setTimeout(function() { s.remove(); }, 1200);
+                        }, 40);
+                    })(d.e, rect.left + rect.width / 2 - 8, rect.top + rect.height / 2 - 8);
                 }
             }
         }
 
-        await sleep(isComplexShape ? 600 : 440);
+        await sleep(isComplexShape ? 500 : 380);
         if (levelComplete || victoryShown) return;
 
         for (var key in allRemoved) board[parseInt(key)] = null;
@@ -1365,7 +1361,7 @@ async function resolveLoop(matched, shapes, newBoosters, mult) {
         fillEmpty();
         render(fall);
         updateUI();
-        await sleep(380);
+        await sleep(350);
         if (levelComplete || victoryShown) return;
         if (score >= goal) { checkWinCondition(); return; }
 
@@ -1393,7 +1389,7 @@ async function resolveLoop(matched, shapes, newBoosters, mult) {
             if (Object.keys(newBoosters).length > 0) {
                 render();
                 updateUI();
-                await sleep(380);
+                await sleep(350);
             }
         }
     }
@@ -1430,7 +1426,7 @@ function doHint() {
                 var id = currentShapes[i].ids[k];
                 if (cells[id]) {
                     cells[id].classList.add('best');
-                    (function(nd) { setTimeout(function() { nd.classList.remove('best'); }, 2500); })(cells[id]);
+                    (function(nd) { setTimeout(function() { nd.classList.remove('best'); }, 2200); })(cells[id]);
                 }
             }
         }
@@ -1450,7 +1446,7 @@ function doHint() {
         var el = cells[mv[i]];
         if (el) {
             el.classList.add('best');
-            (function(nd) { setTimeout(function() { nd.classList.remove('best'); }, 2500); })(el);
+            (function(nd) { setTimeout(function() { nd.classList.remove('best'); }, 2200); })(el);
         }
     }
     showStreak('💡 ЛУЧШИЙ ХОД!', '#2ecc71');
@@ -1541,7 +1537,7 @@ document.addEventListener('DOMContentLoaded', function() {
     bEl.addEventListener('pointermove', function(e) {
         if (si < 0 || busy || levelComplete) return;
         var dx = e.clientX - sx, dy = e.clientY - sy;
-        if (Math.abs(dx) < 16 && Math.abs(dy) < 16) return;
+        if (Math.abs(dx) < 14 && Math.abs(dy) < 14) return;
         mv = true;
         var tgt = -1;
         if (Math.abs(dx) > Math.abs(dy)) {
@@ -1597,4 +1593,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-console.log('✅ hanzi-game.js загружен и готов к работе');
+console.log('✅ hanzi-game.js загружен');
