@@ -1,34 +1,27 @@
 // ============================================================
 //  ЛОГИКА ИГРЫ (использует DB из app.js)
-//  ВНИМАНИЕ: app.js должен загружаться ПЕРЕД этим файлом!
 // ============================================================
 
-// ============================================================
-//  ПРОВЕРКА НАЛИЧИЯ БАЗЫ
-// ============================================================
 if (typeof DB === 'undefined' || DB.length === 0) {
-    console.error('❌ ОШИБКА: app.js не загружен или база пуста!');
-    console.error('❌ Убедитесь, что app.js подключен перед hanzi-game.js');
+    console.error('❌ hanzi-game.js: app.js не загружен!');
     throw new Error('База данных не загружена. Игра остановлена.');
 }
 
+console.log('✅ hanzi-game.js: загружено ' + DB.length + ' иероглифов');
+
 // ============================================================
-//  ПРЕОБРАЗУЕМ БАЗУ ИЗ app.js В НУЖНЫЙ ФОРМАТ
-//  ВАЖНО: в DB структура: [иероглиф, pinyin, перевод, эмодзи, [слова]]
-//  Поэтому эмодзи берём из item[3], а не item[4]!
+//  ПРЕОБРАЗУЕМ БАЗУ В НУЖНЫЙ ФОРМАТ
 // ============================================================
 var ALL_CHARS = DB.map(function(item) {
     return {
         h: item[0],
         p: item[1],
         r: item[2],
-        e: item[3] || '🀄'  // Эмодзи на позиции [3]
+        e: item[3] || '🀄'
     };
 });
 
-console.log('✅ hanzi-game.js: загружено ' + ALL_CHARS.length + ' иероглифов');
-
-// Перемешиваем для случайности
+// Перемешиваем
 for (var i = ALL_CHARS.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
     var t = ALL_CHARS[i];
@@ -423,12 +416,8 @@ function initBoard() {
             }
         }
     }
-    if (typeof applyTheme === 'function') {
-        applyTheme();
-    }
-    if (typeof updateUI === 'function') {
-        updateUI();
-    }
+    applyTheme();
+    updateUI();
 }
 
 function reshuffle(skipCheck) {
@@ -759,13 +748,13 @@ function doNextLevel() {
     var els = document.querySelectorAll('.c');
     for (var i = 0; i < els.length; i++) els[i].className = 'c';
     initBoard();
-    if (typeof calcSize === 'function') calcSize();
-    if (typeof render === 'function') render();
-    if (typeof updateUI === 'function') updateUI();
+    calcSize();
+    render();
+    updateUI();
 }
 
 function doNewGame() {
-    if (typeof closeTut === 'function') closeTut();
+    closeTut();
     var els = document.querySelectorAll('.c');
     for (var i = 0; i < els.length; i++) els[i].className = 'c';
     level = 1;
@@ -784,9 +773,9 @@ function doNewGame() {
     levelComplete = false;
     victoryShown = false;
     initBoard();
-    if (typeof calcSize === 'function') calcSize();
-    if (typeof render === 'function') render();
-    if (typeof updateUI === 'function') updateUI();
+    calcSize();
+    render();
+    updateUI();
 }
 
 // ============================================================
@@ -1170,7 +1159,6 @@ function doTutNext() {
 // ============================================================
 //  ОСНОВНАЯ ЛОГИКА ИГРЫ
 // ============================================================
-
 async function trySwap(a, b) {
     if (busy || levelComplete || !isNeighbor(a, b)) return;
     busy = true;
