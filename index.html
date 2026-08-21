@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
 <title>🀄 Ханзи — Учи китайский</title>
 <style>
-/* ============================================================
-   ГЛОБАЛЬНЫЙ СТИЛЬ
-   ============================================================ */
 * {
   margin: 0;
   padding: 0;
@@ -31,8 +28,6 @@ body {
   min-height: 100vh;
   overflow: hidden;
 }
-
-/* Навигация */
 .app-nav {
   display: flex;
   gap: 6px;
@@ -75,8 +70,6 @@ body {
   border-radius: 10px;
   margin-left: 4px;
 }
-
-/* Контейнеры представлений */
 .view {
   display: none;
   height: calc(100vh - 64px);
@@ -92,8 +85,6 @@ body {
   border: none;
   background: var(--bg);
 }
-
-/* Адаптив */
 @media (max-width: 550px) {
   .app-nav {
     padding: 8px 10px;
@@ -110,28 +101,17 @@ body {
 </style>
 </head>
 <body>
-
-<!-- Навигация -->
 <nav class="app-nav" id="appNav">
   <button class="active" data-view="game">🎮 Игра</button>
   <button data-view="dictionary">📚 Словарь <span class="badge">600</span></button>
 </nav>
-
-<!-- Представление: Игра -->
 <div class="view active" id="view-game">
   <iframe id="gameFrame" src="hanzi.html"></iframe>
 </div>
-
-<!-- Представление: Словарь -->
 <div class="view" id="view-dictionary">
   <iframe id="dictFrame" src="hanmap.html"></iframe>
 </div>
-
 <script>
-// ============================================================
-//  ГЛАВНОЕ ПРИЛОЖЕНИЕ — НАВИГАЦИЯ
-// ============================================================
-
 const nav = document.getElementById('appNav');
 const views = {
   game: document.getElementById('view-game'),
@@ -141,65 +121,42 @@ const frames = {
   game: document.getElementById('gameFrame'),
   dictionary: document.getElementById('dictFrame')
 };
-
 let currentView = localStorage.getItem('hanzi_view') || 'game';
-
-// Переключение
 function switchView(view) {
   if (!views[view]) return;
-  
   currentView = view;
   localStorage.setItem('hanzi_view', view);
-  
-  // Обновляем кнопки
   nav.querySelectorAll('button').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.view === view);
   });
-  
-  // Обновляем представления
   Object.keys(views).forEach(key => {
     views[key].classList.toggle('active', key === view);
   });
-  
-  // Перезагружаем iframe при первом открытии
   if (view === 'dictionary' && !window._dictLoaded) {
     window._dictLoaded = true;
     setTimeout(() => {
-      try {
-        frames.dictionary.src = frames.dictionary.src;
-      } catch(e) {}
+      try { frames.dictionary.src = frames.dictionary.src; } catch(e) {}
     }, 100);
   }
   if (view === 'game' && !window._gameLoaded) {
     window._gameLoaded = true;
     setTimeout(() => {
-      try {
-        frames.game.src = frames.game.src;
-      } catch(e) {}
+      try { frames.game.src = frames.game.src; } catch(e) {}
     }, 100);
   }
 }
-
-// Клики по кнопкам
 nav.addEventListener('click', (e) => {
   const btn = e.target.closest('button');
   if (btn && btn.dataset.view) {
     switchView(btn.dataset.view);
   }
 });
-
-// Горячие клавиши
 document.addEventListener('keydown', (e) => {
   if (e.key === '1') switchView('game');
   if (e.key === '2') switchView('dictionary');
 });
-
-// Запуск
 switchView(currentView);
-
 console.log('✅ Hanzi App загружена');
-console.log('📚 Используется база из app.js');
 </script>
-
 </body>
 </html>
