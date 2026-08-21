@@ -9,31 +9,30 @@
 html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#0a0a0f;color:#fff;touch-action:none;}
 body{display:flex;flex-direction:column;align-items:center;}
 
-/* Дорамные фоны: Глубокие, с виньеткой */
 .bg{position:fixed;inset:0;z-index:0;transition:background 1s ease;}
-.bg.t1{background:radial-gradient(circle at center, #2b1d2e 0%, #0a0510 100%);} /* Слива и Ночь */
-.bg.t2{background:radial-gradient(circle at center, #1a2b25 0%, #050f0a 100%);} /* Нефрит и Тьма */
-.bg.t3{background:radial-gradient(circle at center, #2e1a1a 0%, #100505 100%);} /* Киноварь и Лава */
-.bg.t4{background:radial-gradient(circle at center, #1a202e 0%, #050810 100%);} /* Индиго и Сталь */
-.bg.t5{background:radial-gradient(circle at center, #2e261a 0%, #100c05 100%);} /* Бронза и Песок */
-.bg.t6{background:radial-gradient(circle at center, #1a2e2e 0%, #051010 100%);} /* Изумруд и Океан */
-.bg.t7{background:radial-gradient(circle at center, #2e1a26 0%, #10050c 100%);} /* Розовое дерево */
-.bg.t8{background:radial-gradient(circle at center, #1f1f1f 0%, #000000 100%);} /* Чернильный камень */
+.bg.t1{background:radial-gradient(circle at center, #2b1d2e 0%, #0a0510 100%);}
+.bg.t2{background:radial-gradient(circle at center, #1a2b25 0%, #050f0a 100%);}
+.bg.t3{background:radial-gradient(circle at center, #2e1a1a 0%, #100505 100%);}
+.bg.t4{background:radial-gradient(circle at center, #1a202e 0%, #050810 100%);}
+.bg.t5{background:radial-gradient(circle at center, #2e261a 0%, #100c05 100%);}
+.bg.t6{background:radial-gradient(circle at center, #1a2e2e 0%, #051010 100%);}
+.bg.t7{background:radial-gradient(circle at center, #2e1a26 0%, #10050c 100%);}
+.bg.t8{background:radial-gradient(circle at center, #1f1f1f 0%, #000000 100%);}
 
-.hdr{z-index:10;width:100%;max-width:600px;display:flex;justify-content:space-between;align-items:center;padding:10px 15px;}
-.logo{font-size:1.2rem;font-weight:800;color:#d4af37;text-shadow:0 2px 4px rgba(0,0,0,.5);letter-spacing:1px;}
-.rank{font-size:.65rem;color:#a89f91;letter-spacing:2px;text-transform:uppercase;margin-top:2px;font-weight:600;}
-.stats{display:flex;gap:8px;}
-.stat{background:rgba(20,20,25,.6);border:1px solid rgba(212,175,55,.3);border-radius:8px;padding:5px 12px;font-size:.7rem;display:flex;align-items:center;gap:6px;backdrop-filter:blur(4px);}
-.stat b{font-size:.9rem;color:#e8dcc5;}
+.hdr{z-index:10;width:100%;max-width:600px;display:flex;justify-content:space-between;align-items:center;padding:8px 12px;}
+.logo{font-size:1.1rem;font-weight:800;color:#d4af37;text-shadow:0 2px 4px rgba(0,0,0,.5);letter-spacing:1px;}
+.rank{font-size:.6rem;color:#a89f91;letter-spacing:2px;text-transform:uppercase;margin-top:1px;font-weight:600;}
+.stats{display:flex;gap:5px;flex-wrap:wrap;}
+.stat{background:rgba(20,20,25,.6);border:1px solid rgba(212,175,55,.3);border-radius:6px;padding:4px 10px;font-size:.65rem;display:flex;align-items:center;gap:4px;backdrop-filter:blur(4px);}
+.stat b{font-size:.8rem;color:#e8dcc5;}
 .c-gold{color:#d4af37!important;} .c-grn{color:#5da399!important;} .c-cyan{color:#7fb5b0!important;} .c-pur{color:#9b72aa!important;}
 
-.pw{z-index:10;width:100%;max-width:600px;padding:0 15px 10px;}
-.pt{height:6px;background:rgba(0,0,0,.4);border-radius:3px;overflow:hidden;border:1px solid rgba(255,255,255,.05);}
+.pw{z-index:10;width:100%;max-width:600px;padding:0 12px 6px;}
+.pt{height:5px;background:rgba(0,0,0,.4);border-radius:3px;overflow:hidden;border:1px solid rgba(255,255,255,.05);}
 .pf{height:100%;background:linear-gradient(90deg,#8b3a3a,#d4af37);transition:width .5s ease-out;box-shadow:0 0 10px rgba(212,175,55,.3);}
-.pl{display:flex;justify-content:space-between;font-size:.65rem;color:#8c8276;margin-top:4px;font-weight:600;}
+.pl{display:flex;justify-content:space-between;font-size:.6rem;color:#8c8276;margin-top:3px;font-weight:600;}
 
-.ba{z-index:5;flex:1;width:100%;max-width:600px;display:flex;align-items:center;justify-content:center;padding:5px;}
+.ba{z-index:5;flex:1;width:100%;max-width:600px;display:flex;align-items:center;justify-content:center;padding:4px;}
 #board{
     display:grid;
     background:rgba(10,10,15,.4);
@@ -43,20 +42,15 @@ body{display:flex;flex-direction:column;align-items:center;}
     box-shadow:0 15px 40px rgba(0,0,0,.6), inset 0 0 30px rgba(0,0,0,.4);
 }
 
-/* === ДОРАМНЫЕ КУБИКИ (Матовые, с золотом) === */
 .c{
     position:relative;
     border-radius:10px;
     display:flex;flex-direction:column;align-items:center;justify-content:center;
     cursor:pointer;
     border:1px solid rgba(212,175,55,.25);
-    box-shadow: 
-        inset 1px 1px 2px rgba(255,255,255,.15),
-        inset -1px -1px 2px rgba(0,0,0,.3),
-        2px 3px 6px rgba(0,0,0,.4);
+    box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4);
     transition: transform 0.25s cubic-bezier(.4,1.8,.6,1);
 }
-/* Легкий шелковый блик */
 .c::after{
     content:'';position:absolute;top:0;left:0;right:0;height:45%;
     background:linear-gradient(to bottom, rgba(255,255,255,.08), transparent);
@@ -64,46 +58,41 @@ body{display:flex;flex-direction:column;align-items:center;}
     pointer-events:none;
 }
 
-/* Палитра: Нефрит, Киноварь, Индиго, Золото, Слива, Бронза */
-.t1 .c0{background:#8b3a3a;} /* Киноварь */
-.t1 .c1{background:#2d5a5a;} /* Нефрит */
-.t1 .c2{background:#3a4a6b;} /* Индиго */
-.t1 .c3{background:#8a6d3b;} /* Античное золото */
-.t1 .c4{background:#5a3a5a;} /* Слива */
-.t1 .c5{background:#6b5a4a;} /* Бронза */
-
-.t2 .c0{background:#a04040;} .t2 .c1{background:#3a6b6b;} .t2 .c2{background:#4a5a7b;} .t2 .c3{background:#9a7d4b;} .t2 .c4{background:#6a4a6a;} .t2 .c5{background:#7b6a5a;}
-.t3 .c0{background:#7a2a2a;} .t3 .c1{background:#1d4a4a;} .t3 .c2{background:#2a3a5b;} .t3 .c3{background:#7a5d2b;} .t3 .c4{background:#4a2a4a;} .t3 .c5{background:#5b4a3a;}
-.t4 .c0{background:#9b4b4b;} .t4 .c1{background:#4d7a7a;} .t4 .c2{background:#5a6a8b;} .t4 .c3{background:#aa8d5b;} .t4 .c4{background:#7a5a7a;} .t4 .c5{background:#8b7a6a;}
-.t5 .c0{background:#6b2020;} .t5 .c1{background:#0d3a3a;} .t5 .c2{background:#1a2a4b;} .t5 .c3{background:#6a4d1b;} .t5 .c4{background:#3a1a3a;} .t5 .c5{background:#4b3a2a;}
-.t6 .c0{background:#b05050;} .t6 .c1{background:#5d8a8a;} .t6 .c2{background:#6a7a9b;} .t6 .c3{background:#ba9d6b;} .t6 .c4{background:#8a6a8a;} .t6 .c5{background:#9b8a7a;}
-.t7 .c0{background:#7b3030;} .t7 .c1{background:#2d5050;} .t7 .c2{background:#3a4a6b;} .t7 .c3{background:#8a6d3b;} .t7 .c4{background:#5a3a5a;} .t7 .c5{background:#6b5a4a;}
-.t8 .c0{background:#8b3a3a;} .t8 .c1{background:#2d5a5a;} .t8 .c2{background:#3a4a6b;} .t8 .c3{background:#8a6d3b;} .t8 .c4{background:#5a3a5a;} .t8 .c5{background:#6b5a4a;}
+.t1 .c0{background:#8b3a3a;}.t1 .c1{background:#2d5a5a;}.t1 .c2{background:#3a4a6b;}.t1 .c3{background:#8a6d3b;}.t1 .c4{background:#5a3a5a;}.t1 .c5{background:#6b5a4a;}
+.t2 .c0{background:#a04040;}.t2 .c1{background:#3a6b6b;}.t2 .c2{background:#4a5a7b;}.t2 .c3{background:#9a7d4b;}.t2 .c4{background:#6a4a6a;}.t2 .c5{background:#7b6a5a;}
+.t3 .c0{background:#7a2a2a;}.t3 .c1{background:#1d4a4a;}.t3 .c2{background:#2a3a5b;}.t3 .c3{background:#7a5d2b;}.t3 .c4{background:#4a2a4a;}.t3 .c5{background:#5b4a3a;}
+.t4 .c0{background:#9b4b4b;}.t4 .c1{background:#4d7a7a;}.t4 .c2{background:#5a6a8b;}.t4 .c3{background:#aa8d5b;}.t4 .c4{background:#7a5a7a;}.t4 .c5{background:#8b7a6a;}
+.t5 .c0{background:#6b2020;}.t5 .c1{background:#0d3a3a;}.t5 .c2{background:#1a2a4b;}.t5 .c3{background:#6a4d1b;}.t5 .c4{background:#3a1a3a;}.t5 .c5{background:#4b3a2a;}
+.t6 .c0{background:#b05050;}.t6 .c1{background:#5d8a8a;}.t6 .c2{background:#6a7a9b;}.t6 .c3{background:#ba9d6b;}.t6 .c4{background:#8a6a8a;}.t6 .c5{background:#9b8a7a;}
+.t7 .c0{background:#7b3030;}.t7 .c1{background:#2d5050;}.t7 .c2{background:#3a4a6b;}.t7 .c3{background:#8a6d3b;}.t7 .c4{background:#5a3a5a;}.t7 .c5{background:#6b5a4a;}
+.t8 .c0{background:#8b3a3a;}.t8 .c1{background:#2d5a5a;}.t8 .c2{background:#3a4a6b;}.t8 .c3{background:#8a6d3b;}.t8 .c4{background:#5a3a5a;}.t8 .c5{background:#6b5a4a;}
 
 .c.sp-bomb{border:2px solid #d4af37;box-shadow:0 0 15px rgba(212,175,55,.4);}
 .c.sp-laser{border:2px solid #7fb5b0;box-shadow:0 0 15px rgba(127,181,176,.4);}
 .c.sp-star{border:2px solid #9b72aa;box-shadow:0 0 15px rgba(155,114,170,.4);}
 .c.sp-rainbow{background:conic-gradient(#8b3a3a,#2d5a5a,#3a4a6b,#8a6d3b,#5a3a5a)!important;border:2px solid #d4af37!important;}
 
-.c .hz{font-size:1.6rem;font-weight:900;color:#f0e6d2;text-shadow:0 2px 4px rgba(0,0,0,.6), 0 0 10px rgba(212,175,55,.1);z-index:2;line-height:1;}
-.c .py{font-size:.6rem;color:rgba(240,230,210,.8);margin-top:2px;z-index:2;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.4);}
-.c .ru{font-size:.6rem;font-weight:700;color:#f0e6d2;background:rgba(0,0,0,.35);padding:2px 6px;border-radius:4px;margin-top:3px;z-index:3;max-width:95%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid rgba(212,175,55,.1);}
-.c .emo{position:absolute;bottom:3px;left:3px;font-size:.6rem;opacity:.4;z-index:1;filter:sepia(0.3);}
-.c .badge{position:absolute;top:2px;right:3px;font-size:.8rem;z-index:4;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6));}
+.c .hz{font-size:1.8rem;font-weight:900;color:#f0e6d2;text-shadow:0 2px 4px rgba(0,0,0,.6),0 0 10px rgba(212,175,55,.1);z-index:2;line-height:1;}
+.c .py{font-size:.55rem;color:rgba(240,230,210,.8);z-index:2;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.4);margin-top:1px;}
+.c .ru{font-size:.55rem;font-weight:700;color:#f0e6d2;background:rgba(0,0,0,.35);padding:1px 5px;border-radius:3px;margin-top:2px;z-index:3;max-width:95%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid rgba(212,175,55,.1);}
+.c .emo{position:absolute;bottom:2px;left:3px;font-size:.55rem;opacity:.4;z-index:1;filter:sepia(0.3);}
+.c .badge{position:absolute;top:2px;right:3px;font-size:.7rem;z-index:4;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6));}
 
-.c.sel{transform:scale(1.1);z-index:10;box-shadow:0 0 0 2px #d4af37, 0 10px 25px rgba(0,0,0,.5);}
+.c.sel{transform:scale(1.1);z-index:10;box-shadow:0 0 0 2px #d4af37,0 10px 25px rgba(0,0,0,.5);}
 .c.gone{animation:pop 0.3s forwards;}
 @keyframes pop{to{transform:scale(0);opacity:0;}}
 .c.drop{animation:drop 0.5s cubic-bezier(.175,.885,.32,1.275);}
 @keyframes drop{from{transform:translateY(-60px);opacity:0;}to{transform:translateY(0);opacity:1;}}
 .c.best{animation:pulse 1.5s infinite;}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(212,175,55,.3);}70%{box-shadow:0 0 0 8px rgba(212,175,55,0);}100%{box-shadow:0 0 0 0 rgba(212,175,55,0);}}
+.c.shape-hl{animation:shapeFlash .6s ease-out forwards;border:2px solid #fff!important;}
+@keyframes shapeFlash{0%{box-shadow:0 0 0 0 rgba(255,255,255,0);transform:scale(1);}50%{box-shadow:0 0 40px 10px rgba(255,255,255,0.6);transform:scale(1.12);filter:brightness(1.5);}100%{box-shadow:0 0 0 0 rgba(255,255,255,0);transform:scale(1);}}
 
-.bar{z-index:10;width:100%;max-width:600px;display:flex;gap:8px;justify-content:center;padding:10px;}
-.btn{padding:10px 16px;border:none;border-radius:8px;font-weight:700;font-size:.75rem;cursor:pointer;color:#e8dcc5;background:rgba(20,20,25,.6);border:1px solid rgba(212,175,55,.2);display:flex;align-items:center;gap:6px;transition:.2s;backdrop-filter:blur(4px);}
+.bar{z-index:10;width:100%;max-width:600px;display:flex;gap:6px;justify-content:center;padding:6px 10px;flex-wrap:wrap;}
+.btn{padding:8px 14px;border:none;border-radius:8px;font-weight:700;font-size:.7rem;cursor:pointer;color:#e8dcc5;background:rgba(20,20,25,.6);border:1px solid rgba(212,175,55,.2);display:flex;align-items:center;gap:4px;transition:.2s;backdrop-filter:blur(4px);}
 .btn:active{transform:scale(.95);}
 .btn.buy{border-color:rgba(212,175,55,.6);color:#d4af37;box-shadow:0 0 10px rgba(212,175,55,.1);}
-.btn small{font-size:.6rem;opacity:.7;}
+.btn small{font-size:.55rem;opacity:.7;}
 
 .overlay{position:fixed;inset:0;background:rgba(5,5,10,.9);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(5px);}
 .overlay.show{display:flex;}
@@ -164,7 +153,9 @@ body{display:flex;flex-direction:column;align-items:center;}
 
 <script src="app.js"></script>
 <script>
-// === ЗВУКОВОЙ ДВИЖОК: НЕФРИТОВЫЕ КОЛОКОЛЬЧИКИ ===
+// ============================================================
+//  ЗВУКОВОЙ ДВИЖОК
+// ============================================================
 var audioCtx = null;
 function initAudio() {
     if(!audioCtx) {
@@ -176,36 +167,25 @@ function initAudio() {
 function playChime(pitchIndex) {
     if(!audioCtx) return;
     var now = audioCtx.currentTime;
-    
-    // Китайская пентатоника (Гун, Шан, Цзюэ, Чжи, Юй)
-    // C5, D5, E5, G5, A5, C6
     var scale = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
     var freq = scale[pitchIndex % scale.length];
-    
     var osc = audioCtx.createOscillator();
     var gain = audioCtx.createGain();
-    
     osc.connect(gain);
     gain.connect(audioCtx.destination);
-    
     osc.type = 'sine';
     osc.frequency.setValueAtTime(freq, now);
-    
-    // Мягкая атака, долгое затухание (как у металлического колокольчика)
     gain.gain.setValueAtTime(0, now);
     gain.gain.linearRampToValueAtTime(0.12, now + 0.03);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 2.0);
-    
     osc.start(now);
     osc.stop(now + 2.0);
 }
 
 function playSound(type, comboCount) {
     if(!audioCtx) return;
-    
-    if(type === 'swap') {
-        playChime(0);
-    } else if(type === 'match') {
+    if(type === 'swap') { playChime(0); }
+    else if(type === 'match') {
         var base = Math.min(comboCount, 4);
         playChime(base);
         setTimeout(() => playChime(base + 2), 120);
@@ -226,7 +206,9 @@ function playSound(type, comboCount) {
     }
 }
 
-// === КОНФИГУРАЦИЯ ===
+// ============================================================
+//  КОНФИГУРАЦИЯ
+// ============================================================
 var RANKS = ["Новичок","Ученик","Мастер","Эксперт","Гуру","Магистр","Мудрец","Император"];
 var NC=6, NR=8, TOT=NC*NR;
 var DB_FALLBACK = [
@@ -257,7 +239,166 @@ var state = {
 
 var PRICE_HINT = 50, PRICE_SHUF = 80, PRICE_BOMB = 5;
 
-// === ЛОГИКА ИГРЫ ===
+// ============================================================
+//  ПОИСК ВСЕХ ФОРМ (ВКЛЮЧАЯ L, T, КВАДРАТЫ 2×2)
+// ============================================================
+function findAllCombinations(bd) {
+    var results = [], used = {};
+    
+    // Горизонтальные (3+ в ряд)
+    for (var r = 0; r < NR; r++) {
+        for (var c = 0; c <= NC - 3; c++) {
+            var i = r * NC + c;
+            var ch = bd[i] ? bd[i].h : null;
+            if (!ch) continue;
+            var len = 1;
+            while (c + len < NC && bd[i + len] && bd[i + len].h === ch) len++;
+            if (len >= 3) {
+                var ids = [];
+                for (var k = 0; k < len; k++) ids.push(i + k);
+                var key = ids.join('-');
+                if (!used[key]) {
+                    used[key] = true;
+                    results.push({ ids: ids, len: len, type: len >= 6 ? 'rainbow' : len >= 5 ? 'star' : len === 4 ? 'laser' : 'line', orient: 'h' });
+                }
+            }
+            c += len - 1;
+        }
+    }
+    
+    // Вертикальные (3+ в ряд)
+    for (var c = 0; c < NC; c++) {
+        for (var r = 0; r <= NR - 3; r++) {
+            var i = r * NC + c;
+            var ch = bd[i] ? bd[i].h : null;
+            if (!ch) continue;
+            var len = 1;
+            while (r + len < NR && bd[i + len * NC] && bd[i + len * NC].h === ch) len++;
+            if (len >= 3) {
+                var ids = [];
+                for (var k = 0; k < len; k++) ids.push(i + k * NC);
+                var key = ids.join('-');
+                if (!used[key]) {
+                    used[key] = true;
+                    results.push({ ids: ids, len: len, type: len >= 6 ? 'rainbow' : len >= 5 ? 'star' : len === 4 ? 'laser' : 'line', orient: 'v' });
+                }
+            }
+            r += len - 1;
+        }
+    }
+    
+    // L формы (5 клеток)
+    for (var r = 0; r < NR - 2; r++) {
+        for (var c = 0; c < NC - 2; c++) {
+            var patterns = [
+                { ids: [r*NC+c, r*NC+c+1, r*NC+c+2, (r+1)*NC+c, (r+2)*NC+c], t: 'L' },
+                { ids: [r*NC+c, r*NC+c+1, r*NC+c+2, (r+1)*NC+c+2, (r+2)*NC+c+2], t: 'L' },
+                { ids: [r*NC+c, (r+1)*NC+c, (r+2)*NC+c, (r+2)*NC+c+1, (r+2)*NC+c+2], t: 'L' },
+                { ids: [r*NC+c+2, (r+1)*NC+c+2, (r+2)*NC+c+2, (r+2)*NC+c, (r+2)*NC+c+1], t: 'L' },
+                { ids: [r*NC+c, r*NC+c+1, r*NC+c+2, (r+1)*NC+c+1, (r+2)*NC+c+1], t: 'T' },
+                { ids: [(r+2)*NC+c, (r+2)*NC+c+1, (r+2)*NC+c+2, (r+1)*NC+c+1, r*NC+c+1], t: 'T' },
+                { ids: [r*NC+c, (r+1)*NC+c, (r+2)*NC+c, (r+1)*NC+c+1, (r+1)*NC+c+2], t: 'T' },
+                { ids: [r*NC+c+2, (r+1)*NC+c+2, (r+2)*NC+c+2, (r+1)*NC+c+1, (r+1)*NC+c], t: 'T' }
+            ];
+            for (var p = 0; p < patterns.length; p++) {
+                var ids = patterns[p].ids;
+                var ch = bd[ids[0]] ? bd[ids[0]].h : null;
+                if (!ch) continue;
+                var ok = true;
+                for (var j = 0; j < ids.length; j++) {
+                    if (!bd[ids[j]] || bd[ids[j]].h !== ch) { ok = false; break; }
+                }
+                if (ok) {
+                    var key = ids.join('-');
+                    if (!used[key]) {
+                        used[key] = true;
+                        results.push({ ids: ids, len: 5, type: patterns[p].t, orient: patterns[p].t });
+                    }
+                }
+            }
+        }
+    }
+    
+    // Квадраты 2×2 (4 клетки)
+    for (var r = 0; r < NR - 1; r++) {
+        for (var c = 0; c < NC - 1; c++) {
+            var ids = [r*NC+c, r*NC+c+1, (r+1)*NC+c, (r+1)*NC+c+1];
+            var ch = bd[ids[0]] ? bd[ids[0]].h : null;
+            if (!ch) continue;
+            var ok = true;
+            for (var j = 0; j < ids.length; j++) {
+                if (!bd[ids[j]] || bd[ids[j]].h !== ch) { ok = false; break; }
+            }
+            if (ok) {
+                var key = ids.join('-');
+                if (!used[key]) {
+                    used[key] = true;
+                    results.push({ ids: ids, len: 4, type: 'square', orient: 'square' });
+                }
+            }
+        }
+    }
+    return results;
+}
+
+// ============================================================
+//  ПОИСК СОВПАДЕНИЙ
+// ============================================================
+function findMatches() {
+    var allShapes = findAllCombinations(state.board);
+    var matched = {}, shapes = [];
+    for (var i = 0; i < allShapes.length; i++) {
+        var shape = allShapes[i], ids = shape.ids;
+        for (var j = 0; j < ids.length; j++) {
+            matched[ids[j]] = true;
+        }
+        shapes.push(shape);
+    }
+    var matchedArr = [];
+    for (var key in matched) matchedArr.push(parseInt(key));
+    return { matched: matchedArr, shapes: shapes };
+}
+
+function hasMatch(idx) {
+    var r = Math.floor(idx / NC), c = idx % NC, ch = state.board[idx].h;
+    if (!ch) return false;
+    if (c >= 2 && state.board[idx-1] && state.board[idx-1].h === ch && state.board[idx-2] && state.board[idx-2].h === ch) return true;
+    if (r >= 2 && state.board[idx-NC] && state.board[idx-NC].h === ch && state.board[idx-2*NC] && state.board[idx-2*NC].h === ch) return true;
+    return false;
+}
+
+function anyMove() {
+    for (var i = 0; i < TOT; i++) {
+        if (!state.board[i]) continue;
+        var ns = getNeighbors(i);
+        for (var j = 0; j < ns.length; j++) {
+            var ni = ns[j];
+            if (!state.board[ni]) continue;
+            var temp = state.board[i];
+            state.board[i] = state.board[ni];
+            state.board[ni] = temp;
+            var result = findAllCombinations(state.board);
+            var temp2 = state.board[i];
+            state.board[i] = state.board[ni];
+            state.board[ni] = temp2;
+            if (result.length > 0) return [i, ni];
+        }
+    }
+    return null;
+}
+
+function getNeighbors(idx) {
+    var r = Math.floor(idx / NC), c = idx % NC, res = [];
+    if (r > 0) res.push(idx - NC);
+    if (r < NR - 1) res.push(idx + NC);
+    if (c > 0) res.push(idx - 1);
+    if (c < NC - 1) res.push(idx + 1);
+    return res;
+}
+
+// ============================================================
+//  ЛОГИКА ИГРЫ
+// ============================================================
 function init() {
     loadProgress();
     updateUI();
@@ -286,7 +427,11 @@ function startLevel() {
     document.getElementById('uTheme').innerText = "Уровень " + state.level;
     
     for(var i=0; i<TOT; i++) {
-        do { state.board[i] = randChar(); } while(hasMatch(i));
+        var att = 0;
+        do { 
+            state.board[i] = randChar(); 
+            att++;
+        } while(hasMatch(i) && att < 50);
     }
     if(!anyMove()) reshuffleBoard(true);
     
@@ -297,42 +442,14 @@ function startLevel() {
 
 function randChar() {
     var set = LEVELS[(state.level-1) % LEVELS.length];
-    var c = set[Math.floor(Math.random()*set.length)];
-    return {h:c.h, p:c.p, r:c.r, e:c.e, c:set.indexOf(c), sp:null};
+    var idx = Math.floor(Math.random() * set.length);
+    var c = set[idx];
+    return {h:c.h, p:c.p, r:c.r, e:c.e, c:idx, sp:null};
 }
 
-function hasMatch(idx) {
-    var r=Math.floor(idx/NC), c=idx%NC, ch=state.board[idx].h;
-    if(c>=2 && state.board[idx-1].h==ch && state.board[idx-2].h==ch) return true;
-    if(r>=2 && state.board[idx-NC].h==ch && state.board[idx-2*NC].h==ch) return true;
-    return false;
-}
-
-function findMatches() {
-    var matched = {}, shapes = [];
-    for(var r=0;r<NR;r++) for(var c=0;c<NC-2;c++) {
-        var i=r*NC+c, ch=state.board[i].h, len=1;
-        while(c+len<NC && state.board[i+len].h==ch) len++;
-        if(len>=3) {
-            var ids=[]; for(var k=0;k<len;k++) ids.push(i+k);
-            shapes.push({ids:ids, type:len>=5?'star':len==4?'laser':'line', orient:'h'});
-            ids.forEach(x=>matched[x]=true);
-            c+=len-1;
-        }
-    }
-    for(var c=0;c<NC;c++) for(var r=0;r<NR-2;r++) {
-        var i=r*NC+c, ch=state.board[i].h, len=1;
-        while(r+len<NR && state.board[i+len*NC].h==ch) len++;
-        if(len>=3) {
-            var ids=[]; for(var k=0;k<len;k++) ids.push(i+k*NC);
-            shapes.push({ids:ids, type:len>=5?'star':len==4?'laser':'line', orient:'v'});
-            ids.forEach(x=>matched[x]=true);
-            r+=len-1;
-        }
-    }
-    return {matched:Object.keys(matched).map(Number), shapes:shapes};
-}
-
+// ============================================================
+//  ОСНОВНАЯ ЛОГИКА РЕШЕНИЯ (С ПОДДЕРЖКОЙ СЛОЖНЫХ ФОРМ)
+// ============================================================
 async function resolve(matches, shapes) {
     if(matches.length===0) { state.combo=0; checkWin(); return; }
     state.combo++;
@@ -344,17 +461,37 @@ async function resolve(matches, shapes) {
     var coinsEarned = Math.floor(matches.length / 3);
     var cryEarned = 0;
     
-    shapes.forEach(s => {
-        if(s.type !== 'line') {
-            var mid = s.ids[Math.floor(s.ids.length/2)];
-            if(state.board[mid]) {
-                state.board[mid].sp = s.type;
-                pts += 50;
-                if(s.type==='star') cryEarned++;
+    // ---- ОБРАБОТКА СЛОЖНЫХ ФОРМ (L, T, КВАДРАТЫ, 5+, 6+) ----
+    var shapesCopy = shapes.slice();
+    for (var s = 0; s < shapesCopy.length; s++) {
+        var shape = shapesCopy[s];
+        var type = shape.type;
+        
+        // Если это НЕ обычная линия (3 в ряд)
+        if (type !== 'line') {
+            var midIdx = shape.ids[Math.floor(shape.ids.length / 2)];
+            if (state.board[midIdx] && !state.board[midIdx].sp) {
+                var boosterName = 'bomb';
+                if (type === 'L' || type === 'square') boosterName = 'bomb';
+                else if (type === 'T') boosterName = 'laser';
+                else if (type === 'star') boosterName = 'star';
+                else if (type === 'rainbow') boosterName = 'rainbow';
+                
+                state.board[midIdx].sp = boosterName;
+                pts += 80;
+                if (type === 'star' || type === 'rainbow') cryEarned++;
                 playSound('bonus', 0);
+                
+                // Подсветка формы
+                var cells = document.querySelectorAll('.c');
+                for (var k = 0; k < shape.ids.length; k++) {
+                    var id = shape.ids[k];
+                    if (cells[id]) cells[id].classList.add('shape-hl');
+                }
             }
         }
-    });
+    }
+    // --------------------------------------------------------
     
     state.score += pts;
     state.coins += coinsEarned;
@@ -370,7 +507,7 @@ async function resolve(matches, shapes) {
 
     spawnParticles(matches);
 
-    await sleep(350);
+    await sleep(400);
     
     matches.forEach(i => state.board[i] = null);
     applyGravity();
@@ -385,18 +522,14 @@ function spawnParticles(indices) {
     var firstIdx = indices[0];
     var charData = state.board[firstIdx];
     if(!charData) return;
-    
     var emoji = charData.e;
-    
     indices.forEach(idx => {
         var el = document.querySelectorAll('.c')[idx];
         if(!el) return;
-        
         var rect = el.getBoundingClientRect();
         var cx = rect.left + rect.width/2;
         var cy = rect.top + rect.height/2;
-        
-        for(let k=0; k<3; k++) {
+        for(var k=0; k<3; k++) {
             createParticle(cx, cy, emoji);
         }
     });
@@ -406,28 +539,24 @@ function createParticle(x, y, emoji) {
     var p = document.createElement('div');
     p.className = 'particle';
     p.innerText = emoji;
-    
     p.style.left = x + 'px';
     p.style.top = y + 'px';
-    
     var angle = Math.random() * Math.PI * 2;
     var dist = 80 + Math.random() * 120;
     var tx = Math.cos(angle) * dist + 'px';
     var ty = (Math.sin(angle) * dist - 50) + 'px';
     var rot = (Math.random() - 0.5) * 720 + 'deg';
-    
     p.style.setProperty('--tx', tx);
     p.style.setProperty('--ty', ty);
     p.style.setProperty('--rot', rot);
-    
     document.body.appendChild(p);
     setTimeout(() => p.remove(), 1200);
 }
 
 function applyGravity() {
-    for(var c=0;c<NC;c++) {
+    for(var c=0; c<NC; c++) {
         var w=NR-1;
-        for(var r=NR-1;r>=0;r--) {
+        for(var r=NR-1; r>=0; r--) {
             var i=r*NC+c;
             if(state.board[i]) {
                 if(w!==r) { state.board[w*NC+c]=state.board[i]; state.board[i]=null; }
@@ -447,15 +576,25 @@ function checkWin() {
         state.hintFree = Math.min(state.hintFree+1, 5);
         state.crystals += 2;
         saveProgress();
-        alert("Уровень пройден! +2 💎");
-        startLevel();
+        showToast("🎉 Уровень пройден! +2 💎");
+        setTimeout(startLevel, 500);
     } else if(!anyMove()) {
         reshuffleBoard();
     }
     updateUI();
 }
 
-// === УПРАВЛЕНИЕ ===
+function showToast(msg) {
+    var el = document.createElement('div');
+    el.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#d4af37;padding:12px 24px;border-radius:12px;font-size:16px;font-weight:700;z-index:999;border:1px solid rgba(212,175,55,.3);animation:toastAnim 2s forwards;';
+    el.innerText = msg;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2000);
+}
+
+// ============================================================
+//  УПРАВЛЕНИЕ
+// ============================================================
 var dragStart = -1, isDrag = false, startX=0, startY=0;
 
 function getIdx(e) {
@@ -499,7 +638,6 @@ async function onUp(e) {
         var dy = e.clientY - startY;
         var target = -1;
         var r = Math.floor(dragStart/NC), c = dragStart%NC;
-        
         if(Math.abs(dx) > Math.abs(dy)) {
             if(dx>0 && c<NC-1) target = dragStart+1;
             else if(dx<0 && c>0) target = dragStart-1;
@@ -507,14 +645,12 @@ async function onUp(e) {
             if(dy>0 && r<NR-1) target = dragStart+NC;
             else if(dy<0 && r>0) target = dragStart-NC;
         }
-        
         if(target>=0) {
             state.sel = -1;
             await trySwap(dragStart, target);
         }
     }
-    dragStart=-1; 
-    isDrag=false;
+    dragStart=-1; isDrag=false;
 }
 
 function isNeigh(a,b) {
@@ -533,8 +669,8 @@ async function trySwap(a,b) {
     var dx = rectB.left - rectA.left;
     var dy = rectB.top - rectA.top;
     
-    elA.style.transform = `translate(${dx}px, ${dy}px)`;
-    elB.style.transform = `translate(${-dx}px, ${-dy}px)`;
+    elA.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+    elB.style.transform = 'translate(' + (-dx) + 'px,' + (-dy) + 'px)';
     elA.style.zIndex = 100; elB.style.zIndex = 100;
     
     await sleep(250);
@@ -551,8 +687,8 @@ async function trySwap(a,b) {
         render();
         els = document.querySelectorAll('.c');
         elA = els[a]; elB = els[b];
-        elA.style.transform = `translate(${dx}px, ${dy}px)`;
-        elB.style.transform = `translate(${-dx}px, ${-dy}px)`;
+        elA.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+        elB.style.transform = 'translate(' + (-dx) + 'px,' + (-dy) + 'px)';
         await sleep(50);
         elA.style.transition = 'transform 0.2s'; elB.style.transition = 'transform 0.2s';
         elA.style.transform = ''; elB.style.transform = '';
@@ -561,7 +697,9 @@ async function trySwap(a,b) {
     }
 }
 
-// === МАГАЗИН И КНОПКИ ===
+// ============================================================
+//  МАГАЗИН И КНОПКИ
+// ============================================================
 var G = {
     action: function(type) {
         if(state.busy) return;
@@ -572,7 +710,7 @@ var G = {
                 if(confirm("Купить перемешивание за "+PRICE_SHUF+" 🪙?")) {
                     state.coins-=PRICE_SHUF; reshuffleBoard(); playSound('bonus', 0);
                 }
-            } else { alert("Не хватает монет!"); }
+            } else { showToast("Не хватает монет!"); }
         }
         else if(type==='hint') {
             if(state.hintFree>0) { state.hintFree--; showHint(); playSound('swap', 0); }
@@ -580,16 +718,17 @@ var G = {
                 if(confirm("Купить подсказку за "+PRICE_HINT+" 🪙?")) {
                     state.coins-=PRICE_HINT; showHint(); playSound('bonus', 0);
                 }
-            } else { alert("Не хватает монет!"); }
+            } else { showToast("Не хватает монет!"); }
         }
         else if(type==='bomb') {
             if(state.crystals>=PRICE_BOMB) {
                 if(confirm("Установить бомбу за "+PRICE_BOMB+" 💎?")) {
                     state.crystals-=PRICE_BOMB; placeBomb(); playSound('bonus', 0);
                 }
-            } else { alert("Не хватает кристаллов!"); }
+            } else { showToast("Не хватает кристаллов!"); }
         }
         updateUI();
+        saveProgress();
     },
     showTut: ()=>document.getElementById('tov').classList.add('show'),
     closeTut: ()=>{
@@ -599,21 +738,53 @@ var G = {
 };
 
 function showHint() {
-    for(var i=0;i<TOT;i++) {
+    var allShapes = findAllCombinations(state.board);
+    var cells = document.querySelectorAll('.c');
+    
+    // Сначала ищем сложные формы
+    for (var i = 0; i < allShapes.length; i++) {
+        var shape = allShapes[i];
+        if (shape.type !== 'line') {
+            for (var k = 0; k < shape.ids.length; k++) {
+                var id = shape.ids[k];
+                if (cells[id]) {
+                    cells[id].classList.add('best');
+                    (function(el) {
+                        setTimeout(function() { el.classList.remove('best'); }, 2000);
+                    })(cells[id]);
+                }
+            }
+            showToast("💡 Нашёл сложную форму!");
+            return;
+        }
+    }
+    
+    // Если сложных нет — показываем обычный ход
+    for(var i=0; i<TOT; i++) {
         var ns = [[0,1],[1,0]];
-        for(var n of ns) {
-            var r=Math.floor(i/NC)+n[0], c=i%NC+n[1];
+        for(var n=0; n<ns.length; n++) {
+            var r=Math.floor(i/NC)+ns[n][0], c=i%NC+ns[n][1];
             if(r<NR && c<NC) {
                 var j=r*NC+c;
                 var t=state.board[i]; state.board[i]=state.board[j]; state.board[j]=t;
-                if(findMatches().matched.length>0) {
-                    state.board[j]=state.board[i]; state.board[i]=t;
-                    var els = document.querySelectorAll('.c');
-                    els[i].classList.add('best'); els[j].classList.add('best');
-                    setTimeout(()=>{els[i].classList.remove('best');els[j].classList.remove('best');},1500);
+                var res = findAllCombinations(state.board);
+                state.board[j]=state.board[i]; state.board[i]=t;
+                if(res.length>0) {
+                    if(cells[i]) {
+                        cells[i].classList.add('best');
+                        (function(el) {
+                            setTimeout(function() { el.classList.remove('best'); }, 2000);
+                        })(cells[i]);
+                    }
+                    if(cells[j]) {
+                        cells[j].classList.add('best');
+                        (function(el) {
+                            setTimeout(function() { el.classList.remove('best'); }, 2000);
+                        })(cells[j]);
+                    }
+                    showToast("💡 Лучший ход!");
                     return;
                 }
-                state.board[j]=state.board[i]; state.board[i]=t;
             }
         }
     }
@@ -623,43 +794,39 @@ function placeBomb() {
     var idx = Math.floor(Math.random()*TOT);
     state.board[idx].sp = 'bomb';
     render();
-    setTimeout(()=>{
+    setTimeout(function() {
         var area = [];
-        for(var r=-1;r<=1;r++) for(var c=-1;c<=1;c++) {
-            var ni = (Math.floor(idx/NC)+r)*NC + (idx%NC+c);
-            if(ni>=0 && ni<TOT) area.push(ni);
+        var r = Math.floor(idx/NC), c = idx%NC;
+        for(var dr=-1; dr<=1; dr++) {
+            for(var dc=-1; dc<=1; dc++) {
+                var ni = (r+dr)*NC + (c+dc);
+                if(ni>=0 && ni<TOT) area.push(ni);
+            }
         }
         resolve(area, []);
     }, 500);
 }
 
 function reshuffleBoard(silent) {
-    var items = state.board.filter(x=>x);
-    items.sort(()=>Math.random()-.5);
+    var items = [];
+    for(var i=0; i<TOT; i++) {
+        if(state.board[i]) items.push(state.board[i]);
+    }
+    for(var i=items.length-1; i>0; i--) {
+        var j = Math.floor(Math.random()*(i+1));
+        var t = items[i]; items[i] = items[j]; items[j] = t;
+    }
     var k=0;
-    for(var i=0;i<TOT;i++) if(state.board[i]) state.board[i]=items[k++];
+    for(var i=0; i<TOT; i++) {
+        if(state.board[i]) { state.board[i] = items[k++]; }
+    }
     if(!anyMove() && !silent) reshuffleBoard(true);
     if(!silent) { render(); updateUI(); }
 }
 
-function anyMove() {
-    for(var i=0;i<TOT;i++) {
-        var ns=[[0,1],[1,0]];
-        for(var n of ns) {
-            var r=Math.floor(i/NC)+n[0], c=i%NC+n[1];
-            if(r<NR && c<NC) {
-                var j=r*NC+c;
-                var t=state.board[i]; state.board[i]=state.board[j]; state.board[j]=t;
-                var ok=findMatches().matched.length>0;
-                state.board[j]=state.board[i]; state.board[i]=t;
-                if(ok) return true;
-            }
-        }
-    }
-    return false;
-}
-
-// === ОТРИСОВКА ===
+// ============================================================
+//  ОТРИСОВКА
+// ============================================================
 var cellPx=0;
 function calcSize() {
     var ba=document.querySelector('.ba');
@@ -669,8 +836,8 @@ function calcSize() {
     var b=document.getElementById('board');
     b.style.width=(cellPx*NC+(NC-1)*5+16)+'px';
     b.style.height=(cellPx*NR+(NR-1)*5+16)+'px';
-    b.style.gridTemplateColumns=`repeat(${NC},${cellPx}px)`;
-    b.style.gridTemplateRows=`repeat(${NR},${cellPx}px)`;
+    b.style.gridTemplateColumns='repeat('+NC+','+cellPx+'px)';
+    b.style.gridTemplateRows='repeat('+NR+','+cellPx+'px)';
     b.style.gap='5px';
     render();
 }
@@ -678,11 +845,11 @@ function calcSize() {
 function render() {
     var b=document.getElementById('board');
     b.innerHTML='';
-    var fsH=Math.max(16,cellPx*.45);
-    var fsP=Math.max(9,cellPx*.16);
-    var fsR=Math.max(9,cellPx*.15);
+    var fsH=Math.max(20, cellPx*.48);
+    var fsP=Math.max(10, cellPx*.17);
+    var fsR=Math.max(10, cellPx*.16);
     
-    for(var i=0;i<TOT;i++) {
+    for(var i=0; i<TOT; i++) {
         var d=state.board[i];
         var el=document.createElement('div');
         el.className='c c'+(d?d.c:0);
@@ -692,45 +859,48 @@ function render() {
         
         if(d) {
             if(d.sp) el.classList.add('sp-'+d.sp);
-            el.innerHTML=`
-                <span class="hz" style="font-size:${fsH}px">${d.h}</span>
-                <span class="py" style="font-size:${fsP}px">${d.p}</span>
-                <span class="ru" style="font-size:${fsR}px">${d.r}</span>
-                <span class="emo">${d.e}</span>
-                ${d.sp?'<span class="badge">'+(d.sp=='bomb'?'💥':d.sp=='laser'?'⚡':'⭐')+'</span>':''}
-            `;
+            var badge = '';
+            if(d.sp === 'bomb') badge = '💥';
+            else if(d.sp === 'laser') badge = '⚡';
+            else if(d.sp === 'star') badge = '⭐';
+            else if(d.sp === 'rainbow') badge = '🌈';
+            el.innerHTML = '<span class="hz" style="font-size:'+fsH+'px">'+d.h+
+                '</span><span class="py" style="font-size:'+fsP+'px">'+d.p+
+                '</span><span class="ru" style="font-size:'+fsR+'px">'+d.r+
+                '</span><span class="emo">'+d.e+
+                '</span>'+(d.sp ? '<span class="badge">'+badge+'</span>' : '');
         }
         b.appendChild(el);
     }
 }
 
 function updateUI() {
-    document.getElementById('uSc').innerText=state.score;
-    document.getElementById('uLv').innerText=state.level;
-    document.getElementById('uCoin').innerText=state.coins;
-    document.getElementById('uCry').innerText=state.crystals;
-    document.getElementById('uGl').innerText=state.goal;
-    document.getElementById('pFill').style.width=Math.min(100,state.score/state.goal*100)+'%';
+    document.getElementById('uSc').innerText = state.score;
+    document.getElementById('uLv').innerText = state.level;
+    document.getElementById('uCoin').innerText = state.coins;
+    document.getElementById('uCry').innerText = state.crystals;
+    document.getElementById('uGl').innerText = state.goal;
+    document.getElementById('pFill').style.width = Math.min(100, state.score/state.goal*100) + '%';
     
     var rIdx = Math.min(RANKS.length-1, Math.floor((state.level-1)/5));
     document.getElementById('uRank').innerText = RANKS[rIdx];
     
-    var bSh=document.getElementById('bSh');
-    var bHi=document.getElementById('bHi');
+    var bSh = document.getElementById('bSh');
+    var bHi = document.getElementById('bHi');
     
     if(state.shufFree>0) {
-        bSh.innerHTML=`🔀<span>${state.shufFree}</span><small>Беспл.</small>`;
+        bSh.innerHTML = '🔀<span>'+state.shufFree+'</span><small>Беспл.</small>';
         bSh.classList.remove('buy');
     } else {
-        bSh.innerHTML=`🔀<small>${PRICE_SHUF}🪙</small>`;
+        bSh.innerHTML = '🔀<small>'+PRICE_SHUF+'🪙</small>';
         bSh.classList.add('buy');
     }
     
     if(state.hintFree>0) {
-        bHi.innerHTML=`💡<span>${state.hintFree}</span><small>Беспл.</small>`;
+        bHi.innerHTML = '💡<span>'+state.hintFree+'</span><small>Беспл.</small>';
         bHi.classList.remove('buy');
     } else {
-        bHi.innerHTML=`💡<small>${PRICE_HINT}🪙</small>`;
+        bHi.innerHTML = '💡<small>'+PRICE_HINT+'🪙</small>';
         bHi.classList.add('buy');
     }
 }
@@ -743,27 +913,47 @@ function floatText(txt, idx) {
     f.style.left=el.offsetLeft+'px'; f.style.top=el.offsetTop+'px';
     f.style.fontSize=(cellPx*.35)+'px';
     document.getElementById('board').appendChild(f);
-    setTimeout(()=>f.remove(),1000);
+    setTimeout(function() { f.remove(); }, 1000);
 }
 
-function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function sleep(ms) {
+    return new Promise(function(r) { setTimeout(r, ms); });
+}
 
+// ============================================================
+//  СОХРАНЕНИЕ
+// ============================================================
 function saveProgress() {
     localStorage.setItem('hanzi_save', JSON.stringify({
-        lvl:state.level, coins:state.coins, cry:state.crystals, 
-        sf:state.shufFree, hf:state.hintFree
+        lvl: state.level, 
+        coins: state.coins, 
+        cry: state.crystals, 
+        sf: state.shufFree, 
+        hf: state.hintFree
     }));
 }
+
 function loadProgress() {
-    var s=localStorage.getItem('hanzi_save');
+    var s = localStorage.getItem('hanzi_save');
     if(s) {
-        var d=JSON.parse(s);
-        state.level=d.lvl||1; state.coins=d.coins||0; state.crystals=d.cry||0;
-        state.shufFree=d.sf||3; state.hintFree=d.hf||3;
+        try {
+            var d = JSON.parse(s);
+            state.level = d.lvl || 1;
+            state.coins = d.coins || 0;
+            state.crystals = d.cry || 0;
+            state.shufFree = d.sf || 3;
+            state.hintFree = d.hf || 3;
+        } catch(e) {}
     }
 }
 
+// ============================================================
+//  ЗАПУСК
+// ============================================================
 init();
+
+console.log('✅ Hanzi: Нефрит и Золото загружена!');
+console.log('📐 Сложные формы: L, T, Квадрат 2×2, 5+ в ряд, 6+ в ряд');
 </script>
 </body>
 </html>
