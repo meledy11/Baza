@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.5, user-scalable=yes">
+<meta name="theme-color" content="#eef1ff">
+<title>HanMap — карты китайских иероглифов</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg1:#eef1ff; --bg2:#fff3f3; --card:#ffffff; --ink:#20243a; --mut:#7a809c;
+  --red:#e03131; --blue:#4263eb; --line:#8ea2ff; --sh:0 12px 32px rgba(50,60,130,.14);
+  --grad:linear-gradient(135deg,#ff6b6b,#e03131); --grad2:linear-gradient(135deg,#4263eb,#7048e8);
+}
+body.dark{--bg1:#0e1220;--bg2:#141a2e;--card:#1b2036;--ink:#eef1ff;--mut:#9aa3c7;--line:#5b74d8;--sh:0 12px 32px rgba(0,0,0,.5)}
+body{font-family:'Segoe UI',system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;
+  background:linear-gradient(160deg,var(--bg1),var(--bg2));color:var(--ink);min-height:100vh;overflow-x:hidden}
+body::before,body::after{content:'';position:fixed;border-radius:50%;filter:blur(90px);z-index:-1;opacity:.5}
+body::before{width:420px;height:420px;background:#ffc9c9;top:-120px;right:-120px}
+body::after{width:380px;height:380px;background:#bac8ff;bottom:-120px;left:-120px}
+.wrap{max-width:860px;margin:0 auto;padding:16px}
+header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.logo{font-size:22px;font-weight:800;display:flex;align-items:center;gap:10px}
+.logo small{font-size:12px;color:var(--mut);font-weight:600}
+.stats{margin-left:auto;display:flex;gap:8px}
+.chip{background:var(--card);box-shadow:var(--sh);border-radius:999px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--mut)}
+.icon-btn{width:44px;height:44px;border-radius:16px;border:none;background:var(--card);box-shadow:var(--sh);font-size:18px;cursor:pointer;transition:.2s;color:var(--ink)}
+.icon-btn:hover{transform:translateY(-2px)} .icon-btn:active{transform:scale(.92)}
+.tagline{color:var(--mut);font-size:13px;margin:-6px 0 14px 4px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.search{flex:1;min-width:200px;display:flex;align-items:center;background:var(--card);border-radius:18px;box-shadow:var(--sh);padding:0 14px}
+.search input{flex:1;border:none;outline:none;background:transparent;padding:14px 8px;font-size:15px;color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:18px;border:none;background:var(--card);
+  box-shadow:var(--sh);font-weight:700;font-size:14px;color:var(--ink);cursor:pointer;transition:.2s;user-select:none}
+.btn:hover{transform:translateY(-2px)} .btn:active{transform:scale(.94)}
+.btn.grad{background:var(--grad);color:#fff} .btn.grad2{background:var(--grad2);color:#fff}
+.btn.active{outline:3px solid var(--blue)}
+.navrow{display:flex;align-items:center;justify-content:center;gap:16px;margin:6px 0 10px}
+.nav-btn{width:48px;height:48px;border-radius:50%;border:none;background:var(--grad2);color:#fff;font-size:20px;cursor:pointer;box-shadow:var(--sh);transition:.2s}
+.nav-btn:active{transform:scale(.9)}
+#posLabel{font-weight:700;color:var(--mut);font-size:13px;min-width:70px;text-align:center}
+#map{position:relative;display:flex;align-items:center;gap:34px;padding:10px 4px}
+#lines{position:absolute;inset:0;pointer-events:none;z-index:0}
+.ln{transition:stroke-dashoffset .7s ease}
+.main-node{z-index:1;background:var(--card);border-radius:26px;box-shadow:var(--sh);padding:22px 26px;text-align:center;cursor:pointer;flex:none;transition:.2s}
+.main-node:active{transform:scale(.96)}
+.main-node .py{color:var(--blue);font-weight:700;font-size:18px}
+.main-node .hz{color:var(--red);font-size:clamp(64px,16vw,104px);font-weight:800;line-height:1.15}
+.main-node .ru{color:var(--mut);font-size:14px;font-weight:600}
+#words{z-index:1;flex:1;display:flex;flex-direction:column;gap:12px}
+.word{background:var(--card);border-radius:18px;box-shadow:var(--sh);padding:10px 16px;text-align:center;cursor:pointer;transition:.2s;animation:pop .5s both}
+.word:hover{transform:translateY(-2px)} .word:active{transform:scale(.96)}
+.word .py{color:var(--mut);font-size:12px;font-weight:600}
+.word .hz{font-size:clamp(24px,6vw,32px);font-weight:800;letter-spacing:2px}
+.word .ru{color:var(--mut);font-size:12px;font-weight:600}
+.c-red{color:var(--red)} .c-blue{color:var(--blue)}
+@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.94)}}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:18px 0 8px}
+footer{text-align:center;color:var(--mut);font-size:12px;padding:18px 0 8px}
+.modal{position:fixed;inset:0;background:rgba(10,12,30,.45);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal.open{display:flex}
+.modal-card{width:min(94vw,430px);max-height:88vh;overflow:auto;background:var(--card);border-radius:26px;box-shadow:var(--sh);padding:20px}
+.modal-card.wide{width:min(94vw,680px)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.modal-head h3{font-size:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:10px}
+.tile{background:var(--card);border:2px solid transparent;border-radius:16px;box-shadow:var(--sh);padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;transition:.15s;color:var(--ink)}
+.tile:hover{border-color:var(--blue);transform:translateY(-2px)}
+.t-hz{font-size:30px;font-weight:800;color:var(--red)} .t-py{font-size:11px;color:var(--mut);font-weight:600}
+.empty{color:var(--mut);text-align:center;padding:30px;font-weight:700}
+.canvas-wrap{position:relative;width:min(85vw,460px);margin:0 auto;aspect-ratio:1/1;background:rgba(255,255,255,0.03);border-radius:16px;overflow:hidden}
+#guide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--red);opacity:0.12;font-weight:800;pointer-events:none;user-select:none;transition:opacity 0.3s;font-size:200px}
+#guide.hidden{display:none}
+#pad{position:absolute;inset:0;touch-action:none;cursor:crosshair;width:100%;height:100%}
+.q-ru{font-size:20px;font-weight:800;text-align:center;margin:6px 0 16px}
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.q-opt{background:var(--card);border:2px solid transparent;border-radius:18px;box-shadow:var(--sh);padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;font-size:28px;font-weight:800;color:var(--ink);transition:.15s}
+.q-opt small{font-size:11px;color:var(--mut);font-weight:600}
+.q-opt.ok{border-color:#2f9e44;background:rgba(47,158,68,.15)}
+.q-opt.bad{border-color:var(--red);background:rgba(224,49,49,.12)}
+.q-foot{display:flex;align-items:center;justify-content:space-between;margin-top:16px}
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg1);padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:.3s;z-index:99;box-shadow:var(--sh)}
+#toast.show{opacity:1;transform:translateX(-50%)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">🀄 HanMap <small>карты иероглифов</small></div>
+    <div class="stats"><span class="chip" id="statHz"></span><span class="chip" id="statWord"></span></div>
+    <button class="icon-btn" id="themeBtn" title="Тема">🌙</button>
+  </header>
+  <div class="tagline">Учи иероглифы по картам‑связкам • HSK 1–4 • озвучка zh‑CN</div>
+
+  <div class="toolbar">
+    <div class="search"><span>🔍</span><input id="q" placeholder="Поиск: иероглиф, pinyin, перевод…"></div>
+    <button class="btn grad" id="gridBtn">📚 База</button>
+    <button class="btn" id="favBtn">❤️ <span id="favCount">0</span></button>
+    <button class="btn grad2" id="randBtn">🎲</button>
+  </div>
+
+  <div class="navrow">
+    <button class="nav-btn" id="prevBtn">←</button>
+    <span id="posLabel"></span>
+    <button class="nav-btn" id="nextBtn">→</button>
+  </div>
+
+  <section id="map">
+    <svg id="lines"></svg>
+    <div class="main-node" id="mainNode" title="Озвучить">
+      <div class="py" id="mainPy"></div><div class="hz" id="mainHz"></div><div class="ru" id="mainRu"></div>
+    </div>
+    <div id="words"></div>
+  </section>
+
+  <div class="actions">
+    <button class="btn" id="speakBtn">🔊 Озвучить</button>
+    <button class="btn grad2" id="writeBtn">✍️ Пропись</button>
+    <button class="btn" id="likeBtn">🤍 В избранное</button>
+    <button class="btn grad" id="quizBtn">🧠 Тест</button>
+  </div>
+  <footer>HanMap • сделано для изучения ханьцзы • стрелки ← → для навигации</footer>
+</div>
+
+<!-- База -->
+<div class="modal" id="gridModal"><div class="modal-card wide">
+  <div class="modal-head"><h3>📚 База иероглифов</h3><button class="icon-btn" data-close>✕</button></div>
+  <div class="grid" id="grid"></div>
+</div></div>
+
+<!-- Пропись -->
+<div class="modal" id="writeModal"><div class="modal-card">
+  <div class="modal-head"><h3 id="writeTitle">✍️ Пропись</h3><button class="icon-btn" data-close>✕</button></div>
+  <div class="canvas-wrap" id="canvasWrap"><div id="guide"></div><canvas id="pad"></canvas></div>
+  <div class="actions">
+    <button class="btn" id="clearBtn">🧽 Очистить</button>
+    <button class="btn grad2" id="guideBtn">👁 Образец</button>
+  </div>
+</div></div>
+
+<!-- Тест -->
+<div class="modal" id="quizModal"><div class="modal-card">
+  <div class="modal-head"><h3>🧠 Выбери иероглиф</h3><button class="icon-btn" data-close>✕</button></div>
+  <div class="q-ru" id="qRu"></div>
+  <div class="q-opts" id="qOpts"></div>
+  <div class="q-foot"><span class="chip" id="qScore"></span><button class="btn grad2" id="qNext" hidden>Дальше →</button></div>
+</div></div>
+
+<div id="toast"></div>
+
+<script src="app.js"></script>
+<script>
+// ============================================================
+//  ЛОГИКА HanMap — ИСПОЛЬЗУЕТ DB из app.js
+// ============================================================
+
+// Проверяем наличие базы
+if (typeof DB === 'undefined' || DB.length === 0) {
+    console.error('❌ HanMap: app.js не загружен!');
+    document.getElementById('statHz').textContent = '❌ Ошибка';
+    document.getElementById('statWord').textContent = 'Загрузите app.js';
+} else {
+    console.log('✅ HanMap: загружено ' + DB.length + ' иероглифов');
+}
+
+// ============================================================
+//  ПЕРЕМЕННЫЕ
+// ============================================================
+var favs = new Set();
+var order = [];
+var pos = 0;
+var dark = false;
+
+// Загружаем избранное
+try {
+    var saved = JSON.parse(localStorage.getItem('hanmap_favs') || '[]');
+    favs = new Set(saved);
+} catch (e) {
+    favs = new Set();
+}
+
+// Загружаем тему
+try {
+    dark = localStorage.getItem('hanmap_theme') === 'dark';
+    if (dark) {
+        document.body.classList.add('dark');
+        document.getElementById('themeBtn').textContent = '☀️';
+    }
+} catch (e) {
+    dark = false;
+}
+
+// ============================================================
+//  ВСПОМОГАТЕЛЬНЫЕ
+// ============================================================
+function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+    return arr;
+}
+
+function buildOrder() {
+    if (favs.size > 0) {
+        order = [];
+        for (var i = 0; i < DB.length; i++) {
+            if (favs.has(DB[i][0])) {
+                order.push(i);
+            }
+        }
+        if (order.length === 0) {
+            order = DB.map(function(_, i) { return i; });
+            document.getElementById('favBtn').classList.remove('active');
+        }
+    } else {
+        order = DB.map(function(_, i) { return i; });
+    }
+    if (pos >= order.length) pos = 0;
+    updateFavCount();
+}
+
+function updateFavCount() {
+    var fc = document.getElementById('favCount');
+    if (fc) fc.textContent = favs.size;
+    var fb = document.getElementById('favBtn');
+    if (fb) {
+        fb.innerHTML = (favs.size > 0 ? '❤️' : '🤍') + ' <span id="favCount">' + favs.size + '</span>';
+    }
+}
+
+// ============================================================
+//  ОЗВУЧКА
+// ============================================================
+function speak(text) {
+    if (!('speechSynthesis' in window)) {
+        showToast('🔇 Озвучка недоступна в этом браузере');
+        return;
+    }
+    try {
+        speechSynthesis.cancel();
+        var utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'zh-CN';
+        utterance.rate = 0.8;
+        utterance.pitch = 1;
+        var voices = speechSynthesis.getVoices();
+        for (var i = 0; i < voices.length; i++) {
+            if (voices[i].lang === 'zh-CN' || voices[i].lang === 'zh' || voices[i].lang.startsWith('zh')) {
+                utterance.voice = voices[i];
+                break;
+            }
+        }
+        speechSynthesis.speak(utterance);
+    } catch (e) {
+        console.error('Ошибка озвучки:', e);
+    }
+}
+
+function showToast(msg) {
+    var el = document.getElementById('toast');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(el._timer);
+    el._timer = setTimeout(function() {
+        el.classList.remove('show');
+    }, 2000);
+}
+
+// ============================================================
+//  ОТРИСОВКА
+// ============================================================
+function render() {
+    if (!DB || DB.length === 0 || order.length === 0) {
+        document.getElementById('mainHz').textContent = '⚠️';
+        document.getElementById('mainPy').textContent = 'Нет данных';
+        document.getElementById('mainRu').textContent = 'Загрузите app.js';
+        return;
+    }
+
+    var idx = order[pos];
+    var d = DB[idx];
+    if (!d) return;
+
+    document.getElementById('mainHz').textContent = d[0];
+    document.getElementById('mainPy').textContent = d[1];
+    document.getElementById('mainRu').textContent = d[2];
+
+    var wordsHtml = '';
+    var words = d[4] || [];
+    for (var i = 0; i < words.length; i++) {
+        var w = words[i];
+        var chars = w[0].split('');
+        var colored = chars.map(function(c) {
+            return '<span class="' + (c === d[0] ? 'c-red' : 'c-blue') + '">' + c + '</span>';
+        }).join('');
+        wordsHtml += '<div class="word" data-i="' + i + '" style="animation-delay:' + (i * 70) + 'ms">' +
+            '<div class="py">' + w[1] + '</div>' +
+            '<div class="hz">' + colored + '</div>' +
+            '<div class="ru">' + w[2] + '</div>' +
+            '</div>';
+    }
+    document.getElementById('words').innerHTML = wordsHtml;
+
+    document.getElementById('posLabel').textContent = (pos + 1) + ' / ' + order.length;
+    document.getElementById('statHz').textContent = DB.length + ' иероглифов';
+
+    var totalWords = 0;
+    for (var i = 0; i < DB.length; i++) {
+        if (DB[i][4]) totalWords += DB[i][4].length;
+    }
+    document.getElementById('statWord').textContent = totalWords + ' слов';
+
+    var likeBtn = document.getElementById('likeBtn');
+    if (favs.has(d[0])) {
+        likeBtn.innerHTML = '❤️ В избранном';
+        likeBtn.style.color = '#e03131';
+    } else {
+        likeBtn.innerHTML = '🤍 В избранное';
+        likeBtn.style.color = '';
+    }
+
+    drawLines();
+}
+
+// ============================================================
+//  ЛИНИИ
+// ============================================================
+function drawLines() {
+    var svg = document.getElementById('lines');
+    var map = document.getElementById('map');
+    if (!svg || !map) return;
+
+    var W = map.clientWidth;
+    var H = map.clientHeight;
+
+    svg.setAttribute('width', W);
+    svg.setAttribute('height', H);
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+
+    var mainNode = document.querySelector('.main-node');
+    var words = document.querySelectorAll('.word');
+    if (!mainNode || words.length === 0) {
+        svg.innerHTML = '';
+        return;
+    }
+
+    var col = getComputedStyle(document.body).getPropertyValue('--line').trim() || '#8ea2ff';
+    var html = '<defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="' + col + '"/></marker></defs>';
+
+    var m0 = map.getBoundingClientRect();
+    var mr = mainNode.getBoundingClientRect();
+    var x1 = mr.right - m0.left + 2;
+    var y1 = mr.top + mr.height / 2 - m0.top;
+
+    words.forEach(function(el, i) {
+        var r = el.getBoundingClientRect();
+        var x2 = r.left - m0.left - 10;
+        var y2 = r.top + r.height / 2 - m0.top;
+        var dx = Math.max(30, (x2 - x1) * 0.45);
+        html += '<path class="ln" style="animation-delay:' + (i * 80) + 'ms" d="M' + x1 + ' ' + y1 + ' C ' + (x1 + dx) + ' ' + y1 + ', ' + (x2 - dx) + ' ' + y2 + ', ' + x2 + ' ' + y2 + '" fill="none" stroke="' + col + '" stroke-width="2" marker-end="url(#ar)"/>';
+    });
+
+    svg.innerHTML = html;
+
+    svg.querySelectorAll('.ln').forEach(function(p) {
+        try {
+            var L = p.getTotalLength();
+            p.style.strokeDasharray = L;
+            p.style.strokeDashoffset = L;
+            requestAnimationFrame(function() {
+                p.style.strokeDashoffset = 0;
+            });
+        } catch (e) {}
+    });
+}
+
+// ============================================================
+//  НАВИГАЦИЯ
+// ============================================================
+function go(delta) {
+    if (order.length === 0) return;
+    pos = (pos + delta + order.length) % order.length;
+    render();
+}
+
+function goTo(idx) {
+    pos = order.indexOf(idx);
+    if (pos === -1) pos = 0;
+    render();
+}
+
+// ============================================================
+//  ПОИСК
+// ============================================================
+function search(query) {
+    if (!query || query.trim() === '') {
+        buildOrder();
+        render();
+        return;
+    }
+    query = query.toLowerCase().trim();
+    var results = [];
+    for (var i = 0; i < DB.length; i++) {
+        var d = DB[i];
+        var match = d[0].includes(query) ||
+            d[1].toLowerCase().includes(query) ||
+            d[2].toLowerCase().includes(query);
+        if (!match && d[4]) {
+            for (var j = 0; j < d[4].length; j++) {
+                var w = d[4][j];
+                if (w[0].includes(query) ||
+                    w[1].toLowerCase().includes(query) ||
+                    w[2].toLowerCase().includes(query)) {
+                    match = true;
+                    break;
+                }
+            }
+        }
+        if (match) results.push(i);
+    }
+    order = results;
+    pos = 0;
+    render();
+    if (results.length === 0) {
+        showToast('🔍 Ничего не найдено');
+    } else {
+        showToast('🔍 Найдено: ' + results.length + ' иероглифов');
+    }
+}
+
+// ============================================================
+//  ТЕМА
+// ============================================================
+function toggleTheme() {
+    dark = !dark;
+    document.body.classList.toggle('dark', dark);
+    document.getElementById('themeBtn').textContent = dark ? '☀️' : '🌙';
+    localStorage.setItem('hanmap_theme', dark ? 'dark' : 'light');
+    setTimeout(drawLines, 300);
+}
+
+// ============================================================
+//  ИЗБРАННОЕ
+// ============================================================
+function toggleFavorite() {
+    if (order.length === 0) return;
+    var idx = order[pos];
+    var d = DB[idx];
+    var char = d[0];
+    if (favs.has(char)) {
+        favs.delete(char);
+        showToast('❌ Удалено из избранного: ' + char);
+    } else {
+        favs.add(char);
+        showToast('❤️ Добавлено в избранное: ' + char);
+    }
+    localStorage.setItem('hanmap_favs', JSON.stringify(Array.from(favs)));
+    buildOrder();
+    updateFavCount();
+    render();
+}
+
+function toggleFavFilter() {
+    var btn = document.getElementById('favBtn');
+    if (favs.size === 0) {
+        showToast('📭 Избранное пусто — отметьте ❤️ иероглифы');
+        return;
+    }
+    var isActive = btn.classList.contains('active');
+    btn.classList.toggle('active', !isActive);
+    if (!isActive) {
+        var tempOrder = [];
+        for (var i = 0; i < DB.length; i++) {
+            if (favs.has(DB[i][0])) {
+                tempOrder.push(i);
+            }
+        }
+        if (tempOrder.length > 0) {
+            order = tempOrder;
+            pos = 0;
+            render();
+            showToast('❤️ Только избранное');
+        }
+    } else {
+        buildOrder();
+        render();
+        showToast('📚 Все иероглифы');
+    }
+}
+
+// ============================================================
+//  БАЗА (СЕТКА)
+// ============================================================
+function buildGrid(q) {
+    q = q || document.getElementById('q').value || '';
+    q = q.toLowerCase().trim();
+
+    var grid = document.getElementById('grid');
+    if (!grid) return;
+
+    var items = [];
+    for (var i = 0; i < DB.length; i++) {
+        var d = DB[i];
+        var match = !q ||
+            d[0].includes(q) ||
+            d[1].toLowerCase().includes(q) ||
+            d[2].toLowerCase().includes(q) ||
+            (d[4] && d[4].some(function(w) {
+                return w[0].includes(q) || w[2].toLowerCase().includes(q);
+            }));
+        if (match) {
+            items.push({ d: d, i: i });
+        }
+    }
+
+    if (items.length === 0) {
+        grid.innerHTML = '<div class="empty">Ничего не найдено 🔍</div>';
+        return;
+    }
+
+    grid.innerHTML = '';
+    items.forEach(function(item) {
+        var tile = document.createElement('div');
+        tile.className = 'tile';
+        tile.setAttribute('data-i', item.i);
+        tile.innerHTML = '<div class="t-hz">' + item.d[0] + '</div>' +
+            '<div class="t-py">' + item.d[1] + '</div>';
+        tile.addEventListener('click', function() {
+            var idx = parseInt(this.getAttribute('data-i'));
+            goTo(idx);
+            closeModals();
+        });
+        grid.appendChild(tile);
+    });
+}
+
+function showGrid() {
+    buildGrid();
+    var modal = document.getElementById('gridModal');
+    if (modal) modal.classList.add('open');
+}
+
+// ============================================================
+//  МОДАЛКИ
+// ============================================================
+function closeModals() {
+    document.querySelectorAll('.modal').forEach(function(m) {
+        m.classList.remove('open');
+    });
+}
+
+// ============================================================
+//  ПРОПИСЬ (БОЛЬШАЯ)
+// ============================================================
+var canvas, ctx, drawing = false, lastX, lastY;
+
+function initWrite() {
+    canvas = document.getElementById('pad');
+    if (!canvas) return;
+    ctx = canvas.getContext('2d');
+
+    var wrap = document.getElementById('canvasWrap');
+    if (!wrap) return;
+    var s = Math.min(wrap.clientWidth, window.innerWidth * 0.9, 460);
+    if (s < 300) s = 340;
+    var dpr = window.devicePixelRatio || 1;
+
+    canvas.width = s * dpr;
+    canvas.height = s * dpr;
+    canvas.style.width = s + 'px';
+    canvas.style.height = s + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    var guide = document.getElementById('guide');
+    var hz = document.getElementById('mainHz').textContent;
+    if (guide) {
+        guide.textContent = hz || '人';
+        guide.style.fontSize = (s * 0.72) + 'px';
+        guide.style.opacity = '0.12';
+        guide.className = '';
+    }
+
+    drawGrid(s);
+    var modal = document.getElementById('writeModal');
+    if (modal) modal.classList.add('open');
+    var title = document.getElementById('writeTitle');
+    if (title) title.textContent = '✍️ Пропись: ' + (hz || '人');
+
+    canvas.onmousedown = startDraw;
+    canvas.onmousemove = draw;
+    canvas.onmouseup = endDraw;
+    canvas.onmouseleave = endDraw;
+    canvas.ontouchstart = function(e) {
+        e.preventDefault();
+        var t = e.touches[0];
+        startDraw({ clientX: t.clientX, clientY: t.clientY });
+    };
+    canvas.ontouchmove = function(e) {
+        e.preventDefault();
+        var t = e.touches[0];
+        draw({ clientX: t.clientX, clientY: t.clientY });
+    };
+    canvas.ontouchend = function(e) {
+        e.preventDefault();
+        endDraw();
+    };
+}
+
+function drawGrid(s) {
+    if (!ctx) return;
+    var color = getComputedStyle(document.body).getPropertyValue('--red') || '#e03131';
+    ctx.clearRect(0, 0, s, s);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([]);
+    ctx.strokeRect(2, 2, s - 4, s - 4);
+    ctx.setLineDash([6, 6]);
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = 0.35;
+    var lines = [
+        [s/2, 0, s/2, s],
+        [0, s/2, s, s/2],
+        [0, 0, s, s],
+        [s, 0, 0, s],
+        [s/4, 0, s/4, s],
+        [s*3/4, 0, s*3/4, s],
+        [0, s/4, s, s/4],
+        [0, s*3/4, s, s*3/4]
+    ];
+    lines.forEach(function(l) {
+        ctx.beginPath();
+        ctx.moveTo(l[0], l[1]);
+        ctx.lineTo(l[2], l[3]);
+        ctx.stroke();
+    });
+    ctx.globalAlpha = 1;
+    ctx.setLineDash([]);
+}
+
+function startDraw(e) {
+    drawing = true;
+    var rect = canvas.getBoundingClientRect();
+    lastX = (e.clientX - rect.left);
+    lastY = (e.clientY - rect.top);
+    ctx.beginPath();
+    ctx.arc(lastX, lastY, 4, 0, 7);
+    var ink = getComputedStyle(document.body).getPropertyValue('--ink') || '#20243a';
+    ctx.fillStyle = ink;
+    ctx.fill();
+}
+
+function draw(e) {
+    if (!drawing) return;
+    var rect = canvas.getBoundingClientRect();
+    var x = (e.clientX - rect.left);
+    var y = (e.clientY - rect.top);
+    var ink = getComputedStyle(document.body).getPropertyValue('--ink') || '#20243a';
+    ctx.strokeStyle = ink;
+    ctx.lineWidth = 7;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    lastX = x;
+    lastY = y;
+}
+
+function endDraw() { drawing = false; }
+
+function clearWrite() {
+    if (!ctx) return;
+    var s = document.getElementById('canvasWrap').clientWidth || 340;
+    drawGrid(s);
+    var guide = document.getElementById('guide');
+    if (guide) guide.className = '';
+}
+
+function toggleGuide() {
+    var guide = document.getElementById('guide');
+    if (guide) guide.classList.toggle('hidden');
+}
+
+// ============================================================
+//  ТЕСТ
+// ============================================================
+var ALL_WORDS = [];
+for (var i = 0; i < DB.length; i++) {
+    var words = DB[i][4];
+    for (var j = 0; j < words.length; j++) {
+        ALL_WORDS.push({ hz: words[j][0], py: words[j][1], ru: words[j][2] });
+    }
+}
+
+var quizData = [], quizIdx = 0, quizScore = 0;
+
+function startQuiz() {
+    var shuffled = ALL_WORDS.slice();
+    shuffle(shuffled);
+    quizData = shuffled.slice(0, 10);
+    quizIdx = 0;
+    quizScore = 0;
+    document.getElementById('qScore').textContent = '0 / ' + quizData.length;
+    document.getElementById('qNext').hidden = true;
+    document.getElementById('quizModal').classList.add('open');
+    showQuizQuestion();
+}
+
+function showQuizQuestion() {
+    if (quizIdx >= quizData.length) {
+        document.getElementById('qRu').textContent = '🎉 Тест завершён!';
+        document.getElementById('qOpts').innerHTML = '';
+        document.getElementById('qScore').textContent = quizScore + ' / ' + quizData.length;
+        document.getElementById('qNext').hidden = false;
+        document.getElementById('qNext').textContent = '🔄 Заново';
+        return;
+    }
+
+    var d = quizData[quizIdx];
+    document.getElementById('qRu').textContent = '«' + d.ru + '»';
+
+    var opts = [d];
+    var others = ALL_WORDS.filter(function(item) { return item.hz !== d.hz; });
+    shuffle(others);
+    for (var i = 0; i < 3 && i < others.length; i++) { opts.push(others[i]); }
+    shuffle(opts);
+
+    var container = document.getElementById('qOpts');
+    container.innerHTML = '';
+    for (var i = 0; i < opts.length; i++) {
+        var btn = document.createElement('button');
+        btn.className = 'q-opt';
+        btn.innerHTML = opts[i].hz + '<small>' + opts[i].py + '</small>';
+        btn.setAttribute('data-char', opts[i].hz);
+        btn.onclick = function() { checkQuizAnswer(this); };
+        container.appendChild(btn);
+    }
+    document.getElementById('qScore').textContent = quizScore + ' / ' + quizData.length;
+}
+
+function checkQuizAnswer(btn) {
+    var selected = btn.getAttribute('data-char');
+    var correct = quizData[quizIdx].hz;
+    var btns = document.querySelectorAll('.q-opt');
+
+    for (var i = 0; i < btns.length; i++) {
+        btns[i].disabled = true;
+        if (btns[i].getAttribute('data-char') === correct) { btns[i].classList.add('ok'); }
+        if (btns[i] === btn && selected !== correct) { btns[i].classList.add('bad'); }
+    }
+
+    if (selected === correct) {
+        quizScore++;
+        speak(correct);
+        showToast('✅ Правильно!');
+    } else {
+        speak(correct);
+        showToast('❌ Правильно: ' + correct);
+    }
+
+    document.getElementById('qScore').textContent = quizScore + ' / ' + quizData.length;
+    document.getElementById('qNext').hidden = false;
+    document.getElementById('qNext').textContent = quizIdx < quizData.length - 1 ? 'Дальше →' : '📊 Результат';
+}
+
+function nextQuestion() {
+    quizIdx++;
+    document.getElementById('qNext').hidden = true;
+    showQuizQuestion();
+}
+
+// ============================================================
+//  ИНИЦИАЛИЗАЦИЯ
+// ============================================================
+function init() {
+    console.log('🔄 HanMap инициализация...');
+
+    // Тема
+    var savedTheme = localStorage.getItem('hanmap_theme');
+    if (savedTheme === 'dark') {
+        dark = true;
+        document.body.classList.add('dark');
+        document.getElementById('themeBtn').textContent = '☀️';
+    }
+
+    // Статистика
+    buildOrder();
+    render();
+
+    // События
+    document.getElementById('prevBtn').addEventListener('click', function() { go(-1); });
+    document.getElementById('nextBtn').addEventListener('click', function() { go(1); });
+    document.getElementById('mainNode').addEventListener('click', function() {
+        var hz = document.getElementById('mainHz').textContent;
+        if (hz && hz !== '⚠️') speak(hz);
+    });
+    document.getElementById('speakBtn').addEventListener('click', function() {
+        var hz = document.getElementById('mainHz').textContent;
+        if (hz && hz !== '⚠️') speak(hz);
+    });
+    // Озвучка слов при клике
+    document.getElementById('words').addEventListener('click', function(e) {
+        var el = e.target.closest('.word');
+        if (!el) return;
+        var idx = parseInt(el.dataset.i);
+        if (isNaN(idx)) return;
+        var d = DB[order[pos]];
+        if (!d || !d[4]) return;
+        var w = d[4][idx];
+        if (!w) return;
+        speak(w[0]);
+        showToast('🔊 ' + w[0] + ' — ' + w[2]);
+    });
+
+    document.getElementById('likeBtn').addEventListener('click', toggleFavorite);
+    document.getElementById('favBtn').addEventListener('click', toggleFavFilter);
+    document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+    document.getElementById('randBtn').addEventListener('click', function() {
+        shuffle(order);
+        pos = 0;
+        render();
+        showToast('🎲 Перемешано!');
+    });
+    document.getElementById('gridBtn').addEventListener('click', showGrid);
+    document.getElementById('writeBtn').addEventListener('click', initWrite);
+    document.getElementById('clearBtn').addEventListener('click', clearWrite);
+    document.getElementById('guideBtn').addEventListener('click', toggleGuide);
+    document.getElementById('quizBtn').addEventListener('click', startQuiz);
+    document.getElementById('qNext').addEventListener('click', nextQuestion);
+
+    // Поиск
+    var searchInput = document.getElementById('q');
+    var searchTimeout;
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(function() {
+            search(searchInput.value);
+        }, 300);
+    });
+
+    // Закрытие модалок
+    document.querySelectorAll('[data-close]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var modal = this.closest('.modal');
+            if (modal) modal.classList.remove('open');
+        });
+    });
+
+    document.querySelectorAll('.modal').forEach(function(m) {
+        m.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('open');
+            }
+        });
+    });
+
+    // Ресайз
+    var resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(drawLines, 300);
+    });
+
+    // Клавиатура
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft') go(-1);
+        if (e.key === 'ArrowRight') go(1);
+        if (e.key === 'Escape') {
+            closeModals();
+        }
+    });
+
+    // Предзагрузка голосов
+    if ('speechSynthesis' in window) {
+        speechSynthesis.getVoices();
+        speechSynthesis.onvoiceschanged = function() {
+            speechSynthesis.getVoices();
+        };
+    }
+
+    console.log('✅ HanMap загружен!');
+}
+
+// Запуск
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
+</script>
+</body>
+</html>
