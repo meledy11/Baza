@@ -19,7 +19,7 @@ body{display:flex;flex-direction:column;align-items:center;}
 .hdr{position:relative;z-index:10;width:100%;max-width:560px;display:flex;justify-content:space-between;align-items:center;padding:12px 16px 6px;flex-shrink:0;}
 .logo{font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,#ffd700,#ff6b6b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:.5px;}
 .pills{display:flex;gap:6px;flex-wrap:wrap;}
-.pill{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:4px 12px;font-size:.6rem;font-weight:600;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:4px;}
+.pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:4px 12px;font-size:.6rem;font-weight:600;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:4px;}
 .pill b{font-size:.8rem;}.pill .g{color:#ffd700;}.pill .r{color:#ff6b6b;}.pill .gr{color:#2ecc71;}.pill .p{color:#a855f7;}.pill .o{color:#f59e0b;}
 
 .pw{position:relative;z-index:10;width:100%;max-width:560px;padding:0 16px 8px;flex-shrink:0;}
@@ -33,26 +33,28 @@ body{display:flex;flex-direction:column;align-items:center;}
 .c{position:relative;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;transition:transform .15s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;border:1px solid rgba(255,255,255,.08);box-shadow:0 4px 16px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.08),inset 0 -2px 0 rgba(0,0,0,.15);}
 .c::after{content:'';position:absolute;inset:0;border-radius:14px;background:radial-gradient(circle at 28% 22%,rgba(255,255,255,.06),transparent 55%);pointer-events:none;z-index:0;}
 
-.t1 .c0{background:linear-gradient(150deg,#c47a5a,#8a4a2a);}.t1 .c1{background:linear-gradient(150deg,#c4a84a,#8a7a2a);}.t1 .c2{background:linear-gradient(150deg,#4a9a5a,#2a6a3a);}.t1 .c3{background:linear-gradient(150deg,#4a6a9a,#2a3a6a);}.t1 .c4{background:linear-gradient(150deg,#8a5a9a,#4a2a6a);}.t1 .c5{background:linear-gradient(150deg,#5a8a8a,#2a5a5a);}
-.t2 .c0{background:linear-gradient(150deg,#8a8aaa,#4a4a6a);}.t2 .c1{background:linear-gradient(150deg,#8aaa8a,#4a6a4a);}.t2 .c2{background:linear-gradient(150deg,#6a8aaa,#2a4a6a);}.t2 .c3{background:linear-gradient(150deg,#aa8a8a,#6a4a4a);}.t2 .c4{background:linear-gradient(150deg,#8a6aaa,#4a2a6a);}.t2 .c5{background:linear-gradient(150deg,#6a8a8a,#2a4a4a);}
+/* Более контрастные цвета для кубиков */
+.t1 .c0{background:linear-gradient(150deg,#ff8a5a,#c44a2a);}.t1 .c1{background:linear-gradient(150deg,#ffd94a,#c49a2a);}.t1 .c2{background:linear-gradient(150deg,#5aff5a,#2a8a3a);}.t1 .c3{background:linear-gradient(150deg,#5a8aff,#2a4a8a);}.t1 .c4{background:linear-gradient(150deg,#c08aff,#5a2a8a);}.t1 .c5{background:linear-gradient(150deg,#5acaca,#2a6a6a);}
+.t2 .c0{background:linear-gradient(150deg,#aaaaff,#4a4a8a);}.t2 .c1{background:linear-gradient(150deg,#aaffaa,#4a7a4a);}.t2 .c2{background:linear-gradient(150deg,#7aaaff,#2a5a8a);}.t2 .c3{background:linear-gradient(150deg,#ffaaaa,#6a4a4a);}.t2 .c4{background:linear-gradient(150deg,#aa7aff,#4a2a7a);}.t2 .c5{background:linear-gradient(150deg,#7aaaaa,#2a5a5a);}
 .t3 .c0{background:linear-gradient(150deg,#ff6b6b,#cc3333);}.t3 .c1{background:linear-gradient(150deg,#ffd93d,#cca800);}.t3 .c2{background:linear-gradient(150deg,#6bff6b,#33cc33);}.t3 .c3{background:linear-gradient(150deg,#6bb5ff,#3388cc);}.t3 .c4{background:linear-gradient(150deg,#c084fc,#8844cc);}.t3 .c5{background:linear-gradient(150deg,#ff6bff,#cc33cc);}
-.t4 .c0{background:linear-gradient(150deg,#8a3a4a,#5a1a2a);}.t4 .c1{background:linear-gradient(150deg,#8a5a3a,#5a2a1a);}.t4 .c2{background:linear-gradient(150deg,#3a7a4a,#1a4a2a);}.t4 .c3{background:linear-gradient(150deg,#3a4a7a,#1a2a4a);}.t4 .c4{background:linear-gradient(150deg,#6a3a7a,#3a1a4a);}.t4 .c5{background:linear-gradient(150deg,#3a6a6a,#1a3a3a);}
+.t4 .c0{background:linear-gradient(150deg,#aa4a5a,#6a2a3a);}.t4 .c1{background:linear-gradient(150deg,#aa7a4a,#6a3a2a);}.t4 .c2{background:linear-gradient(150deg,#4a8a5a,#2a5a3a);}.t4 .c3{background:linear-gradient(150deg,#4a5a8a,#2a3a5a);}.t4 .c4{background:linear-gradient(150deg,#8a4a9a,#4a2a5a);}.t4 .c5{background:linear-gradient(150deg,#4a8a8a,#2a4a4a);}
 .t5 .c0{background:linear-gradient(150deg,#f5b0b0,#d07070);}.t5 .c1{background:linear-gradient(150deg,#f5d0a0,#d0a070);}.t5 .c2{background:linear-gradient(150deg,#a0d0a0,#70a070);}.t5 .c3{background:linear-gradient(150deg,#a0b0d0,#7080a0);}.t5 .c4{background:linear-gradient(150deg,#c0a0d0,#9080a0);}.t5 .c5{background:linear-gradient(150deg,#a0d0d0,#70a0a0);}
 
-.c.sp-bomb{background:radial-gradient(circle at 30% 30%,#dd4444,#881818)!important;border:2px solid #ffd700!important;animation:bPulse 1s ease infinite alternate;}
+.c.sp-bomb{background:radial-gradient(circle at 30% 30%,#ff4444,#aa1818)!important;border:2px solid #ffd700!important;animation:bPulse 1s ease infinite alternate;}
 @keyframes bPulse{from{box-shadow:0 0 15px rgba(255,215,0,.1);}to{box-shadow:0 0 45px rgba(255,215,0,.4);}}
-.c.sp-laser{background:radial-gradient(circle at 30% 30%,#7a5add,#4422aa)!important;border:2px solid #aa88ee!important;animation:lPulse 1s ease infinite alternate;}
+.c.sp-laser{background:radial-gradient(circle at 30% 30%,#9a5add,#5522aa)!important;border:2px solid #aa88ee!important;animation:lPulse 1s ease infinite alternate;}
 @keyframes lPulse{from{box-shadow:0 0 15px rgba(170,136,238,.1);}to{box-shadow:0 0 45px rgba(170,136,238,.4);}}
 .c.sp-star{background:radial-gradient(circle at 30% 30%,#44dd88,#118844)!important;border:2px solid #88eebb!important;animation:sPulse 1s ease infinite alternate;}
 @keyframes sPulse{from{box-shadow:0 0 15px rgba(136,238,187,.1);}to{box-shadow:0 0 45px rgba(136,238,187,.4);}}
 .c.sp-rainbow{background:linear-gradient(135deg,#ff6b6b,#ffd93d,#6bff6b,#6bb5ff,#c084fc)!important;border:2px solid #ffd700!important;animation:rPulse .8s ease infinite alternate;}
 @keyframes rPulse{from{box-shadow:0 0 20px rgba(255,215,0,.1);}to{box-shadow:0 0 60px rgba(255,215,0,.5);}}
 
-.c .hz{font-weight:800;line-height:1;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.5);z-index:1;pointer-events:none;}
-.c .py{color:rgba(255,255,255,.5);font-weight:500;text-shadow:0 1px 6px rgba(0,0,0,.5);z-index:1;pointer-events:none;margin-top:1px;font-size:.55rem;}
-.c .ru{color:rgba(255,255,255,.7);font-weight:500;text-shadow:0 1px 6px rgba(0,0,0,.5);background:rgba(0,0,0,.2);padding:0 6px;border-radius:4px;z-index:1;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:92%;font-size:.5rem;}
-.c .badge{position:absolute;top:2px;right:3px;z-index:2;pointer-events:none;text-shadow:0 0 12px rgba(0,0,0,.6);font-size:.65rem;}
-.c .emo{position:absolute;bottom:2px;left:4px;opacity:.3;z-index:2;pointer-events:none;font-size:.55rem;}
+/* Увеличенный контрастный текст */
+.c .hz{font-weight:900;line-height:1;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.7),0 0 4px rgba(0,0,0,.3);z-index:1;pointer-events:none;}
+.c .py{color:rgba(255,255,255,.7);font-weight:600;text-shadow:0 1px 6px rgba(0,0,0,.6);z-index:1;pointer-events:none;margin-top:1px;font-size:.55rem;}
+.c .ru{color:rgba(255,255,255,.8);font-weight:600;text-shadow:0 1px 6px rgba(0,0,0,.6);background:rgba(0,0,0,.3);padding:0 6px;border-radius:4px;z-index:1;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:92%;font-size:.5rem;}
+.c .badge{position:absolute;top:2px;right:3px;z-index:2;pointer-events:none;text-shadow:0 0 12px rgba(0,0,0,.8);font-size:.65rem;}
+.c .emo{position:absolute;bottom:2px;left:4px;opacity:.5;z-index:2;pointer-events:none;font-size:.55rem;}
 
 .c.sel{transform:scale(1.12);z-index:6;box-shadow:0 0 0 3px #ffd700,0 0 40px rgba(255,215,0,.3);}
 .c.drag{transform:scale(1.18)!important;z-index:20!important;box-shadow:0 0 0 4px #ffd700,0 12px 50px rgba(0,0,0,.4)!important;}
@@ -139,7 +141,7 @@ body{display:flex;flex-direction:column;align-items:center;}
     <div class="pill">🔥<b class="r" id="uCo">0</b></div>
     <div class="pill">🎯<b class="gr" id="uLv">1</b></div>
     <div class="pill">💎<b class="p" id="uSp">0</b></div>
-    <div class="pill">📦<b class="o" id="uSet">Набор 1/5</b></div>
+    <div class="pill">📦<b class="o" id="uSet">Набор 1/120</b></div>
   </div>
 </div>
 <div class="pw">
@@ -207,7 +209,7 @@ if (typeof DB === 'undefined' || DB.length === 0) {
 }
 
 // ============================================================
-//  ПАРАМЕТРЫ ИГРЫ
+//  ПАРАМЕТРЫ ИГРЫ (увеличенная цель для долгого уровня)
 // ============================================================
 var NCOLORS = 6;
 var NR = 8;
@@ -221,7 +223,7 @@ var score = 0;
 var combo = 0;
 var moves = 0;
 var level = 1;
-var goal = 200;
+var goal = 500; // Увеличено с 200 до 500
 var nShuf = 3;
 var nHint = 5;
 var nBomb = 0;
@@ -293,9 +295,14 @@ function isNeighbor(a, b) {
     return false;
 }
 
+// ============================================================
+//  ПОИСК КОМБИНАЦИЙ (ВСЕ ФОРМЫ: L, T, квадраты, 4/5/6 в ряд)
+// ============================================================
 function findAllCombinations(bd) {
     var results = [];
     var used = {};
+    
+    // Горизонтальные (3+ в ряд)
     for (var r = 0; r < NR; r++) {
         for (var c = 0; c <= NC - 3; c++) {
             var i = r * NC + c;
@@ -320,6 +327,8 @@ function findAllCombinations(bd) {
             c += len - 1;
         }
     }
+    
+    // Вертикальные (3+ в ряд)
     for (var c = 0; c < NC; c++) {
         for (var r = 0; r <= NR - 3; r++) {
             var i = r * NC + c;
@@ -344,6 +353,8 @@ function findAllCombinations(bd) {
             r += len - 1;
         }
     }
+    
+    // L и T формы (5 клеток)
     for (var r = 0; r < NR - 2; r++) {
         for (var c = 0; c < NC - 2; c++) {
             var patterns = [
@@ -377,6 +388,8 @@ function findAllCombinations(bd) {
             }
         }
     }
+    
+    // Квадраты 2x2 (4 клетки)
     for (var r = 0; r < NR - 1; r++) {
         for (var c = 0; c < NC - 1; c++) {
             var ids = [r*NC+c, r*NC+c+1, (r+1)*NC+c, (r+1)*NC+c+1];
@@ -398,6 +411,7 @@ function findAllCombinations(bd) {
             }
         }
     }
+    
     return results;
 }
 
@@ -417,9 +431,12 @@ function findMatches(bd) {
     var allShapes = findAllCombinations(bd);
     var matched = {};
     var shapes = [];
+    
     for (var i = 0; i < allShapes.length; i++) {
         var shape = allShapes[i];
         var ids = shape.ids;
+        
+        // Проверяем наличие бомбы в комбинации
         var hasBomb = false;
         for (var j = 0; j < ids.length; j++) {
             if (bd[ids[j]] && bd[ids[j]].sp === 'bomb') {
@@ -427,6 +444,7 @@ function findMatches(bd) {
                 break;
             }
         }
+        
         if (hasBomb) {
             var bombIdx = -1;
             for (var j = 0; j < ids.length; j++) {
@@ -449,6 +467,7 @@ function findMatches(bd) {
             shapes.push(shape);
         }
     }
+    
     var matchedArr = [];
     for (var key in matched) {
         matchedArr.push(parseInt(key));
@@ -476,6 +495,7 @@ function anyMove(bd) {
     return null;
 }
 
+// Находит лучший ход (учитывает сложные формы)
 function bestMove(bd) {
     var best = null;
     var bestScore = -1;
@@ -500,6 +520,9 @@ function bestMove(bd) {
                     var booster = getBooster(sh);
                     if (booster) sc += 200;
                     if (sh.type === 'L' || sh.type === 'T') sc += 100;
+                    if (sh.type === 'square') sc += 80;
+                    if (sh.type === '5line') sc += 150;
+                    if (sh.type === '6line') sc += 250;
                 }
                 if (sc > bestScore) {
                     bestScore = sc;
@@ -632,11 +655,11 @@ function render(fallSet) {
     fallSet = fallSet || {};
     var b = document.getElementById('board');
     b.innerHTML = '';
-    var hzPx = Math.max(16, Math.floor(cellPx * .44));
-    var pyPx = Math.max(8, Math.floor(cellPx * .13));
-    var ruPx = Math.max(8, Math.floor(cellPx * .12));
-    var emPx = Math.max(8, Math.floor(cellPx * .12));
-    var bdPx = Math.max(8, Math.floor(cellPx * .16));
+    var hzPx = Math.max(18, Math.floor(cellPx * .48));
+    var pyPx = Math.max(9, Math.floor(cellPx * .14));
+    var ruPx = Math.max(9, Math.floor(cellPx * .13));
+    var emPx = Math.max(9, Math.floor(cellPx * .13));
+    var bdPx = Math.max(9, Math.floor(cellPx * .17));
     for (var i = 0; i < TOT; i++) {
         var el = document.createElement('div');
         el.setAttribute('data-i', String(i));
@@ -697,14 +720,14 @@ function salute(idx, emos) {
     var rect = el.getBoundingClientRect();
     var cx = rect.left + rect.width / 2;
     var cy = rect.top + rect.height / 2;
-    for (var i = 0; i < 16; i++) {
+    for (var i = 0; i < 20; i++) {
         var s = document.createElement('div');
         s.className = 'salute';
         s.textContent = emos[Math.floor(Math.random() * emos.length)];
-        s.style.fontSize = (16 + Math.random() * 20) + 'px';
+        s.style.fontSize = (18 + Math.random() * 24) + 'px';
         var ang = Math.random() * Math.PI * 2;
-        var d1 = 60 + Math.random() * 140;
-        var d2 = 40 + Math.random() * 100;
+        var d1 = 70 + Math.random() * 160;
+        var d2 = 50 + Math.random() * 120;
         s.style.left = cx + 'px';
         s.style.top = cy + 'px';
         s.style.setProperty('--t1x', (Math.cos(ang) * d1 * 0.5) + 'px');
@@ -720,14 +743,14 @@ function salute(idx, emos) {
 }
 
 function rainEmojis(cx, cy, count, emos) {
-    count = count || 12;
+    count = count || 15;
     emos = emos || ['✨', '⭐', '💥', '🌟', '🌈', '🎆'];
     for (var i = 0; i < count; i++) {
         var el = document.createElement('div');
         el.className = 'rain';
         el.textContent = emos[Math.floor(Math.random() * emos.length)];
-        el.style.fontSize = (14 + Math.random() * 18) + 'px';
-        el.style.left = (cx + (Math.random() - 0.5) * 280) + 'px';
+        el.style.fontSize = (16 + Math.random() * 20) + 'px';
+        el.style.left = (cx + (Math.random() - 0.5) * 320) + 'px';
         el.style.top = (cy - 20 + (Math.random() - 0.5) * 40) + 'px';
         el.style.setProperty('--rd', (1.5 + Math.random() * 1.5) + 's');
         document.body.appendChild(el);
@@ -746,7 +769,7 @@ function floatPts(idx, pts) {
     var f = document.createElement('div');
     f.className = 'fpts';
     f.textContent = '+' + pts;
-    f.style.fontSize = Math.max(14, cellPx * 0.32) + 'px';
+    f.style.fontSize = Math.max(16, cellPx * 0.36) + 'px';
     f.style.left = (cr.left - br.left + cr.width / 2 - 18) + 'px';
     f.style.top = (cr.top - br.top - 5) + 'px';
     document.getElementById('board').appendChild(f);
@@ -757,7 +780,7 @@ function showCombo(c) {
     var el = document.getElementById('cmb');
     var emos = ['🔥', '⚡', '💥', '🌟', '✨', '🌈'];
     el.textContent = emos[Math.min(c - 1, emos.length - 1)] + ' COMBO ×' + c + '!';
-    el.style.fontSize = Math.max(28, cellPx * 0.7) + 'px';
+    el.style.fontSize = Math.max(30, cellPx * 0.75) + 'px';
     el.classList.remove('show');
     void el.offsetWidth;
     el.classList.add('show');
@@ -768,7 +791,7 @@ function showStreak(text, color) {
     var el = document.getElementById('streak');
     el.textContent = text;
     el.style.color = color || '#ffd700';
-    el.style.fontSize = Math.max(18, cellPx * 0.42) + 'px';
+    el.style.fontSize = Math.max(20, cellPx * 0.45) + 'px';
     el.classList.remove('show');
     void el.offsetWidth;
     el.classList.add('show');
@@ -866,7 +889,7 @@ function activateBomb(idx) {
         if (cells[ki]) cells[ki].classList.add('boom');
     }
     salute(idx, ['💥', '🔥', '🌟', '✨']);
-    var pts = Object.keys(removed).length * 12 + 40;
+    var pts = Object.keys(removed).length * 15 + 50;
     score += pts;
     floatPts(idx, pts);
     showStreak('💥 БОМБА! +' + pts, '#ff6b6b');
@@ -895,7 +918,7 @@ function activateLaser(idx, orient) {
         }
     }
     salute(idx, ['⚡', '✨', '💥']);
-    var pts = Object.keys(removed).length * 10 + 35;
+    var pts = Object.keys(removed).length * 12 + 45;
     score += pts;
     floatPts(idx, pts);
     showStreak('⚡ ЛАЗЕР! +' + pts, '#aa88ee');
@@ -917,7 +940,7 @@ function activateStar(idx) {
     }
     if (cells[idx]) cells[idx].classList.add('shit');
     salute(idx, ['⭐', '🌟', '✨', '💫', '🌈']);
-    var pts = Object.keys(removed).length * 15 + 55;
+    var pts = Object.keys(removed).length * 18 + 65;
     score += pts;
     floatPts(idx, pts);
     showStreak('⭐ ЗВЕЗДА! +' + pts, '#88eebb');
@@ -954,8 +977,8 @@ function activateRainbow(idx) {
     }
     if (cells[idx]) cells[idx].classList.add('rhit');
     salute(idx, ['🌈', '✨', '⭐', '💫', '🌟', '🎆']);
-    rainEmojis(window.innerWidth / 2, window.innerHeight / 3, 20, ['🌈', '✨', '⭐', '💫']);
-    var pts = Object.keys(removed).length * 18 + 80;
+    rainEmojis(window.innerWidth / 2, window.innerHeight / 3, 25, ['🌈', '✨', '⭐', '💫']);
+    var pts = Object.keys(removed).length * 20 + 90;
     score += pts;
     floatPts(idx, pts);
     showStreak('🌈 РАДУГА! +' + pts, '#ffd700');
@@ -978,10 +1001,11 @@ function activateCombo(idx1, idx2) {
     sndSpec();
     var removed = {};
     var cells = document.querySelectorAll('.c');
+    
     if (sp1 === 'bomb' && sp2 === 'bomb') {
         for (var i = 0; i < TOT; i++) removed[i] = true;
         showStreak('💥💥 МЕГА ВЗРЫВ!', '#ff4444');
-        rainEmojis(window.innerWidth / 2, window.innerHeight / 3, 40, ['💥', '🔥', '✨', '⭐']);
+        rainEmojis(window.innerWidth / 2, window.innerHeight / 3, 45, ['💥', '🔥', '✨', '⭐']);
     } else if ((sp1 === 'bomb' && sp2 === 'laser') || (sp1 === 'laser' && sp2 === 'bomb')) {
         var bombIdx = sp1 === 'bomb' ? idx1 : idx2;
         var r = Math.floor(bombIdx / NC);
@@ -1083,13 +1107,14 @@ function activateCombo(idx1, idx2) {
         }
         showStreak('✨ КОМБО!', '#ffd700');
     }
+    
     for (var key in removed) {
         var ki = parseInt(key);
         if (cells[ki]) cells[ki].classList.add('boom');
     }
     salute(idx1, ['💥', '⚡', '⭐', '🌈', '✨']);
     salute(idx2, ['💥', '⚡', '⭐', '🌈', '✨']);
-    var pts = Object.keys(removed).length * 15 + 100;
+    var pts = Object.keys(removed).length * 18 + 120;
     score += pts;
     floatPts(idx1, pts);
     return removed;
@@ -1104,21 +1129,21 @@ function updateStreak() {
     var color = '#ffd700';
     if (streak >= 7) {
         mult = 5;
-        bonus = 60;
+        bonus = 80;
         text = '🔥 СУПЕР СТРЕЙК ×5!';
         color = '#ff4444';
         sndStreak();
-        rainEmojis(window.innerWidth / 2, window.innerHeight / 3, 25, ['🔥', '⚡', '💥', '🌟']);
+        rainEmojis(window.innerWidth / 2, window.innerHeight / 3, 30, ['🔥', '⚡', '💥', '🌟']);
     } else if (streak >= 5) {
         mult = 3;
-        bonus = 35;
+        bonus = 50;
         text = '🔥 СТРЕЙК ×3!';
         color = '#ff8800';
         sndStreak();
-        rainEmojis(window.innerWidth / 2, window.innerHeight / 3, 12, ['🔥', '⚡', '✨']);
+        rainEmojis(window.innerWidth / 2, window.innerHeight / 3, 15, ['🔥', '⚡', '✨']);
     } else if (streak >= 3) {
         mult = 2;
-        bonus = 18;
+        bonus = 25;
         text = '🔥 СТРЕЙК ×2!';
         color = '#ffaa00';
         sndStreak();
@@ -1160,7 +1185,7 @@ function fillEmpty() {
 }
 
 // ============================================================
-//  ОСНОВНАЯ ЛОГИКА
+//  ПРОВЕРКА ПОБЕДЫ И ПЕРЕХОД УРОВНЯ
 // ============================================================
 function checkWinCondition() {
     if (!levelComplete && !victoryShown && score >= goal) {
@@ -1168,11 +1193,11 @@ function checkWinCondition() {
         levelComplete = true;
         busy = true;
         sndLvl();
-        rainEmojis(window.innerWidth / 2, window.innerHeight / 3, 40, ['🎉', '🎊', '✨', '⭐', '🌈', '💖', '🔥']);
+        rainEmojis(window.innerWidth / 2, window.innerHeight / 3, 50, ['🎉', '🎊', '✨', '⭐', '🌈', '💖', '🔥']);
         showStreak('🎉 УРОВЕНЬ ' + level + ' ПРОЙДЕН!', '#ffd700');
         setTimeout(function() {
             doNextLevel();
-        }, 1500);
+        }, 1800);
     }
 }
 
@@ -1181,7 +1206,7 @@ function doNextLevel() {
     victoryShown = false;
     busy = false;
     level = (level % ALL_LEVELS.length) + 1;
-    goal = 200 + ((level - 1) * 100);
+    goal = 500 + ((level - 1) * 50); // 500, 550, 600...
     score = 0;
     combo = 0;
     moves = 0;
@@ -1207,7 +1232,7 @@ function doNewGame() {
     score = 0;
     combo = 0;
     moves = 0;
-    goal = 200;
+    goal = 500;
     nShuf = 3;
     nHint = 5;
     nBomb = 0;
@@ -1336,6 +1361,7 @@ async function resolveLoop(matched, shapes, newBoosters, mult) {
             for (var si = 0; si < shapes.length; si++) {
                 if (shapes[si].type === 'L' || shapes[si].type === 'T') pts += 25;
                 if (shapes[si].len >= 5) pts += 30;
+                if (shapes[si].type === 'square') pts += 20;
             }
         }
         pts = Math.floor(pts);
@@ -1451,9 +1477,12 @@ function doShuffle() {
 
 function doHint() {
     if (busy || levelComplete || nHint <= 0) return;
+    
+    // Сначала проверяем, есть ли сложные формы (L, T, квадраты)
     var currentShapes = findAllCombinations(board);
     var complexFound = false;
     var cells = document.querySelectorAll('.c');
+    
     for (var i = 0; i < currentShapes.length; i++) {
         var t = currentShapes[i].type;
         if (t === 'L' || t === 'T' || t === 'square' || t === 'cross' || t === '5line' || t === '6line') {
@@ -1469,6 +1498,7 @@ function doHint() {
             }
         }
     }
+    
     if (complexFound) {
         nHint--;
         sndShuf();
@@ -1476,11 +1506,14 @@ function doHint() {
         updateUI();
         return;
     }
+    
+    // Иначе показываем лучший ход
     var mv = bestMove(board);
     if (!mv) {
         showStreak('😅 Нет доступных ходов!', '#ff6b6b');
         return;
     }
+    
     nHint--;
     sndShuf();
     for (var i = 0; i < mv.length; i++) {
@@ -1513,6 +1546,9 @@ function doUseBomb() {
     showStreak('💥 БОМБА УСТАНОВЛЕНА!', '#ff6b6b');
 }
 
+// ============================================================
+//  ОСНОВНАЯ ЛОГИКА ОБМЕНА
+// ============================================================
 async function trySwap(a, b) {
     if (busy || levelComplete || !isNeighbor(a, b)) return;
     busy = true;
@@ -1521,6 +1557,8 @@ async function trySwap(a, b) {
     var spA = board[a] ? board[a].sp : null;
     var spB = board[b] ? board[b].sp : null;
     await animSwap(a, b);
+    
+    // Комбо спец-способностей
     if (spA && spB) {
         var removed = activateCombo(a, b);
         if (removed) {
@@ -1543,6 +1581,8 @@ async function trySwap(a, b) {
             return;
         }
     }
+    
+    // Спец-способность + обычный
     if (spA && !spB) {
         var removed = activateSpecial(a, spA);
         if (removed) {
@@ -1565,6 +1605,7 @@ async function trySwap(a, b) {
             return;
         }
     }
+    
     if (spB && !spA) {
         var removed = activateSpecial(b, spB);
         if (removed) {
@@ -1587,10 +1628,13 @@ async function trySwap(a, b) {
             return;
         }
     }
+    
+    // Обычный обмен
     var temp = board[a];
     board[a] = board[b];
     board[b] = temp;
     var result = findMatches(board);
+    
     if (result.matched.length === 0) {
         sndBad();
         var temp2 = board[a];
@@ -1603,6 +1647,7 @@ async function trySwap(a, b) {
         busy = false;
         return;
     }
+    
     moves++;
     combo = 0;
     var mult = updateStreak();
