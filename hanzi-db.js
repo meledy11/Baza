@@ -1,9 +1,7 @@
 // ============================================================
-//  БАЗА ИГРЫ: 600 ИЕРОГЛИФОВ (из HanMap)
-//  Каждый уровень берёт 6 случайных иероглифов из 600
+//  БАЗА 600 ИЕРОГЛИФОВ (общая для игры и словаря)
 // ============================================================
 
-// ----- ГЕНЕРАТОР 600 ИЕРОГЛИФОВ -----
 function generateAllChars() {
   const core = [
     ["人", "rén", "человек", "👤"],
@@ -564,7 +562,6 @@ function generateAllChars() {
     "作": "🔧", "坐": "🪑", "做": "🔧"
   };
 
-  // Формируем массив объектов
   const result = core.map(item => {
     const [h, p, r, em] = item;
     return {
@@ -575,7 +572,6 @@ function generateAllChars() {
     };
   });
 
-  // Перемешиваем для случайности
   for (let i = result.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [result[i], result[j]] = [result[j], result[i]];
@@ -584,32 +580,7 @@ function generateAllChars() {
   return result;
 }
 
-// ----- ГЛОБАЛЬНАЯ БАЗА 600 ИЕРОГЛИФОВ -----
+// Глобальная БД
 var ALL_CHARS = generateAllChars();
 var NCOLORS = 6;
-
-// ----- ФУНКЦИИ ДЛЯ ИГРЫ -----
-function getCharsForLevel(lvl) {
-  // Берём 6 случайных иероглифов из 600
-  // Каждый уровень — новая случайная выборка
-  const shuffled = [...ALL_CHARS];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled.slice(0, 6).map((char, idx) => ({
-    ...char,
-    c: idx % NCOLORS,
-    sp: null
-  }));
-}
-
-function getCurrentChars() {
-  return getCharsForLevel(level);
-}
-
-function randomChar() {
-  const chars = getCurrentChars();
-  const idx = Math.floor(Math.random() * chars.length);
-  return { ...chars[idx] };
-}
+var NR = 8, NC = 6, TOT = NR * NC;
