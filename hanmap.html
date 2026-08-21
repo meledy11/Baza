@@ -152,7 +152,7 @@ footer{text-align:center;color:var(--mut);font-size:12px;padding:18px 0 8px}
 <script src="app.js"></script>
 <script>
 // ============================================================
-//  LOGICA HanMap — ИСПОЛЬЗУЕТ DB ИЗ app.js
+//  ЛОГИКА HanMap — ИСПОЛЬЗУЕТ DB из app.js
 // ============================================================
 
 // Проверяем наличие базы
@@ -237,7 +237,7 @@ function render() {
   document.getElementById('mainRu').textContent = d[2];
 
   var wordsHtml = '';
-  var words = d[3] || [];
+  var words = d[4] || [];
   for (var i = 0; i < words.length; i++) {
     var w = words[i];
     var chars = w[0].split('');
@@ -257,7 +257,7 @@ function render() {
   
   var totalWords = 0;
   for (var i = 0; i < DB.length; i++) {
-    if (DB[i][3]) totalWords += DB[i][3].length;
+    if (DB[i][4]) totalWords += DB[i][4].length;
   }
   document.getElementById('statWord').textContent = totalWords + ' слов';
 
@@ -331,14 +331,12 @@ function go(delta) {
   if (order.length === 0) return;
   pos = (pos + delta + order.length) % order.length;
   render();
-  if (typeof speak === 'function') speak();
 }
 
 function goTo(idx) {
   pos = order.indexOf(idx);
   if (pos === -1) pos = 0;
   render();
-  if (typeof speak === 'function') speak();
 }
 
 // ============================================================
@@ -357,9 +355,9 @@ function search(query) {
     var match = d[0].includes(query) ||
                d[1].toLowerCase().includes(query) ||
                d[2].toLowerCase().includes(query);
-    if (!match && d[3]) {
-      for (var j = 0; j < d[3].length; j++) {
-        var w = d[3][j];
+    if (!match && d[4]) {
+      for (var j = 0; j < d[4].length; j++) {
+        var w = d[4][j];
         if (w[0].includes(query) || 
             w[1].toLowerCase().includes(query) || 
             w[2].toLowerCase().includes(query)) {
@@ -451,7 +449,7 @@ function buildGrid(q) {
                 d[0].includes(q) || 
                 d[1].toLowerCase().includes(q) || 
                 d[2].toLowerCase().includes(q) ||
-                (d[3] && d[3].some(function(w) { 
+                (d[4] && d[4].some(function(w) { 
                   return w[0].includes(q) || w[2].toLowerCase().includes(q); 
                 }));
     if (match) {
@@ -486,6 +484,15 @@ function showGrid() {
 }
 
 // ============================================================
+//  МОДАЛКИ
+// ============================================================
+function closeModals() {
+  document.querySelectorAll('.modal').forEach(function(m) {
+    m.classList.remove('open');
+  });
+}
+
+// ============================================================
 //  ПРОПИСЬ
 // ============================================================
 var canvas, ctx, drawing = false, lastX, lastY;
@@ -509,7 +516,6 @@ function initWrite() {
   guide.style.fontSize = s * 0.78 + 'px';
   guide.className = '';
   
-  // Рисуем сетку
   ctx.clearRect(0, 0, s, s);
   ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--red');
   ctx.lineWidth = 2;
@@ -531,7 +537,6 @@ function initWrite() {
   document.getElementById('writeModal').classList.add('open');
   document.getElementById('writeTitle').textContent = '✍️ Пропись: ' + hz;
   
-  // События
   canvas.onmousedown = startDraw;
   canvas.onmousemove = draw;
   canvas.onmouseup = endDraw;
@@ -589,7 +594,6 @@ function clearWrite() {
   if (!ctx) return;
   var s = document.getElementById('canvasWrap').clientWidth;
   ctx.clearRect(0, 0, s, s);
-  // Перерисовываем сетку
   ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--red');
   ctx.lineWidth = 2;
   ctx.setLineDash([]);
@@ -686,7 +690,6 @@ function checkQuizAnswer(btn) {
   if (selected === correct) {
     quizScore++;
     showToast('✅ Правильно!');
-    speak();
   } else {
     showToast('❌ Правильно: ' + correct);
   }
@@ -704,15 +707,6 @@ function nextQuestion() {
   } else {
     showQuizQuestion();
   }
-}
-
-// ============================================================
-//  МОДАЛКИ
-// ============================================================
-function closeModals() {
-  document.querySelectorAll('.modal').forEach(function(m) {
-    m.classList.remove('open');
-  });
 }
 
 // ============================================================
@@ -768,7 +762,6 @@ function init() {
     });
   });
   
-  // Клик вне модалки
   document.querySelectorAll('.modal').forEach(function(m) {
     m.addEventListener('click', function(e) {
       if (e.target === this) {
@@ -777,14 +770,12 @@ function init() {
     });
   });
 
-  // Обработка resize для линий
   var resizeTimer;
   window.addEventListener('resize', function() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(drawLines, 300);
   });
 
-  // Клавиши
   document.addEventListener('keydown', function(e) {
     if (e.key === 'ArrowLeft') go(-1);
     if (e.key === 'ArrowRight') go(1);
