@@ -19,32 +19,32 @@ body{display:flex;flex-direction:column;align-items:center;}
 .bg.t7{background:radial-gradient(circle at center, #2e1a26 0%, #10050c 100%);}
 .bg.t8{background:radial-gradient(circle at center, #1f1f1f 0%, #000000 100%);}
 
-.hdr{z-index:10;width:100%;max-width:600px;display:flex;justify-content:space-between;align-items:center;padding:8px 12px;}
-.logo{font-size:1.1rem;font-weight:800;color:#d4af37;text-shadow:0 2px 4px rgba(0,0,0,.5);letter-spacing:1px;}
-.rank{font-size:.6rem;color:#a89f91;letter-spacing:2px;text-transform:uppercase;margin-top:1px;font-weight:600;}
-.stats{display:flex;gap:5px;flex-wrap:wrap;}
-.stat{background:rgba(20,20,25,.6);border:1px solid rgba(212,175,55,.3);border-radius:6px;padding:4px 10px;font-size:.65rem;display:flex;align-items:center;gap:4px;backdrop-filter:blur(4px);}
-.stat b{font-size:.8rem;color:#e8dcc5;}
+.hdr{z-index:10;width:100%;max-width:600px;display:flex;justify-content:space-between;align-items:center;padding:6px 10px;}
+.logo{font-size:1rem;font-weight:800;color:#d4af37;text-shadow:0 2px 4px rgba(0,0,0,.5);letter-spacing:1px;}
+.rank{font-size:.55rem;color:#a89f91;letter-spacing:2px;text-transform:uppercase;margin-top:1px;font-weight:600;}
+.stats{display:flex;gap:4px;flex-wrap:wrap;}
+.stat{background:rgba(20,20,25,.6);border:1px solid rgba(212,175,55,.3);border-radius:5px;padding:3px 8px;font-size:.6rem;display:flex;align-items:center;gap:3px;backdrop-filter:blur(4px);}
+.stat b{font-size:.75rem;color:#e8dcc5;}
 .c-gold{color:#d4af37!important;} .c-grn{color:#5da399!important;} .c-cyan{color:#7fb5b0!important;} .c-pur{color:#9b72aa!important;}
 
-.pw{z-index:10;width:100%;max-width:600px;padding:0 12px 6px;}
-.pt{height:5px;background:rgba(0,0,0,.4);border-radius:3px;overflow:hidden;border:1px solid rgba(255,255,255,.05);}
+.pw{z-index:10;width:100%;max-width:600px;padding:0 12px 4px;}
+.pt{height:4px;background:rgba(0,0,0,.4);border-radius:3px;overflow:hidden;border:1px solid rgba(255,255,255,.05);}
 .pf{height:100%;background:linear-gradient(90deg,#8b3a3a,#d4af37);transition:width .5s ease-out;box-shadow:0 0 10px rgba(212,175,55,.3);}
-.pl{display:flex;justify-content:space-between;font-size:.6rem;color:#8c8276;margin-top:3px;font-weight:600;}
+.pl{display:flex;justify-content:space-between;font-size:.55rem;color:#8c8276;margin-top:2px;font-weight:600;}
 
-.ba{z-index:5;flex:1;width:100%;max-width:600px;display:flex;align-items:center;justify-content:center;padding:4px;}
+.ba{z-index:5;flex:1;width:100%;max-width:600px;display:flex;align-items:center;justify-content:center;padding:2px;}
 #board{
     display:grid;
     background:rgba(10,10,15,.4);
-    border-radius:12px;
-    padding:8px;
+    border-radius:10px;
+    padding:6px;
     border:1px solid rgba(212,175,55,.15);
     box-shadow:0 15px 40px rgba(0,0,0,.6), inset 0 0 30px rgba(0,0,0,.4);
 }
 
 .c{
     position:relative;
-    border-radius:10px;
+    border-radius:8px;
     display:flex;flex-direction:column;align-items:center;justify-content:center;
     cursor:pointer;
     border:1px solid rgba(212,175,55,.25);
@@ -54,7 +54,7 @@ body{display:flex;flex-direction:column;align-items:center;}
 .c::after{
     content:'';position:absolute;top:0;left:0;right:0;height:45%;
     background:linear-gradient(to bottom, rgba(255,255,255,.08), transparent);
-    border-radius:10px 10px 50% 50%;
+    border-radius:8px 8px 50% 50%;
     pointer-events:none;
 }
 
@@ -72,13 +72,29 @@ body{display:flex;flex-direction:column;align-items:center;}
 .c.sp-star{border:2px solid #9b72aa;box-shadow:0 0 15px rgba(155,114,170,.4);}
 .c.sp-rainbow{background:conic-gradient(#8b3a3a,#2d5a5a,#3a4a6b,#8a6d3b,#5a3a5a)!important;border:2px solid #d4af37!important;}
 
-.c .hz{font-size:1.8rem;font-weight:900;color:#f0e6d2;text-shadow:0 2px 4px rgba(0,0,0,.6),0 0 10px rgba(212,175,55,.1);z-index:2;line-height:1;}
-.c .py{font-size:.55rem;color:rgba(240,230,210,.8);z-index:2;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.4);margin-top:1px;}
-.c .ru{font-size:.55rem;font-weight:700;color:#f0e6d2;background:rgba(0,0,0,.35);padding:1px 5px;border-radius:3px;margin-top:2px;z-index:3;max-width:95%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid rgba(212,175,55,.1);}
-.c .emo{position:absolute;bottom:2px;left:3px;font-size:.55rem;opacity:.4;z-index:1;filter:sepia(0.3);}
-.c .badge{position:absolute;top:2px;right:3px;font-size:.7rem;z-index:4;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6));}
+.c .hz{font-size:1.4rem;font-weight:900;color:#f0e6d2;text-shadow:0 2px 4px rgba(0,0,0,.6),0 0 10px rgba(212,175,55,.1);z-index:2;line-height:1;}
+.c .py{font-size:.45rem;color:rgba(240,230,210,.8);z-index:2;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.4);margin-top:1px;}
+.c .ru{
+    font-size:.45rem;
+    font-weight:700;
+    color:#f0e6d2;
+    background:rgba(0,0,0,.35);
+    padding:1px 4px;
+    border-radius:3px;
+    margin-top:1px;
+    z-index:3;
+    max-width:92%;
+    text-align:center;
+    word-wrap:break-word;
+    overflow-wrap:break-word;
+    white-space:normal;
+    line-height:1.1;
+    border:1px solid rgba(212,175,55,.1);
+}
+.c .emo{position:absolute;bottom:1px;left:2px;font-size:.45rem;opacity:.4;z-index:1;filter:sepia(0.3);}
+.c .badge{position:absolute;top:1px;right:2px;font-size:.6rem;z-index:4;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6));}
 
-.c.sel{transform:scale(1.1);z-index:10;box-shadow:0 0 0 2px #d4af37,0 10px 25px rgba(0,0,0,.5);}
+.c.sel{transform:scale(1.08);z-index:10;box-shadow:0 0 0 2px #d4af37,0 10px 25px rgba(0,0,0,.5);}
 .c.gone{animation:pop 0.3s forwards;}
 @keyframes pop{to{transform:scale(0);opacity:0;}}
 .c.drop{animation:drop 0.5s cubic-bezier(.175,.885,.32,1.275);}
@@ -88,11 +104,11 @@ body{display:flex;flex-direction:column;align-items:center;}
 .c.shape-hl{animation:shapeFlash .6s ease-out forwards;border:2px solid #fff!important;}
 @keyframes shapeFlash{0%{box-shadow:0 0 0 0 rgba(255,255,255,0);transform:scale(1);}50%{box-shadow:0 0 40px 10px rgba(255,255,255,0.6);transform:scale(1.12);filter:brightness(1.5);}100%{box-shadow:0 0 0 0 rgba(255,255,255,0);transform:scale(1);}}
 
-.bar{z-index:10;width:100%;max-width:600px;display:flex;gap:6px;justify-content:center;padding:6px 10px;flex-wrap:wrap;}
-.btn{padding:8px 14px;border:none;border-radius:8px;font-weight:700;font-size:.7rem;cursor:pointer;color:#e8dcc5;background:rgba(20,20,25,.6);border:1px solid rgba(212,175,55,.2);display:flex;align-items:center;gap:4px;transition:.2s;backdrop-filter:blur(4px);}
+.bar{z-index:10;width:100%;max-width:600px;display:flex;gap:4px;justify-content:center;padding:4px 8px;flex-wrap:wrap;}
+.btn{padding:6px 10px;border:none;border-radius:6px;font-weight:700;font-size:.6rem;cursor:pointer;color:#e8dcc5;background:rgba(20,20,25,.6);border:1px solid rgba(212,175,55,.2);display:flex;align-items:center;gap:3px;transition:.2s;backdrop-filter:blur(4px);}
 .btn:active{transform:scale(.95);}
 .btn.buy{border-color:rgba(212,175,55,.6);color:#d4af37;box-shadow:0 0 10px rgba(212,175,55,.1);}
-.btn small{font-size:.55rem;opacity:.7;}
+.btn small{font-size:.5rem;opacity:.7;}
 
 .overlay{position:fixed;inset:0;background:rgba(5,5,10,.9);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(5px);}
 .overlay.show{display:flex;}
@@ -105,7 +121,7 @@ body{display:flex;flex-direction:column;align-items:center;}
 .fpts{position:absolute;pointer-events:none;z-index:50;font-weight:bold;color:#d4af37;text-shadow:0 2px 4px rgba(0,0,0,.6);animation:floatUp 1s forwards;}
 @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1;}100%{transform:translateY(-40px) scale(1.2);opacity:0;}}
 
-.particle{position:fixed;pointer-events:none;z-index:1000;font-size:1.8rem;will-change:transform,opacity;animation:fly 1.2s ease-out forwards;}
+.particle{position:fixed;pointer-events:none;z-index:1000;font-size:1.5rem;will-change:transform,opacity;animation:fly 1.2s ease-out forwards;}
 @keyframes fly{0%{transform:translate(0,0) scale(0.5) rotate(0deg);opacity:1;}100%{transform:translate(var(--tx),var(--ty)) scale(1.5) rotate(var(--rot));opacity:0;}}
 
 .shake{animation:shake 0.4s cubic-bezier(.36,.07,.19,.97) both;}
@@ -245,7 +261,6 @@ var PRICE_HINT = 50, PRICE_SHUF = 80, PRICE_BOMB = 5;
 function findAllCombinations(bd) {
     var results = [], used = {};
     
-    // Горизонтальные (3+ в ряд)
     for (var r = 0; r < NR; r++) {
         for (var c = 0; c <= NC - 3; c++) {
             var i = r * NC + c;
@@ -266,7 +281,6 @@ function findAllCombinations(bd) {
         }
     }
     
-    // Вертикальные (3+ в ряд)
     for (var c = 0; c < NC; c++) {
         for (var r = 0; r <= NR - 3; r++) {
             var i = r * NC + c;
@@ -287,7 +301,6 @@ function findAllCombinations(bd) {
         }
     }
     
-    // L формы (5 клеток)
     for (var r = 0; r < NR - 2; r++) {
         for (var c = 0; c < NC - 2; c++) {
             var patterns = [
@@ -319,7 +332,6 @@ function findAllCombinations(bd) {
         }
     }
     
-    // Квадраты 2×2 (4 клетки)
     for (var r = 0; r < NR - 1; r++) {
         for (var c = 0; c < NC - 1; c++) {
             var ids = [r*NC+c, r*NC+c+1, (r+1)*NC+c, (r+1)*NC+c+1];
@@ -341,9 +353,6 @@ function findAllCombinations(bd) {
     return results;
 }
 
-// ============================================================
-//  ПОИСК СОВПАДЕНИЙ
-// ============================================================
 function findMatches() {
     var allShapes = findAllCombinations(state.board);
     var matched = {}, shapes = [];
@@ -448,7 +457,7 @@ function randChar() {
 }
 
 // ============================================================
-//  ОСНОВНАЯ ЛОГИКА РЕШЕНИЯ (С ПОДДЕРЖКОЙ СЛОЖНЫХ ФОРМ)
+//  ОСНОВНАЯ ЛОГИКА РЕШЕНИЯ
 // ============================================================
 async function resolve(matches, shapes) {
     if(matches.length===0) { state.combo=0; checkWin(); return; }
@@ -461,13 +470,11 @@ async function resolve(matches, shapes) {
     var coinsEarned = Math.floor(matches.length / 3);
     var cryEarned = 0;
     
-    // ---- ОБРАБОТКА СЛОЖНЫХ ФОРМ (L, T, КВАДРАТЫ, 5+, 6+) ----
     var shapesCopy = shapes.slice();
     for (var s = 0; s < shapesCopy.length; s++) {
         var shape = shapesCopy[s];
         var type = shape.type;
         
-        // Если это НЕ обычная линия (3 в ряд)
         if (type !== 'line') {
             var midIdx = shape.ids[Math.floor(shape.ids.length / 2)];
             if (state.board[midIdx] && !state.board[midIdx].sp) {
@@ -482,7 +489,6 @@ async function resolve(matches, shapes) {
                 if (type === 'star' || type === 'rainbow') cryEarned++;
                 playSound('bonus', 0);
                 
-                // Подсветка формы
                 var cells = document.querySelectorAll('.c');
                 for (var k = 0; k < shape.ids.length; k++) {
                     var id = shape.ids[k];
@@ -491,7 +497,6 @@ async function resolve(matches, shapes) {
             }
         }
     }
-    // --------------------------------------------------------
     
     state.score += pts;
     state.coins += coinsEarned;
@@ -529,7 +534,7 @@ function spawnParticles(indices) {
         var rect = el.getBoundingClientRect();
         var cx = rect.left + rect.width/2;
         var cy = rect.top + rect.height/2;
-        for(var k=0; k<3; k++) {
+        for(var k=0; k<2; k++) {
             createParticle(cx, cy, emoji);
         }
     });
@@ -542,9 +547,9 @@ function createParticle(x, y, emoji) {
     p.style.left = x + 'px';
     p.style.top = y + 'px';
     var angle = Math.random() * Math.PI * 2;
-    var dist = 80 + Math.random() * 120;
+    var dist = 60 + Math.random() * 100;
     var tx = Math.cos(angle) * dist + 'px';
-    var ty = (Math.sin(angle) * dist - 50) + 'px';
+    var ty = (Math.sin(angle) * dist - 40) + 'px';
     var rot = (Math.random() - 0.5) * 720 + 'deg';
     p.style.setProperty('--tx', tx);
     p.style.setProperty('--ty', ty);
@@ -586,7 +591,7 @@ function checkWin() {
 
 function showToast(msg) {
     var el = document.createElement('div');
-    el.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#d4af37;padding:12px 24px;border-radius:12px;font-size:16px;font-weight:700;z-index:999;border:1px solid rgba(212,175,55,.3);animation:toastAnim 2s forwards;';
+    el.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#d4af37;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:700;z-index:999;border:1px solid rgba(212,175,55,.3);animation:toastAnim 2s forwards;';
     el.innerText = msg;
     document.body.appendChild(el);
     setTimeout(() => el.remove(), 2000);
@@ -741,7 +746,6 @@ function showHint() {
     var allShapes = findAllCombinations(state.board);
     var cells = document.querySelectorAll('.c');
     
-    // Сначала ищем сложные формы
     for (var i = 0; i < allShapes.length; i++) {
         var shape = allShapes[i];
         if (shape.type !== 'line') {
@@ -759,7 +763,6 @@ function showHint() {
         }
     }
     
-    // Если сложных нет — показываем обычный ход
     for(var i=0; i<TOT; i++) {
         var ns = [[0,1],[1,0]];
         for(var n=0; n<ns.length; n++) {
@@ -830,24 +833,24 @@ function reshuffleBoard(silent) {
 var cellPx=0;
 function calcSize() {
     var ba=document.querySelector('.ba');
-    var w=ba.clientWidth-10, h=ba.clientHeight-10;
-    var cw=(w-(NC-1)*5)/NC, ch=(h-(NR-1)*5)/NR;
+    var w=ba.clientWidth-8, h=ba.clientHeight-8;
+    var cw=(w-(NC-1)*4)/NC, ch=(h-(NR-1)*4)/NR;
     cellPx=Math.min(cw,ch);
     var b=document.getElementById('board');
-    b.style.width=(cellPx*NC+(NC-1)*5+16)+'px';
-    b.style.height=(cellPx*NR+(NR-1)*5+16)+'px';
+    b.style.width=(cellPx*NC+(NC-1)*4+12)+'px';
+    b.style.height=(cellPx*NR+(NR-1)*4+12)+'px';
     b.style.gridTemplateColumns='repeat('+NC+','+cellPx+'px)';
     b.style.gridTemplateRows='repeat('+NR+','+cellPx+'px)';
-    b.style.gap='5px';
+    b.style.gap='4px';
     render();
 }
 
 function render() {
     var b=document.getElementById('board');
     b.innerHTML='';
-    var fsH=Math.max(20, cellPx*.48);
-    var fsP=Math.max(10, cellPx*.17);
-    var fsR=Math.max(10, cellPx*.16);
+    var fsH=Math.max(18, cellPx * .42);
+    var fsP=Math.max(9, cellPx * .14);
+    var fsR=Math.max(9, cellPx * .14);
     
     for(var i=0; i<TOT; i++) {
         var d=state.board[i];
@@ -911,7 +914,7 @@ function floatText(txt, idx) {
     var f=document.createElement('div');
     f.className='fpts'; f.innerText='+'+txt;
     f.style.left=el.offsetLeft+'px'; f.style.top=el.offsetTop+'px';
-    f.style.fontSize=(cellPx*.35)+'px';
+    f.style.fontSize=(cellPx*.3)+'px';
     document.getElementById('board').appendChild(f);
     setTimeout(function() { f.remove(); }, 1000);
 }
