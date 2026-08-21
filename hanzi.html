@@ -109,6 +109,7 @@ body{display:flex;flex-direction:column;align-items:center;}
 .btn:active{transform:scale(.95);}
 .btn.buy{border-color:rgba(212,175,55,.6);color:#d4af37;box-shadow:0 0 10px rgba(212,175,55,.1);}
 .btn small{font-size:.5rem;opacity:.7;}
+.btn.restart{background:rgba(212,175,55,.15);border-color:rgba(212,175,55,.4);color:#d4af37;}
 
 .overlay{position:fixed;inset:0;background:rgba(5,5,10,.9);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(5px);}
 .overlay.show{display:flex;}
@@ -142,6 +143,7 @@ body{display:flex;flex-direction:column;align-items:center;}
     <div class="stat">🎯<b class="c-grn" id="uLv">1</b></div>
     <div class="stat">🪙<b class="c-cyan" id="uCoin">100</b></div>
     <div class="stat">💎<b class="c-pur" id="uCry">5</b></div>
+    <div class="stat">🔄<b class="c-gold" id="uCircle">1</b></div>
   </div>
 </div>
 
@@ -156,6 +158,7 @@ body{display:flex;flex-direction:column;align-items:center;}
   <button class="btn" id="bSh" onclick="G.action('shuffle')">🔀<span id="cSh">3</span><small>Беспл.</small></button>
   <button class="btn" id="bHi" onclick="G.action('hint')">💡<span id="cHi">3</span><small>Беспл.</small></button>
   <button class="btn" id="bBm" onclick="G.action('bomb')">💥<small>5💎</small></button>
+  <button class="btn restart" onclick="G.restart()">🔄 Сначала</button>
   <button class="btn" onclick="G.showTut()">❓</button>
 </div>
 
@@ -246,11 +249,13 @@ if(typeof DB !== 'undefined' && DB.length > 0) {
     }
 } else { LEVELS = DB_FALLBACK; }
 
+var MAX_COLORS = 10;
 var state = {
     board: [], score: 0, level: 1, goal: 800, 
     coins: 100, crystals: 5, 
     shufFree: 3, hintFree: 3,
-    busy: false, sel: -1, combo: 0
+    busy: false, sel: -1, combo: 0,
+    circle: 1
 };
 
 var PRICE_HINT = 50, PRICE_SHUF = 80, PRICE_BOMB = 5;
@@ -406,7 +411,7 @@ function getNeighbors(idx) {
 }
 
 // ============================================================
-//  ЛОГИКА ИГРЫ
+//  ЛОГИКА ИГРЫ С УСЛОЖНЕНИЕМ ПО КРУГАМ
 // ============================================================
 function init() {
     loadProgress();
@@ -425,15 +430,22 @@ function init() {
 
 function startLevel() {
     state.score = 0;
-    state.goal = Math.floor(800 + (state.level * 150)); 
-    state.board = [];
     state.busy = false;
     state.sel = -1;
+    
+    // ---- УСЛОЖНЕНИЕ ПОСЛЕ КАЖДОГО КРУГА ----
+    var totalLevels = LEVELS.length;
+    state.circle = Math.floor((state.level - 1) / totalLevels) + 1;
+    var baseGoal = 800 + (state.level * 150);
+    var mult = 1 + (state.circle - 1) * 0.35; // +35% за каждый круг
+    state.goal = Math.floor(baseGoal * mult);
+    // -----------------------------------------
     
     var themeIdx = (state.level - 1) % 8;
     document.getElementById('bg').className = 'bg t' + (themeIdx+1);
     document.getElementById('board').className = 't' + (themeIdx+1);
-    document.getElementById('uTheme').innerText = "Уровень " + state.level;
+    document.getElementById('uTheme').innerText = "Уровень " + state.level + " (Круг " + state.circle + ")";
+    document.getElementById('uCircle').innerText = state.circle;
     
     for(var i=0; i<TOT; i++) {
         var att = 0;
@@ -450,10 +462,18 @@ function startLevel() {
 }
 
 function randChar() {
-    var set = LEVELS[(state.level-1) % LEVELS.length];
+    var set = LEVELS[(state.level - 1) % LEVELS.length];
     var idx = Math.floor(Math.random() * set.length);
     var c = set[idx];
-    return {h:c.h, p:c.p, r:c.r, e:c.e, c:idx, sp:null};
+    
+    // ---- БОЛЬШЕ ЦВЕТОВ В КАЖДОМ КРУГЕ ----
+    var totalLevels = LEVELS.length;
+    var circle = Math.floor((state.level - 1) / totalLevels) + 1;
+    var extraColors = Math.min(circle - 1, 4); // максимум +4 цвета
+    var colorIdx = (idx + circle * 3) % Math.min(5 + extraColors, MAX_COLORS);
+    // -----------------------------------------
+    
+    return {h:c.h, p:c.p, r:c.r, e:c.e, c:colorIdx, sp:null};
 }
 
 // ============================================================
@@ -735,6 +755,20 @@ var G = {
         updateUI();
         saveProgress();
     },
+    restart: function() {
+        if(confirm("🔄 Начать сначала? Весь прогресс будет сброшен!")) {
+            state.level = 1;
+            state.coins = 100;
+            state.crystals = 5;
+            state.shufFree = 3;
+            state.hintFree = 3;
+            state.score = 0;
+            state.circle = 1;
+            localStorage.removeItem('hanzi_save');
+            startLevel();
+            showToast("🔄 Игра перезапущена!");
+        }
+    },
     showTut: ()=>document.getElementById('tov').classList.add('show'),
     closeTut: ()=>{
         document.getElementById('tov').classList.remove('show');
@@ -884,6 +918,7 @@ function updateUI() {
     document.getElementById('uCry').innerText = state.crystals;
     document.getElementById('uGl').innerText = state.goal;
     document.getElementById('pFill').style.width = Math.min(100, state.score/state.goal*100) + '%';
+    document.getElementById('uCircle').innerText = state.circle;
     
     var rIdx = Math.min(RANKS.length-1, Math.floor((state.level-1)/5));
     document.getElementById('uRank').innerText = RANKS[rIdx];
@@ -957,6 +992,7 @@ init();
 
 console.log('✅ Hanzi: Нефрит и Золото загружена!');
 console.log('📐 Сложные формы: L, T, Квадрат 2×2, 5+ в ряд, 6+ в ряд');
+console.log('🔄 Бесконечные уровни с усложнением после каждого круга!');
 </script>
 </body>
 </html>
