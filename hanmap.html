@@ -85,17 +85,20 @@ footer{text-align:center;color:var(--mut);font-size:12px;padding:18px 0 8px}
     <button class="icon-btn" id="themeBtn" title="Тема">🌙</button>
   </header>
   <div class="tagline">Учи иероглифы по картам‑связкам • HSK 1–4 • озвучка zh‑CN</div>
+
   <div class="toolbar">
     <div class="search"><span>🔍</span><input id="q" placeholder="Поиск: иероглиф, pinyin, перевод…"></div>
     <button class="btn grad" id="gridBtn">📚 База</button>
     <button class="btn" id="favBtn">❤️ <span id="favCount">0</span></button>
     <button class="btn grad2" id="randBtn">🎲</button>
   </div>
+
   <div class="navrow">
     <button class="nav-btn" id="prevBtn">←</button>
     <span id="posLabel"></span>
     <button class="nav-btn" id="nextBtn">→</button>
   </div>
+
   <section id="map">
     <svg id="lines"></svg>
     <div class="main-node" id="mainNode" title="Озвучить">
@@ -105,6 +108,7 @@ footer{text-align:center;color:var(--mut);font-size:12px;padding:18px 0 8px}
     </div>
     <div id="words"></div>
   </section>
+
   <div class="actions">
     <button class="btn" id="speakBtn">🔊 Озвучить</button>
     <button class="btn grad2" id="writeBtn">✍️ Пропись</button>
@@ -113,25 +117,33 @@ footer{text-align:center;color:var(--mut);font-size:12px;padding:18px 0 8px}
   </div>
   <footer>HanMap • 600 иероглифов • стрелки ← → для навигации</footer>
 </div>
+
+<!-- База -->
 <div class="modal" id="gridModal"><div class="modal-card wide">
   <div class="modal-head"><h3>📚 База иероглифов</h3><button class="icon-btn" data-close>✕</button></div>
   <div class="grid" id="grid"></div>
 </div></div>
+
+<!-- Пропись -->
 <div class="modal" id="writeModal"><div class="modal-card">
   <div class="modal-head"><h3 id="writeTitle">✍️ Пропись</h3><button class="icon-btn" data-close>✕</button></div>
   <div class="canvas-wrap" id="canvasWrap"><div id="guide"></div><canvas id="pad"></canvas></div>
   <div class="actions">
-    <button class="btn" id="clearBtn">🧽 Очистить</button>
+    <button class="btn" id="clear <Btn">🧽 Очистить</button>
     <button class="btn grad2" id="guideBtn">👁 Образец</button>
   </div>
 </div></div>
+
+<!-- Тест -->
 <div class="modal" id="quizModal"><div class="modal-card">
-  <div class="modal-head"><h3>🧠 Выбери иероглиф</h3><button class="icon-btn" data-close>✕</button></div>
+ div class="modal-head"><h3>🧠 Выбери иероглиф</h3><button class="icon-btn" data-close>✕</button></div>
   <div class="q-ru" id="qRu"></div>
   <div class="q-opts" id="qOpts"></div>
   <div class="q-foot"><span class="chip" id="qScore"></span><button class="btn grad2" id="qNext" hidden>Дальше →</button></div>
 </div></div>
+
 <div id="toast"></div>
+
 <script src="app.js"></script>
 <script src="hanmap.js"></script>
 </body>
