@@ -3,101 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+<meta name="theme-color" content="#0a0a0f">
 <title>🀄 Ханзи — Учи китайский</title>
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
-:root {
-  --bg: #0a0a0f;
-  --card: #141424;
-  --ink: #eef1ff;
-  --mut: #7a809c;
-  --gold: #ffd700;
-  --red: #ff6b6b;
-  --blue: #4263eb;
-  --grad: linear-gradient(135deg, #ffd700, #f59e0b);
-}
-body {
-  font-family: 'Segoe UI', system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  background: var(--bg);
-  color: var(--ink);
-  min-height: 100vh;
-  overflow: hidden;
-}
-.app-nav {
-  display: flex;
-  gap: 6px;
-  padding: 10px 14px;
-  background: rgba(255,255,255,0.04);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  overflow-x: auto;
-}
-.app-nav button {
-  padding: 10px 18px;
-  border: none;
-  border-radius: 12px;
-  background: transparent;
-  color: rgba(255,255,255,0.4);
-  font-weight: 700;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.3s;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.app-nav button:hover {
-  background: rgba(255,255,255,0.05);
-  color: rgba(255,255,255,0.7);
-}
-.app-nav button.active {
-  background: var(--grad);
-  color: #1a1a2e;
-  box-shadow: 0 4px 20px rgba(255,215,0,0.25);
-}
-.app-nav button .badge {
-  background: var(--red);
-  color: #fff;
-  font-size: 9px;
-  padding: 1px 8px;
-  border-radius: 10px;
-  margin-left: 4px;
-}
-.view {
-  display: none;
-  height: calc(100vh - 64px);
-  overflow: hidden;
-  position: relative;
-}
-.view.active {
-  display: block;
-}
-.view iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  background: var(--bg);
-}
-@media (max-width: 550px) {
-  .app-nav {
-    padding: 8px 10px;
-    gap: 4px;
-  }
-  .app-nav button {
-    padding: 8px 12px;
-    font-size: 11px;
-  }
-  .view {
-    height: calc(100vh - 56px);
-  }
-}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#0a0a0f;--card:#141424;--ink:#eef1ff;--mut:#7a809c;--gold:#ffd700;--red:#ff6b6b;--blue:#4263eb;--grad:linear-gradient(135deg,#ffd700,#f59e0b)}
+body{font-family:'Segoe UI',system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;overflow:hidden}
+.app-nav{display:flex;gap:6px;padding:10px 14px;background:rgba(255,255,255,0.04);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06);position:sticky;top:0;z-index:100;overflow-x:auto;flex-shrink:0}
+.app-nav button{padding:10px 18px;border:none;border-radius:12px;background:transparent;color:rgba(255,255,255,0.4);font-weight:700;font-size:13px;cursor:pointer;transition:all 0.3s;white-space:nowrap;flex-shrink:0}
+.app-nav button:hover{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.7)}
+.app-nav button.active{background:var(--grad);color:#1a1a2e;box-shadow:0 4px 20px rgba(255,215,0,0.25)}
+.app-nav button .badge{background:var(--red);color:#fff;font-size:9px;padding:1px 8px;border-radius:10px;margin-left:4px}
+.view{display:none;height:calc(100vh - 64px);overflow:hidden;position:relative}
+.view.active{display:block}
+.view iframe{width:100%;height:100%;border:none;background:var(--bg)}
+@media(max-width:550px){.app-nav{padding:8px 10px;gap:4px}.app-nav button{padding:8px 12px;font-size:11px}.view{height:calc(100vh - 56px)}}
 </style>
 </head>
 <body>
@@ -112,51 +32,28 @@ body {
   <iframe id="dictFrame" src="hanmap.html"></iframe>
 </div>
 <script>
-const nav = document.getElementById('appNav');
-const views = {
-  game: document.getElementById('view-game'),
-  dictionary: document.getElementById('view-dictionary')
-};
-const frames = {
-  game: document.getElementById('gameFrame'),
-  dictionary: document.getElementById('dictFrame')
-};
-let currentView = localStorage.getItem('hanzi_view') || 'game';
-function switchView(view) {
-  if (!views[view]) return;
-  currentView = view;
-  localStorage.setItem('hanzi_view', view);
-  nav.querySelectorAll('button').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.view === view);
-  });
-  Object.keys(views).forEach(key => {
-    views[key].classList.toggle('active', key === view);
-  });
-  if (view === 'dictionary' && !window._dictLoaded) {
-    window._dictLoaded = true;
-    setTimeout(() => {
-      try { frames.dictionary.src = frames.dictionary.src; } catch(e) {}
-    }, 100);
+(function(){
+  var nav=document.getElementById('appNav');
+  var views={game:document.getElementById('view-game'),dictionary:document.getElementById('view-dictionary')};
+  var frames={game:document.getElementById('gameFrame'),dictionary:document.getElementById('dictFrame')};
+  var currentView=localStorage.getItem('hanzi_view')||'game';
+  function switchView(view){
+    if(!views[view])return;
+    currentView=view;
+    localStorage.setItem('hanzi_view',view);
+    nav.querySelectorAll('button').forEach(function(btn){
+      btn.classList.toggle('active',btn.dataset.view===view);
+    });
+    Object.keys(views).forEach(function(key){
+      views[key].classList.toggle('active',key===view);
+    });
+    if(view==='dictionary'&&!window._dictLoaded){window._dictLoaded=true;try{frames.dictionary.src=frames.dictionary.src;}catch(e){}}
+    if(view==='game'&&!window._gameLoaded){window._gameLoaded=true;try{frames.game.src=frames.game.src;}catch(e){}}
   }
-  if (view === 'game' && !window._gameLoaded) {
-    window._gameLoaded = true;
-    setTimeout(() => {
-      try { frames.game.src = frames.game.src; } catch(e) {}
-    }, 100);
-  }
-}
-nav.addEventListener('click', (e) => {
-  const btn = e.target.closest('button');
-  if (btn && btn.dataset.view) {
-    switchView(btn.dataset.view);
-  }
-});
-document.addEventListener('keydown', (e) => {
-  if (e.key === '1') switchView('game');
-  if (e.key === '2') switchView('dictionary');
-});
-switchView(currentView);
-console.log('✅ Hanzi App загружена');
+  nav.addEventListener('click',function(e){var btn=e.target.closest('button');if(btn&&btn.dataset.view){switchView(btn.dataset.view);}});
+  document.addEventListener('keydown',function(e){if(e.key==='1')switchView('game');if(e.key==='2')switchView('dictionary');});
+  switchView(currentView);
+})();
 </script>
 </body>
 </html>
