@@ -2,9 +2,8 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.5, user-scalable=yes">
-  <meta name="theme-color" content="#eef1ff">
-  <title>HanMap 600 — карты иероглифов с чертами</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+  <title>🀄 Ханзи · HanMap 600</title>
   <style>
     * {
       margin: 0;
@@ -12,588 +11,189 @@
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
     }
-    :root {
-      --bg1: #eef1ff;
-      --bg2: #fff3f3;
-      --card: #ffffff;
-      --ink: #20243a;
-      --mut: #7a809c;
-      --red: #e03131;
-      --blue: #4263eb;
-      --line: #8ea2ff;
-      --sh: 0 12px 32px rgba(50, 60, 130, .14);
-      --grad: linear-gradient(135deg, #ff6b6b, #e03131);
-      --grad2: linear-gradient(135deg, #4263eb, #7048e8);
-    }
-    body.dark {
-      --bg1: #0e1220;
-      --bg2: #141a2e;
-      --card: #1b2036;
-      --ink: #eef1ff;
-      --mut: #9aa3c7;
-      --line: #5b74d8;
-      --sh: 0 12px 32px rgba(0, 0, 0, .5);
-    }
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-      background: linear-gradient(160deg, var(--bg1), var(--bg2));
-      color: var(--ink);
+      background: #0a0a0f;
       min-height: 100vh;
-      overflow-x: hidden;
+      overflow: hidden;
     }
-    body::before,
-    body::after {
-      content: '';
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(90px);
-      z-index: -1;
-      opacity: .5;
-    }
-    body::before {
-      width: 420px;
-      height: 420px;
-      background: #ffc9c9;
-      top: -120px;
-      right: -120px;
-    }
-    body::after {
-      width: 380px;
-      height: 380px;
-      background: #bac8ff;
-      bottom: -120px;
-      left: -120px;
-    }
-    .wrap {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 16px;
-    }
-    header {
+    .app-container {
+      width: 100%;
+      height: 100vh;
       display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 14px;
+      flex-direction: column;
+      background: #0a0a0f;
     }
-    .logo {
-      font-size: 22px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .logo small {
-      font-size: 12px;
-      color: var(--mut);
-      font-weight: 600;
-    }
-    .stats {
-      margin-left: auto;
-      display: flex;
-      gap: 8px;
-    }
-    .chip {
-      background: var(--card);
-      box-shadow: var(--sh);
-      border-radius: 999px;
-      padding: 8px 14px;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--mut);
-      white-space: nowrap;
-    }
-    .icon-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 16px;
-      border: none;
-      background: var(--card);
-      box-shadow: var(--sh);
-      font-size: 18px;
-      cursor: pointer;
-      transition: .2s;
-      color: var(--ink);
-      flex-shrink: 0;
-    }
-    .icon-btn:hover {
-      transform: translateY(-2px);
-    }
-    .icon-btn:active {
-      transform: scale(.92);
-    }
-    .tagline {
-      color: var(--mut);
-      font-size: 13px;
-      margin: -6px 0 14px 4px;
-    }
-    .toolbar {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-    .search {
-      flex: 1;
-      min-width: 180px;
-      display: flex;
-      align-items: center;
-      background: var(--card);
-      border-radius: 18px;
-      box-shadow: var(--sh);
-      padding: 0 14px;
-    }
-    .search input {
-      flex: 1;
-      border: none;
-      outline: none;
-      background: transparent;
-      padding: 14px 8px;
-      font-size: 15px;
-      color: var(--ink);
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 13px 20px;
-      border-radius: 18px;
-      border: none;
-      background: var(--card);
-      box-shadow: var(--sh);
-      font-weight: 700;
-      font-size: 14px;
-      color: var(--ink);
-      cursor: pointer;
-      transition: .2s;
-      user-select: none;
-      flex-shrink: 0;
-    }
-    .btn:hover {
-      transform: translateY(-2px);
-    }
-    .btn:active {
-      transform: scale(.94);
-    }
-    .btn.grad {
-      background: var(--grad);
-      color: #fff;
-    }
-    .btn.grad2 {
-      background: var(--grad2);
-      color: #fff;
-    }
-    .btn.active {
-      outline: 3px solid var(--blue);
-    }
-    .navrow {
+
+    /* ——— Верхняя панель ——— */
+    .nav-bar {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 16px;
-      margin: 6px 0 10px;
+      gap: 12px;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      flex-shrink: 0;
+      z-index: 100;
+      position: relative;
+      flex-wrap: wrap;
+    }
+    .nav-bar .logo {
+      font-size: 20px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffd700, #ff6b6b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-right: auto;
     }
     .nav-btn {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
+      padding: 10px 22px;
       border: none;
-      background: var(--grad2);
-      color: #fff;
-      font-size: 20px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 14px;
       cursor: pointer;
-      box-shadow: var(--sh);
-      transition: .2s;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      position: relative;
+    }
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-1px);
     }
     .nav-btn:active {
-      transform: scale(.9);
+      transform: scale(0.95);
     }
-    #posLabel {
-      font-weight: 700;
-      color: var(--mut);
-      font-size: 13px;
-      min-width: 70px;
-      text-align: center;
+    .nav-btn.active {
+      background: linear-gradient(135deg, #ffd700, #f59e0b);
+      color: #1a1a2e;
+      border-color: #ffd700;
+      box-shadow: 0 4px 30px rgba(255, 215, 0, 0.3);
     }
-    #map {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      padding: 10px 4px;
-      min-height: 200px;
+    .nav-btn .icon {
+      margin-right: 6px;
     }
-    #lines {
+    .nav-btn .badge {
       position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      width: 100%;
-      height: 100%;
-    }
-    .ln {
-      transition: stroke-dashoffset .7s ease;
-    }
-    .main-node {
-      z-index: 1;
-      background: var(--card);
-      border-radius: 26px;
-      box-shadow: var(--sh);
-      padding: 22px 26px;
-      text-align: center;
-      cursor: pointer;
-      flex: none;
-      transition: .2s;
-      min-width: 120px;
-    }
-    .main-node:active {
-      transform: scale(.96);
-    }
-    .main-node .py {
-      color: var(--blue);
+      top: -6px;
+      right: -6px;
+      background: #ff6b6b;
+      color: #fff;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 20px;
       font-weight: 700;
-      font-size: 18px;
     }
-    .main-node .hz {
-      color: var(--red);
-      font-size: clamp(56px, 14vw, 96px);
-      font-weight: 800;
-      line-height: 1.15;
-    }
-    .main-node .ru {
-      color: var(--mut);
-      font-size: 14px;
-      font-weight: 600;
-    }
-    #words {
-      z-index: 1;
+
+    /* ——— Iframe ——— */
+    .iframe-wrapper {
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      min-width: 0;
-    }
-    .word {
-      background: var(--card);
-      border-radius: 18px;
-      box-shadow: var(--sh);
-      padding: 10px 14px;
-      text-align: center;
-      cursor: pointer;
-      transition: .2s;
-      animation: pop .5s both;
-    }
-    .word:hover {
-      transform: translateY(-2px);
-    }
-    .word:active {
-      transform: scale(.96);
-    }
-    .word .py {
-      color: var(--mut);
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .word .hz {
-      font-size: clamp(22px, 5vw, 32px);
-      font-weight: 800;
-      letter-spacing: 2px;
-    }
-    .word .ru {
-      color: var(--mut);
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .c-red {
-      color: var(--red);
-    }
-    .c-blue {
-      color: var(--blue);
-    }
-    @keyframes pop {
-      from {
-        opacity: 0;
-        transform: translateY(12px) scale(.94);
-      }
-    }
-    .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin: 18px 0 8px;
-    }
-    footer {
-      text-align: center;
-      color: var(--mut);
-      font-size: 12px;
-      padding: 18px 0 8px;
-    }
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(10, 12, 30, .45);
-      backdrop-filter: blur(6px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-      padding: 16px;
-    }
-    .modal.open {
-      display: flex;
-    }
-    .modal-card {
-      width: min(94vw, 430px);
-      max-height: 88vh;
-      overflow: auto;
-      background: var(--card);
-      border-radius: 26px;
-      box-shadow: var(--sh);
-      padding: 20px;
-    }
-    .modal-card.wide {
-      width: min(94vw, 680px);
-    }
-    .modal-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-    .modal-head h3 {
-      font-size: 18px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-      gap: 10px;
-    }
-    .tile {
-      background: var(--card);
-      border: 2px solid transparent;
-      border-radius: 16px;
-      box-shadow: var(--sh);
-      padding: 10px 6px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      cursor: pointer;
-      transition: .15s;
-      color: var(--ink);
-      font-family: inherit;
-      font-size: inherit;
-    }
-    .tile:hover {
-      border-color: var(--blue);
-      transform: translateY(-2px);
-    }
-    .t-hz {
-      font-size: 28px;
-      font-weight: 800;
-      color: var(--red);
-    }
-    .t-py {
-      font-size: 11px;
-      color: var(--mut);
-      font-weight: 600;
-    }
-    .empty {
-      color: var(--mut);
-      text-align: center;
-      padding: 30px;
-      font-weight: 700;
-    }
-    .canvas-wrap {
+      width: 100%;
       position: relative;
-      width: min(78vw, 320px);
-      margin: 0 auto;
-      aspect-ratio: 1/1;
+      overflow: hidden;
     }
-    #guide {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--red);
-      opacity: .16;
-      font-weight: 800;
-      pointer-events: none;
-      user-select: none;
-      font-size: 200px;
-    }
-    #guide.hidden {
-      display: none;
-    }
-    #pad {
-      position: absolute;
-      inset: 0;
-      touch-action: none;
-      cursor: crosshair;
+    .iframe-wrapper iframe {
       width: 100%;
       height: 100%;
+      border: none;
+      display: block;
+      background: #0a0a0f;
     }
-    .q-ru {
-      font-size: 20px;
-      font-weight: 800;
-      text-align: center;
-      margin: 6px 0 16px;
+    .iframe-wrapper iframe.hidden {
+      display: none;
     }
-    .q-opts {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .q-opt {
-      background: var(--card);
-      border: 2px solid transparent;
-      border-radius: 18px;
-      box-shadow: var(--sh);
-      padding: 14px 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      cursor: pointer;
-      font-size: 28px;
-      font-weight: 800;
-      color: var(--ink);
-      transition: .15s;
-      font-family: inherit;
-    }
-    .q-opt small {
-      font-size: 11px;
-      color: var(--mut);
-      font-weight: 600;
-    }
-    .q-opt.ok {
-      border-color: #2f9e44;
-      background: rgba(47, 158, 68, .15);
-    }
-    .q-opt.bad {
-      border-color: var(--red);
-      background: rgba(224, 49, 49, .12);
-    }
-    .q-foot {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 16px;
-    }
-    #toast {
-      position: fixed;
-      left: 50%;
-      bottom: 26px;
-      transform: translateX(-50%) translateY(20px);
-      background: var(--ink);
-      color: var(--bg1);
-      padding: 12px 22px;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: 14px;
-      opacity: 0;
-      pointer-events: none;
-      transition: .3s;
-      z-index: 99;
-      box-shadow: var(--sh);
-    }
-    #toast.show {
-      opacity: 1;
-      transform: translateX(-50%);
-    }
-    @media (max-width: 550px) {
-      .wrap {
-        padding: 10px;
+
+    @media (max-width: 600px) {
+      .nav-bar {
+        padding: 8px 12px;
+        gap: 6px;
       }
-      .toolbar .btn {
-        padding: 10px 14px;
+      .nav-bar .logo {
+        font-size: 16px;
+        margin-right: 4px;
+      }
+      .nav-btn {
+        padding: 8px 14px;
         font-size: 12px;
-      }
-      .main-node {
-        padding: 16px 18px;
-        min-width: 80px;
-      }
-      .main-node .hz {
-        font-size: 48px;
-      }
-      #map {
-        gap: 12px;
-      }
-      .word {
-        padding: 6px 10px;
-      }
-      .word .hz {
-        font-size: 20px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="logo">🀄 HanMap <small>600</small></div>
-      <div class="stats"><span class="chip" id="statHz"></span><span class="chip" id="statWord"></span></div>
-      <button class="icon-btn" id="themeBtn" title="Тема">🌙</button>
-    </header>
-    <div class="tagline">Учи иероглифы по картам‑связкам • HSK 1–4 • озвучка zh‑CN</div>
-
-    <div class="toolbar">
-      <div class="search"><span>🔍</span><input id="q" placeholder="Поиск: иероглиф, pinyin, перевод…"></div>
-      <button class="btn grad" id="gridBtn">📚 База</button>
-      <button class="btn" id="favBtn">❤️ <span id="favCount">0</span></button>
-      <button class="btn grad2" id="randBtn">🎲</button>
+  <div class="app-container">
+    <!-- Панель навигации -->
+    <div class="nav-bar">
+      <div class="logo">🀄 Ханзи</div>
+      <button class="nav-btn active" data-app="hanzi" id="btnHanzi">
+        <span class="icon">🎮</span> Игра
+      </button>
+      <button class="nav-btn" data-app="hanmap" id="btnHanmap">
+        <span class="icon">📚</span> Словарь
+        <span class="badge">600</span>
+      </button>
     </div>
 
-    <div class="navrow">
-      <button class="nav-btn" id="prevBtn">←</button>
-      <span id="posLabel"></span>
-      <button class="nav-btn" id="nextBtn">→</button>
+    <!-- Контейнер для iframe -->
+    <div class="iframe-wrapper">
+      <iframe id="frameHanzi" src="hanzi.html"></iframe>
+      <iframe id="frameHanmap" src="hanmap.html" class="hidden"></iframe>
     </div>
-
-    <section id="map">
-      <svg id="lines"></svg>
-      <div class="main-node" id="mainNode" title="Озвучить">
-        <div class="py" id="mainPy"></div><div class="hz" id="mainHz"></div><div class="ru" id="mainRu"></div>
-      </div>
-      <div id="words"></div>
-    </section>
-
-    <div class="actions">
-      <button class="btn" id="speakBtn">🔊 Озвучить</button>
-      <button class="btn grad2" id="writeBtn">✍️ Пропись</button>
-      <button class="btn" id="likeBtn">🤍 В избранное</button>
-      <button class="btn grad" id="quizBtn">🧠 Тест</button>
-    </div>
-    <footer>HanMap • 600 иероглифов • стрелки ← → для навигации</footer>
   </div>
 
-  <!-- База -->
-  <div class="modal" id="gridModal"><div class="modal-card wide">
-      <div class="modal-head"><h3>📚 База иероглифов (600)</h3><button class="icon-btn" data-close>✕</button></div>
-      <div class="grid" id="grid"></div>
-    </div></div>
+  <script>
+    const btnHanzi = document.getElementById('btnHanzi');
+    const btnHanmap = document.getElementById('btnHanmap');
+    const frameHanzi = document.getElementById('frameHanzi');
+    const frameHanmap = document.getElementById('frameHanmap');
 
-  <!-- Пропись -->
-  <div class="modal" id="writeModal"><div class="modal-card">
-      <div class="modal-head"><h3 id="writeTitle">✍️ Пропись</h3><button class="icon-btn" data-close>✕</button></div>
-      <div class="canvas-wrap" id="canvasWrap"><div id="guide"></div><canvas id="pad"></canvas></div>
-      <div class="actions">
-        <button class="btn" id="clearBtn">🧽 Очистить</button>
-        <button class="btn grad2" id="guideBtn">👁 Образец</button>
-      </div>
-    </div></div>
+    // Проверяем сохранённое состояние
+    let currentApp = localStorage.getItem('hanzi_app') || 'hanzi';
 
-  <!-- Тест -->
-  <div class="modal" id="quizModal"><div class="modal-card">
-      <div class="modal-head"><h3>🧠 Выбери иероглиф</h3><button class="icon-btn" data-close>✕</button></div>
-      <div class="q-ru" id="qRu"></div>
-      <div class="q-opts" id="qOpts"></div>
-      <div class="q-foot"><span class="chip" id="qScore"></span><button class="btn grad2" id="qNext" hidden>Дальше →</button></div>
-    </div></div>
+    function switchApp(app) {
+      currentApp = app;
+      localStorage.setItem('hanzi_app', app);
 
-  <div id="toast"></div>
+      // Кнопки
+      btnHanzi.classList.toggle('active', app === 'hanzi');
+      btnHanmap.classList.toggle('active', app === 'hanmap');
 
-  <script src="app.js"></script>
+      // Iframe
+      frameHanzi.classList.toggle('hidden', app !== 'hanzi');
+      frameHanmap.classList.toggle('hidden', app !== 'hanmap');
+
+      // Обновляем высоту iframe
+      setTimeout(() => {
+        const frame = app === 'hanzi' ? frameHanzi : frameHanmap;
+        if (frame) {
+          frame.style.height = '100%';
+        }
+      }, 100);
+    }
+
+    btnHanzi.addEventListener('click', () => switchApp('hanzi'));
+    btnHanmap.addEventListener('click', () => switchApp('hanmap'));
+
+    // Горячие клавиши: 1 — игра, 2 — словарь
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '1') switchApp('hanzi');
+      if (e.key === '2') switchApp('hanmap');
+    });
+
+    // Загружаем последнее состояние
+    switchApp(currentApp);
+
+    // Обновляем при изменении размера
+    window.addEventListener('resize', () => {
+      const frame = currentApp === 'hanzi' ? frameHanzi : frameHanmap;
+      if (frame) {
+        frame.style.height = '100%';
+      }
+    });
+  </script>
 </body>
 </html>
