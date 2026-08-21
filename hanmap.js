@@ -1,5 +1,5 @@
 // ============================================================
-//  ЛОГИКА HanMap — ПОЛНАЯ ВЕРСИЯ
+//  ЛОГИКА HanMap — ИСПРАВЛЕННАЯ (пропись больше)
 // ============================================================
 
 if (typeof DB === 'undefined' || DB.length === 0) {
@@ -329,6 +329,9 @@ function closeModals() {
     });
 }
 
+// ============================================================
+//  ПРОПИСЬ — БОЛЬШОЕ ОКНО
+// ============================================================
 var canvas, ctx, drawing = false, lastX, lastY;
 
 function initWrite() {
@@ -338,7 +341,8 @@ function initWrite() {
 
     var wrap = document.getElementById('canvasWrap');
     if (!wrap) return;
-    var s = wrap.clientWidth || 300;
+    var s = Math.min(wrap.clientWidth, window.innerWidth * 0.85, 420);
+    if (s < 200) s = 320;
     var dpr = window.devicePixelRatio || 1;
 
     canvas.width = s * dpr;
@@ -351,7 +355,7 @@ function initWrite() {
     var hz = document.getElementById('mainHz').textContent;
     if (guide) {
         guide.textContent = hz || '人';
-        guide.style.fontSize = s * 0.78 + 'px';
+        guide.style.fontSize = (s * 0.7) + 'px';
         guide.className = '';
     }
 
@@ -361,6 +365,15 @@ function initWrite() {
 
     var title = document.getElementById('writeTitle');
     if (title) title.textContent = '✍️ Пропись: ' + hz;
+
+    // Удаляем старые обработчики
+    canvas.onmousedown = null;
+    canvas.onmousemove = null;
+    canvas.onmouseup = null;
+    canvas.onmouseleave = null;
+    canvas.ontouchstart = null;
+    canvas.ontouchmove = null;
+    canvas.ontouchend = null;
 
     canvas.onmousedown = startDraw;
     canvas.onmousemove = draw;
@@ -439,7 +452,7 @@ function endDraw() { drawing = false; }
 
 function clearWrite() {
     if (!ctx) return;
-    var s = document.getElementById('canvasWrap').clientWidth || 300;
+    var s = document.getElementById('canvasWrap').clientWidth || 320;
     drawGrid(s);
     var guide = document.getElementById('guide');
     if (guide) guide.className = '';
@@ -450,6 +463,9 @@ function toggleGuide() {
     if (guide) guide.classList.toggle('hidden');
 }
 
+// ============================================================
+//  ТЕСТ
+// ============================================================
 var quizData = [], quizIdx = 0, quizScore = 0;
 
 function startQuiz() {
@@ -537,6 +553,9 @@ function nextQuestion() {
     showQuizQuestion();
 }
 
+// ============================================================
+//  ИНИЦИАЛИЗАЦИЯ
+// ============================================================
 function init() {
     console.log('🔄 HanMap загружается...');
     buildOrder();
