@@ -1,22 +1,15 @@
 // ============================================================
-//  ЛОГИКА HanMap — ИСПОЛЬЗУЕТ DB из app.js
-//  ПОЛНАЯ ВЕРСИЯ С ОЗВУЧКОЙ КАК В ПРИМЕРЕ
+//  ЛОГИКА HanMap — ПОЛНАЯ ВЕРСИЯ
 // ============================================================
 
-// ============================================================
-//  ПРОВЕРКА НАЛИЧИЯ БАЗЫ
-// ============================================================
 if (typeof DB === 'undefined' || DB.length === 0) {
-    console.error('❌ ОШИБКА: app.js не загружен или база пуста!');
+    console.error('❌ app.js не загружен!');
     document.getElementById('statHz').textContent = '❌ Ошибка';
     document.getElementById('statWord').textContent = 'Загрузите app.js';
 } else {
     console.log('✅ hanmap.js: загружено ' + DB.length + ' иероглифов');
 }
 
-// ============================================================
-//  ПЕРЕМЕННЫЕ
-// ============================================================
 var favs = new Set();
 var order = [];
 var pos = 0;
@@ -24,28 +17,19 @@ var dark = false;
 var toastTimer = null;
 var favOnly = false;
 
-// Загружаем избранное из localStorage
 try {
     var saved = JSON.parse(localStorage.getItem('hanmap_favs') || '[]');
     favs = new Set(saved);
-} catch (e) {
-    favs = new Set();
-}
+} catch (e) { favs = new Set(); }
 
-// Загружаем тему
 try {
     dark = localStorage.getItem('hanmap_theme') === 'dark';
     if (dark) {
         document.body.classList.add('dark');
         document.getElementById('themeBtn').textContent = '☀️';
     }
-} catch (e) {
-    dark = false;
-}
+} catch (e) { dark = false; }
 
-// ============================================================
-//  ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
-// ============================================================
 function shuffle(arr) {
     for (var i = arr.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
@@ -60,9 +44,7 @@ function buildOrder() {
     if (favOnly && favs.size > 0) {
         order = [];
         for (var i = 0; i < DB.length; i++) {
-            if (favs.has(DB[i][0])) {
-                order.push(i);
-            }
+            if (favs.has(DB[i][0])) order.push(i);
         }
         if (order.length === 0) {
             order = DB.map(function(_, i) { return i; });
@@ -79,18 +61,11 @@ function buildOrder() {
 function updateFavCount() {
     var fc = document.getElementById('favCount');
     if (fc) fc.textContent = favs.size;
-    var fb = document.getElementById('favBtn');
-    if (fb) {
-        fb.innerHTML = (favs.size > 0 ? '❤️' : '🤍') + ' <span id="favCount">' + favs.size + '</span>';
-    }
 }
 
-// ============================================================
-//  ОЗВУЧКА (КАК В ПРИМЕРЕ)
-// ============================================================
 function speak(text) {
     if (!('speechSynthesis' in window)) {
-        showToast('🔇 Озвучка недоступна в этом браузере');
+        showToast('🔇 Озвучка недоступна');
         return;
     }
     try {
@@ -99,40 +74,28 @@ function speak(text) {
         utterance.lang = 'zh-CN';
         utterance.rate = 0.8;
         utterance.pitch = 1;
-        // Пробуем найти китайский голос
         var voices = speechSynthesis.getVoices();
-        var zhVoice = null;
         for (var i = 0; i < voices.length; i++) {
             if (voices[i].lang === 'zh-CN' || voices[i].lang === 'zh' || voices[i].lang.startsWith('zh')) {
-                zhVoice = voices[i];
+                utterance.voice = voices[i];
                 break;
             }
         }
-        if (zhVoice) utterance.voice = zhVoice;
         speechSynthesis.speak(utterance);
     } catch (e) {
         console.error('Ошибка озвучки:', e);
-        showToast('🔇 Ошибка озвучки');
     }
 }
 
-// ============================================================
-//  ТОСТ (ВСПЛЫВАШКА)
-// ============================================================
 function showToast(msg) {
     var el = document.getElementById('toast');
     if (!el) return;
     el.textContent = msg;
     el.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function() {
-        el.classList.remove('show');
-    }, 2000);
+    toastTimer = setTimeout(function() { el.classList.remove('show'); }, 2000);
 }
 
-// ============================================================
-//  ОТРИСОВКА КАРТЫ
-// ============================================================
 function render() {
     if (!DB || DB.length === 0 || order.length === 0) {
         document.getElementById('mainHz').textContent = '⚠️';
@@ -145,17 +108,14 @@ function render() {
     var d = DB[idx];
     if (!d) return;
 
-    // Главный иероглиф
     document.getElementById('mainHz').textContent = d[0];
     document.getElementById('mainPy').textContent = d[1];
     document.getElementById('mainRu').textContent = d[2];
 
-    // Слова (связки)
     var wordsHtml = '';
     var words = d[4] || [];
     for (var i = 0; i < words.length; i++) {
         var w = words[i];
-        // Разбиваем слово на символы и подсвечиваем главный иероглиф
         var chars = w[0].split('');
         var colored = chars.map(function(c) {
             return '<span class="' + (c === d[0] ? 'c-red' : 'c-blue') + '">' + c + '</span>';
@@ -168,18 +128,15 @@ function render() {
     }
     document.getElementById('words').innerHTML = wordsHtml;
 
-    // Навигация
     document.getElementById('posLabel').textContent = (pos + 1) + ' / ' + order.length;
-
-    // Статистика
     document.getElementById('statHz').textContent = DB.length + ' иероглифов';
+
     var totalWords = 0;
     for (var i = 0; i < DB.length; i++) {
         if (DB[i][4]) totalWords += DB[i][4].length;
     }
     document.getElementById('statWord').textContent = totalWords + ' слов';
 
-    // Кнопка избранного
     var likeBtn = document.getElementById('likeBtn');
     if (favs.has(d[0])) {
         likeBtn.innerHTML = '❤️ В избранном';
@@ -189,13 +146,9 @@ function render() {
         likeBtn.style.color = '';
     }
 
-    // Рисуем линии после рендера
     setTimeout(drawLines, 100);
 }
 
-// ============================================================
-//  ЛИНИИ (СВЯЗИ МЕЖДУ ГЛАВНЫМ ИЕРОГЛИФОМ И СЛОВАМИ)
-// ============================================================
 function drawLines() {
     var svg = document.getElementById('lines');
     var map = document.getElementById('map');
@@ -203,7 +156,6 @@ function drawLines() {
 
     var W = map.clientWidth;
     var H = map.clientHeight;
-
     svg.setAttribute('width', W);
     svg.setAttribute('height', H);
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
@@ -233,7 +185,6 @@ function drawLines() {
 
     svg.innerHTML = html;
 
-    // Анимация линий
     svg.querySelectorAll('.ln').forEach(function(p) {
         try {
             var L = p.getTotalLength();
@@ -242,15 +193,10 @@ function drawLines() {
             requestAnimationFrame(function() {
                 p.style.strokeDashoffset = 0;
             });
-        } catch (e) {
-            // Игнорируем ошибки для путей
-        }
+        } catch (e) {}
     });
 }
 
-// ============================================================
-//  НАВИГАЦИЯ
-// ============================================================
 function go(delta) {
     if (order.length === 0) return;
     pos = (pos + delta + order.length) % order.length;
@@ -263,9 +209,6 @@ function goTo(idx) {
     render();
 }
 
-// ============================================================
-//  ПОИСК
-// ============================================================
 function search(query) {
     if (!query || query.trim() === '') {
         buildOrder();
@@ -279,13 +222,10 @@ function search(query) {
         var match = d[0].includes(query) ||
             d[1].toLowerCase().includes(query) ||
             d[2].toLowerCase().includes(query);
-        // Поиск по словам
         if (!match && d[4]) {
             for (var j = 0; j < d[4].length; j++) {
                 var w = d[4][j];
-                if (w[0].includes(query) ||
-                    w[1].toLowerCase().includes(query) ||
-                    w[2].toLowerCase().includes(query)) {
+                if (w[0].includes(query) || w[1].toLowerCase().includes(query) || w[2].toLowerCase().includes(query)) {
                     match = true;
                     break;
                 }
@@ -296,16 +236,9 @@ function search(query) {
     order = results;
     pos = 0;
     render();
-    if (results.length === 0) {
-        showToast('🔍 Ничего не найдено');
-    } else {
-        showToast('🔍 Найдено: ' + results.length + ' иероглифов');
-    }
+    showToast(results.length === 0 ? '🔍 Ничего не найдено' : '🔍 Найдено: ' + results.length);
 }
 
-// ============================================================
-//  ТЕМА
-// ============================================================
 function toggleTheme() {
     dark = !dark;
     document.body.classList.toggle('dark', dark);
@@ -314,9 +247,6 @@ function toggleTheme() {
     setTimeout(drawLines, 300);
 }
 
-// ============================================================
-//  ИЗБРАННОЕ
-// ============================================================
 function toggleFavorite() {
     if (order.length === 0) return;
     var idx = order[pos];
@@ -324,10 +254,10 @@ function toggleFavorite() {
     var char = d[0];
     if (favs.has(char)) {
         favs.delete(char);
-        showToast('❌ Удалено из избранного: ' + char);
+        showToast('❌ Удалено: ' + char);
     } else {
         favs.add(char);
-        showToast('❤️ Добавлено в избранное: ' + char);
+        showToast('❤️ Добавлено: ' + char);
     }
     localStorage.setItem('hanmap_favs', JSON.stringify(Array.from(favs)));
     buildOrder();
@@ -338,7 +268,7 @@ function toggleFavorite() {
 function toggleFavFilter() {
     var btn = document.getElementById('favBtn');
     if (favs.size === 0) {
-        showToast('📭 Избранное пусто — отметьте ❤️ иероглифы');
+        showToast('📭 Избранное пусто');
         return;
     }
     favOnly = !favOnly;
@@ -348,13 +278,9 @@ function toggleFavFilter() {
     showToast(favOnly ? '❤️ Только избранное' : '📚 Все иероглифы');
 }
 
-// ============================================================
-//  БАЗА (СЕТКА)
-// ============================================================
 function buildGrid(q) {
     q = q || document.getElementById('q').value || '';
     q = q.toLowerCase().trim();
-
     var grid = document.getElementById('grid');
     if (!grid) return;
 
@@ -368,9 +294,7 @@ function buildGrid(q) {
             (d[4] && d[4].some(function(w) {
                 return w[0].includes(q) || w[2].toLowerCase().includes(q);
             }));
-        if (match) {
-            items.push({ d: d, i: i });
-        }
+        if (match) items.push({ d: d, i: i });
     }
 
     if (items.length === 0) {
@@ -383,8 +307,7 @@ function buildGrid(q) {
         var tile = document.createElement('div');
         tile.className = 'tile';
         tile.setAttribute('data-i', item.i);
-        tile.innerHTML = '<div class="t-hz">' + item.d[0] + '</div>' +
-            '<div class="t-py">' + item.d[1] + '</div>';
+        tile.innerHTML = '<div class="t-hz">' + item.d[0] + '</div><div class="t-py">' + item.d[1] + '</div>';
         tile.addEventListener('click', function() {
             var idx = parseInt(this.getAttribute('data-i'));
             goTo(idx);
@@ -400,18 +323,12 @@ function showGrid() {
     if (modal) modal.classList.add('open');
 }
 
-// ============================================================
-//  МОДАЛКИ
-// ============================================================
 function closeModals() {
     document.querySelectorAll('.modal').forEach(function(m) {
         m.classList.remove('open');
     });
 }
 
-// ============================================================
-//  ПРОПИСЬ
-// ============================================================
 var canvas, ctx, drawing = false, lastX, lastY;
 
 function initWrite() {
@@ -421,8 +338,7 @@ function initWrite() {
 
     var wrap = document.getElementById('canvasWrap');
     if (!wrap) return;
-    var s = wrap.clientWidth;
-    if (s === 0) s = 300;
+    var s = wrap.clientWidth || 300;
     var dpr = window.devicePixelRatio || 1;
 
     canvas.width = s * dpr;
@@ -439,16 +355,13 @@ function initWrite() {
         guide.className = '';
     }
 
-    // Рисуем сетку
     drawGrid(s);
-
     var modal = document.getElementById('writeModal');
     if (modal) modal.classList.add('open');
 
     var title = document.getElementById('writeTitle');
     if (title) title.textContent = '✍️ Пропись: ' + hz;
 
-    // Обработчики событий
     canvas.onmousedown = startDraw;
     canvas.onmousemove = draw;
     canvas.onmouseup = endDraw;
@@ -478,17 +391,10 @@ function drawGrid(s) {
     ctx.lineWidth = 2;
     ctx.setLineDash([]);
     ctx.strokeRect(1, 1, s - 2, s - 2);
-
     ctx.setLineDash([6, 6]);
     ctx.lineWidth = 1;
     ctx.globalAlpha = 0.45;
-
-    var lines = [
-        [s / 2, 0, s / 2, s],
-        [0, s / 2, s, s / 2],
-        [0, 0, s, s],
-        [s, 0, 0, s]
-    ];
+    var lines = [[s/2, 0, s/2, s], [0, s/2, s, s/2], [0, 0, s, s], [s, 0, 0, s]];
     lines.forEach(function(l) {
         ctx.beginPath();
         ctx.moveTo(l[0], l[1]);
@@ -529,9 +435,7 @@ function draw(e) {
     lastY = y;
 }
 
-function endDraw() {
-    drawing = false;
-}
+function endDraw() { drawing = false; }
 
 function clearWrite() {
     if (!ctx) return;
@@ -546,12 +450,7 @@ function toggleGuide() {
     if (guide) guide.classList.toggle('hidden');
 }
 
-// ============================================================
-//  ТЕСТ
-// ============================================================
-var quizData = [];
-var quizIdx = 0;
-var quizScore = 0;
+var quizData = [], quizIdx = 0, quizScore = 0;
 
 function startQuiz() {
     var shuffled = DB.slice();
@@ -575,10 +474,7 @@ function showQuizQuestion() {
         var scoreEl = document.getElementById('qScore');
         if (scoreEl) scoreEl.textContent = quizScore + ' / ' + quizData.length;
         var nextBtn = document.getElementById('qNext');
-        if (nextBtn) {
-            nextBtn.hidden = false;
-            nextBtn.textContent = '🔄 Заново';
-        }
+        if (nextBtn) { nextBtn.hidden = false; nextBtn.textContent = '🔄 Заново'; }
         return;
     }
 
@@ -588,9 +484,7 @@ function showQuizQuestion() {
     var opts = [d];
     var others = DB.filter(function(item) { return item[0] !== d[0]; });
     shuffle(others);
-    for (var i = 0; i < 3 && i < others.length; i++) {
-        opts.push(others[i]);
-    }
+    for (var i = 0; i < 3 && i < others.length; i++) { opts.push(others[i]); }
     shuffle(opts);
 
     var container = document.getElementById('qOpts');
@@ -600,9 +494,7 @@ function showQuizQuestion() {
         btn.className = 'q-opt';
         btn.innerHTML = opts[i][0] + '<small>' + opts[i][1] + '</small>';
         btn.setAttribute('data-char', opts[i][0]);
-        btn.onclick = function() {
-            checkQuizAnswer(this);
-        };
+        btn.onclick = function() { checkQuizAnswer(this); };
         container.appendChild(btn);
     }
     var scoreEl = document.getElementById('qScore');
@@ -616,12 +508,8 @@ function checkQuizAnswer(btn) {
 
     for (var i = 0; i < btns.length; i++) {
         btns[i].disabled = true;
-        if (btns[i].getAttribute('data-char') === correct) {
-            btns[i].classList.add('ok');
-        }
-        if (btns[i] === btn && selected !== correct) {
-            btns[i].classList.add('bad');
-        }
+        if (btns[i].getAttribute('data-char') === correct) { btns[i].classList.add('ok'); }
+        if (btns[i] === btn && selected !== correct) { btns[i].classList.add('bad'); }
     }
 
     if (selected === correct) {
@@ -646,44 +534,27 @@ function nextQuestion() {
     quizIdx++;
     var nextBtn = document.getElementById('qNext');
     if (nextBtn) nextBtn.hidden = true;
-    if (quizIdx >= quizData.length) {
-        showQuizQuestion();
-    } else {
-        showQuizQuestion();
-    }
+    showQuizQuestion();
 }
 
-// ============================================================
-//  ИНИЦИАЛИЗАЦИЯ
-// ============================================================
 function init() {
-    console.log('🔄 HanMap инициализация...');
-
-    // Строим порядок
+    console.log('🔄 HanMap загружается...');
     buildOrder();
-
-    // Рендерим
     render();
 
-    // ---- НАВИГАЦИЯ ----
-    var prevBtn = document.getElementById('prevBtn');
-    var nextBtn = document.getElementById('nextBtn');
-    if (prevBtn) prevBtn.addEventListener('click', function() { go(-1); });
-    if (nextBtn) nextBtn.addEventListener('click', function() { go(1); });
+    document.getElementById('prevBtn').addEventListener('click', function() { go(-1); });
+    document.getElementById('nextBtn').addEventListener('click', function() { go(1); });
 
-    // ---- ОЗВУЧКА ИЕРОГЛИФА ----
-    var mainNode = document.getElementById('mainNode');
-    var speakBtn = document.getElementById('speakBtn');
-    if (mainNode) mainNode.addEventListener('click', function() {
-        var hz = document.getElementById('mainHz').textContent;
-        if (hz && hz !== '⚠️') speak(hz);
-    });
-    if (speakBtn) speakBtn.addEventListener('click', function() {
+    document.getElementById('mainNode').addEventListener('click', function() {
         var hz = document.getElementById('mainHz').textContent;
         if (hz && hz !== '⚠️') speak(hz);
     });
 
-    // ---- ОЗВУЧКА СЛОВ ПРИ КЛИКЕ (КАК В ПРИМЕРЕ) ----
+    document.getElementById('speakBtn').addEventListener('click', function() {
+        var hz = document.getElementById('mainHz').textContent;
+        if (hz && hz !== '⚠️') speak(hz);
+    });
+
     document.getElementById('words').addEventListener('click', function(e) {
         var el = e.target.closest('.word');
         if (!el) return;
@@ -693,62 +564,37 @@ function init() {
         if (!d || !d[4]) return;
         var w = d[4][idx];
         if (!w) return;
-        speak(w[0]); // Озвучиваем слово
+        speak(w[0]);
         showToast('🔊 ' + w[0] + ' — ' + w[2]);
     });
 
-    // ---- ИЗБРАННОЕ ----
-    var likeBtn = document.getElementById('likeBtn');
-    var favBtn = document.getElementById('favBtn');
-    if (likeBtn) likeBtn.addEventListener('click', toggleFavorite);
-    if (favBtn) favBtn.addEventListener('click', toggleFavFilter);
+    document.getElementById('likeBtn').addEventListener('click', toggleFavorite);
+    document.getElementById('favBtn').addEventListener('click', toggleFavFilter);
+    document.getElementById('themeBtn').addEventListener('click', toggleTheme);
 
-    // ---- ТЕМА ----
-    var themeBtn = document.getElementById('themeBtn');
-    if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+    document.getElementById('randBtn').addEventListener('click', function() {
+        shuffle(order);
+        pos = 0;
+        render();
+        showToast('🎲 Перемешано!');
+    });
 
-    // ---- ПЕРЕМЕШАТЬ ----
-    var randBtn = document.getElementById('randBtn');
-    if (randBtn) {
-        randBtn.addEventListener('click', function() {
-            shuffle(order);
-            pos = 0;
-            render();
-            showToast('🎲 Перемешано!');
-        });
-    }
+    document.getElementById('gridBtn').addEventListener('click', showGrid);
+    document.getElementById('writeBtn').addEventListener('click', initWrite);
+    document.getElementById('clearBtn').addEventListener('click', clearWrite);
+    document.getElementById('guideBtn').addEventListener('click', toggleGuide);
+    document.getElementById('quizBtn').addEventListener('click', startQuiz);
+    document.getElementById('qNext').addEventListener('click', nextQuestion);
 
-    // ---- БАЗА (СЕТКА) ----
-    var gridBtn = document.getElementById('gridBtn');
-    if (gridBtn) gridBtn.addEventListener('click', showGrid);
-
-    // ---- ПРОПИСЬ ----
-    var writeBtn = document.getElementById('writeBtn');
-    var clearBtn = document.getElementById('clearBtn');
-    var guideBtn = document.getElementById('guideBtn');
-    if (writeBtn) writeBtn.addEventListener('click', initWrite);
-    if (clearBtn) clearBtn.addEventListener('click', clearWrite);
-    if (guideBtn) guideBtn.addEventListener('click', toggleGuide);
-
-    // ---- ТЕСТ ----
-    var quizBtn = document.getElementById('quizBtn');
-    var qNext = document.getElementById('qNext');
-    if (quizBtn) quizBtn.addEventListener('click', startQuiz);
-    if (qNext) qNext.addEventListener('click', nextQuestion);
-
-    // ---- ПОИСК ----
     var searchInput = document.getElementById('q');
     if (searchInput) {
         var searchTimeout;
         searchInput.addEventListener('input', function() {
             clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(function() {
-                search(searchInput.value);
-            }, 300);
+            searchTimeout = setTimeout(function() { search(searchInput.value); }, 300);
         });
     }
 
-    // ---- ЗАКРЫТИЕ МОДАЛОК ----
     document.querySelectorAll('[data-close]').forEach(function(btn) {
         btn.addEventListener('click', function() {
             var modal = this.closest('.modal');
@@ -758,20 +604,16 @@ function init() {
 
     document.querySelectorAll('.modal').forEach(function(m) {
         m.addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.remove('open');
-            }
+            if (e.target === this) this.classList.remove('open');
         });
     });
 
-    // ---- РЕСАЙЗ ----
     var resizeTimer;
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(drawLines, 300);
     });
 
-    // ---- КЛАВИАТУРА ----
     document.addEventListener('keydown', function(e) {
         if (e.key === 'ArrowLeft') go(-1);
         if (e.key === 'ArrowRight') go(1);
@@ -779,21 +621,14 @@ function init() {
         if (e.key === 'f' || e.key === 'F') toggleFavorite();
     });
 
-    // ---- ПРЕДЗАГРУЗКА ГОЛОСОВ ----
     if ('speechSynthesis' in window) {
         speechSynthesis.getVoices();
-        speechSynthesis.onvoiceschanged = function() {
-            speechSynthesis.getVoices();
-        };
+        speechSynthesis.onvoiceschanged = function() { speechSynthesis.getVoices(); };
     }
 
     console.log('✅ HanMap загружен!');
-    console.log('📚 Всего иероглифов: ' + DB.length);
 }
 
-// ============================================================
-//  ЗАПУСК
-// ============================================================
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
 } else {
