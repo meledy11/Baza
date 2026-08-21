@@ -1,0 +1,97 @@
+// ============================================================
+//  UI ИГРЫ (отрисовка, анимации, звуки)
+// ============================================================
+
+var THEMES = [
+  { id: 't1', name: '🌳 Дерево', bg: 't1' },
+  { id: 't2', name: '⚙️ Металл', bg: 't2' },
+  { id: 't3', name: '💡 Неон', bg: 't3' },
+  { id: 't4', name: '🧶 Бархат', bg: 't4' },
+  { id: 't5', name: '🎨 Пастель', bg: 't5' }
+];
+
+function getTheme() { return THEMES[(level - 1) % THEMES.length]; }
+
+function applyTheme() {
+  var theme = getTheme();
+  document.getElementById('board').className = theme.id;
+  document.getElementById('bg').className = 'bg ' + theme.bg;
+  document.getElementById('uHz').textContent = theme.name;
+}
+
+function calcSize() {
+  var wrap = document.querySelector('.ba'), ww = wrap.clientWidth - 12, wh = wrap.clientHeight - 8;
+  var bw = ww, bh = bw * NR / NC;
+  if (bh > wh) { bh = wh; bw = bh * NC / NR; }
+  var cw = Math.floor((bw - PAD * 2 - GAP * (NC - 1)) / NC);
+  var ch = Math.floor((bh - PAD * 2 - GAP * (NR - 1)) / NR);
+  cellPx = Math.min(cw, ch);
+  var bEl = document.getElementById('board');
+  bEl.style.width = (cellPx * NC + GAP * (NC - 1) + PAD * 2) + 'px';
+  bEl.style.height = (cellPx * NR + GAP * (NR - 1) + PAD * 2) + 'px';
+  bEl.style.gridTemplateColumns = 'repeat(' + NC + ',' + cellPx + 'px)';
+  bEl.style.gridTemplateRows = 'repeat(' + NR + ',' + cellPx + 'px)';
+  bEl.style.gap = GAP + 'px';
+  bEl.style.padding = PAD + 'px';
+}
+
+function render(fallSet) {
+  fallSet = fallSet || {};
+  var b = document.getElementById('board');
+  b.innerHTML = '';
+  var hzPx = Math.max(16, Math.floor(cellPx * .44));
+  var pyPx = Math.max(8, Math.floor(cellPx * .13));
+  var ruPx = Math.max(8, Math.floor(cellPx * .12));
+  var emPx = Math.max(8, Math.floor(cellPx * .12));
+  var bdPx = Math.max(8, Math.floor(cellPx * .16));
+  
+  for (var i = 0; i < TOT; i++) {
+    var el = document.createElement('div');
+    el.setAttribute('data-i', String(i));
+    var d = board[i];
+    if (!d) {
+      el.className = 'c empty';
+    } else {
+      var cls = 'c c' + d.c;
+      if (d.sp === 'bomb') cls += ' sp-bomb';
+      else if (d.sp === 'laser') cls += ' sp-laser';
+      else if (d.sp === 'star') cls += ' sp-star';
+      else if (d.sp === 'rainbow') cls += ' sp-rainbow';
+      el.className = cls;
+      el.style.width = cellPx + 'px';
+      el.style.height = cellPx + 'px';
+      var badges = { bomb: '💥', laser: '⚡', star: '⭐', rainbow: '🌈' };
+      el.innerHTML = '<span class="hz" style="font-size:' + hzPx + 'px">' + d.h + 
+        '</span><span class="py" style="font-size:' + pyPx + 'px">' + d.p + 
+        '</span><span class="ru" style="font-size:' + ruPx + 'px">' + d.r + 
+        '</span>' + (d.e ? '<span class="emo" style="font-size:' + emPx + 'px">' + d.e + '</span>' : '') + 
+        (d.sp ? '<span class="badge" style="font-size:' + bdPx + 'px">' + (badges[d.sp] || '✨') + '</span>' : '');
+      if (sel === i) el.classList.add('sel');
+      if (fallSet[i]) {
+        el.classList.add('drop');
+        var row = Math.floor(i / NC);
+        el.style.setProperty('--dy', (-(row + 1) * 68) + 'px');
+        el.style.setProperty('--dd', (0.2 + row * 0.04) + 's');
+      }
+    }
+    b.appendChild(el);
+  }
+}
+
+function updateUI() {
+  document.getElementById('uSc').textContent = score;
+  document.getElementById('uCo').textContent = combo;
+  document.getElementById('uLv').textContent = level;
+  document.getElementById('uSp').textContent = specials;
+  document.getElementById('pFill').style.width = Math.min(100, score / goal * 100) + '%';
+  document.getElementById('uGl').textContent = goal;
+  document.getElementById('cSh').textContent = nShuf;
+  document.getElementById('cHi').textContent = nHint;
+  document.getElementById('cBm').textContent = nBomb;
+  document.getElementById('bSh').classList.toggle('off', nShuf <= 0);
+  document.getElementById('bHi').classList.toggle('off', nHint <= 0);
+  var setNum = ((level - 1) % 5) + 1;
+  document.getElementById('uSet').textContent = 'Набор ' + setNum;
+}
+
+// ... остальные UI функции (звуки, анимации, салюты, комбо)
