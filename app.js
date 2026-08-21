@@ -1,5 +1,6 @@
 // ============================================================
 //  БАЗА 600 ИЕРОГЛИФОВ + ЭМОДЗИ + СЛОВА (полная)
+//  ЧАСТЬ 1/3 — ОСНОВНЫЕ 90 ИЕРОГЛИФОВ
 // ============================================================
 
 function generateDB() {
@@ -69,7 +70,6 @@ function generateDB() {
     ["买", "mǎi", "покупать", "🛍️", [["买东西", "mǎi dōng xi", "делать покупки"], ["购买", "gòu mǎi", "приобретать"], ["买菜", "mǎi cài", "покупать овощи"], ["买票", "mǎi piào", "купить билет"]]],
     ["高", "gāo", "высокий", "📈", [["高兴", "gāo xìng", "счастливый"], ["高大", "gāo dà", "высокий"], ["高手", "gāo shǒu", "мастер"], ["高兴", "gāo xìng", "радостный"]]]
   ];
-
   // ========== ДОБАВЛЯЕМ ОСТАЛЬНЫЕ 500+ ИЕРОГЛИФОВ ==========
   const extra = [
     ["安", "ān", "спокойный", "😌", [["安全", "ān quán", "безопасность"], ["安静", "ān jìng", "тихий"]]],
@@ -194,7 +194,10 @@ function generateDB() {
     ["快", "kuài", "быстрый; скорый", "🏃", [["快乐", "kuài lè", "радостный"], ["赶快", "gǎn kuài", "побыстрее"]]],
     ["乐", "lè", "радость", "😊", [["快乐", "kuài lè", "радостный"], ["音乐", "yīn yuè", "музыка"]]],
     ["冷", "lěng", "холодный", "❄️", [["寒冷", "hán lěng", "холодный"], ["冷饮", "lěng yǐn", "холодный напиток"]]],
-    ["离", "lí", "отделяться; от", "➡️", [["离开", "lí kāi", "уходить"], ["距离", "jù lí", "расстояние"]]],
+    ["离", "lí", "отделяться; от", "➡️", [["离开", "lí kāi", "уходить"], ["距离", "jù lí", "расстояние"]]]
+  ];
+  // ========== ПРОДОЛЖЕНИЕ EXTRA (оставшиеся иероглифы) ==========
+  const extra2 = [
     ["理", "lǐ", "логика; управлять", "🧠", [["道理", "dào lǐ", "принцип"], ["心理", "xīn lǐ", "психология"]]],
     ["力", "lì", "сила", "💪", [["努力", "nǔ lì", "стараться"], ["力量", "lì liàng", "сила"]]],
     ["利", "lì", "выгода; острый", "✅", [["利用", "lì yòng", "использовать"], ["利益", "lì yì", "интерес"]]],
@@ -484,11 +487,14 @@ function generateDB() {
     ["做", "zuò", "делать; заниматься", "🔧", [["做饭", "zuò fàn", "готовить еду"], ["做事", "zuò shì", "заниматься делом"]]]
   ];
 
-  // Объединяем
-  const all = [...core, ...extra];
+  // Объединяем все части
+  const all = [...core, ...extra, ...extra2];
+  
+  // Удаляем дубликаты по иероглифу
   const map = new Map();
   all.forEach(item => {
     if (!map.has(item[0])) {
+      // Добавляем дополнительные слова если их меньше 2
       if (item[3].length < 2) {
         const extraWords = [
           [item[0] + "子", item[1] + " zi", item[2] + " (слово)"],
@@ -499,6 +505,7 @@ function generateDB() {
       map.set(item[0], item);
     }
   });
+  
   return Array.from(map.values());
 }
 
@@ -508,41 +515,52 @@ function generateDB() {
 const DB = generateDB();
 
 // ============================================================
-//  ЛОГИКА СЛОВАРЯ
+//  ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ РАБОТЫ С БД
 // ============================================================
-const $ = s => document.querySelector(s);
-const ALLW = DB.flatMap(d => d[3].map(w => ({ hz: w[0], py: w[1], ru: w[2] })));
-const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d } catch (e) { return d } };
-const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)) } catch (e) {} };
-const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]] } return a };
 
-let favs = new Set(load('hanfav', [])), favOnly = false, order = [], pos = 0;
-
-$('#statHz').textContent = DB.length + ' иероглифов';
-$('#statWord').textContent = ALLW.length + ' слов';
-
-function buildOrder() { order = favOnly ? DB.map((_, i) => i).filter(i => favs.has(DB[i][0])) : DB.map((_, i) => i); if (pos >= order.length) pos = 0; }
-
-function render() {
-  const d = DB[order[pos]];
-  $('#mainPy').textContent = d[1];
-  $('#mainHz').textContent = d[0];
-  $('#mainRu').textContent = d[2];
-  $('#words').innerHTML = d[3].map((w, i) => `<div class="word" data-i="${i}" style="animation-delay:${i * 70}ms">
-    <div class="py">${w[1]}</div>
-    <div class="hz">${[...w[0]].map(c => `<span class="${c === d[0] ? 'c-red' : 'c-blue'}">${c}</span>`).join('')}</div>
-    <div class="ru">${w[2]}</div></div>`).join('');
-  $('#likeBtn').innerHTML = favs.has(d[0]) ? '❤️ В избранном' : '🤍 В избранное';
-  $('#posLabel').textContent = (pos + 1) + ' / ' + order.length;
-  requestAnimationFrame(drawLines);
+// Поиск иероглифа по символу
+function findChar(char) {
+  return DB.find(item => item[0] === char);
 }
 
-// ... остальная логика словаря (drawLines, go, speak, toast, etc.) ...
+// Получить случайный набор иероглифов
+function getRandomChars(count = 6) {
+  const shuffled = [...DB];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, count);
+}
 
-// Инициализация
-buildOrder();
-updFav();
-render();
-setTimeout(drawLines, 300);
+// Получить иероглифы для уровня (6 уникальных на уровень)
+function getCharsForLevel(level) {
+  const count = 6;
+  const start = ((level - 1) * count) % DB.length;
+  const chars = [];
+  for (let i = 0; i < count; i++) {
+    const idx = (start + i) % DB.length;
+    const item = DB[idx];
+    chars.push({
+      h: item[0],
+      p: item[1],
+      r: item[2],
+      e: item[4] || '🀄',
+      c: i % 6
+    });
+  }
+  return chars;
+}
+
+// Получить все слова (для словаря)
+function getAllWords() {
+  return DB.flatMap(d => d[3].map(w => ({
+    hz: w[0],
+    py: w[1],
+    ru: w[2]
+  })));
+}
+
+// Экспорт для использования в других файлах
+console.log(`✅ База загружена: ${DB.length} иероглифов`);
+console.log(`📝 Всего слов: ${getAllWords().length}`);
