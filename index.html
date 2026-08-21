@@ -1,170 +1,206 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-  <title>🀄 Ханзи · HanMap 600</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-      background: #0a0a0f;
-      min-height: 100vh;
-      overflow: hidden;
-    }
-    .app-container {
-      width: 100%;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      background: #0a0a0f;
-    }
-    .nav-bar {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 12px 16px;
-      background: rgba(255, 255, 255, 0.04);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      flex-shrink: 0;
-      z-index: 100;
-      position: relative;
-      flex-wrap: wrap;
-    }
-    .nav-bar .logo {
-      font-size: 20px;
-      font-weight: 800;
-      background: linear-gradient(135deg, #ffd700, #ff6b6b);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-right: auto;
-    }
-    .nav-btn {
-      padding: 10px 22px;
-      border: none;
-      border-radius: 30px;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      background: rgba(255, 255, 255, 0.06);
-      color: rgba(255, 255, 255, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      position: relative;
-    }
-    .nav-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-1px);
-    }
-    .nav-btn:active {
-      transform: scale(0.95);
-    }
-    .nav-btn.active {
-      background: linear-gradient(135deg, #ffd700, #f59e0b);
-      color: #1a1a2e;
-      border-color: #ffd700;
-      box-shadow: 0 4px 30px rgba(255, 215, 0, 0.3);
-    }
-    .nav-btn .icon {
-      margin-right: 6px;
-    }
-    .nav-btn .badge {
-      position: absolute;
-      top: -6px;
-      right: -6px;
-      background: #ff6b6b;
-      color: #fff;
-      font-size: 10px;
-      padding: 2px 8px;
-      border-radius: 20px;
-      font-weight: 700;
-    }
-    .iframe-wrapper {
-      flex: 1;
-      width: 100%;
-      position: relative;
-      overflow: hidden;
-    }
-    .iframe-wrapper iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
-      background: #0a0a0f;
-    }
-    .iframe-wrapper iframe.hidden {
-      display: none;
-    }
-    @media (max-width: 600px) {
-      .nav-bar {
-        padding: 8px 12px;
-        gap: 6px;
-      }
-      .nav-bar .logo {
-        font-size: 16px;
-        margin-right: 4px;
-      }
-      .nav-btn {
-        padding: 8px 14px;
-        font-size: 12px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+<title>🀄 Ханзи — Учи китайский</title>
+<style>
+/* ============================================================
+   ГЛОБАЛЬНЫЙ СТИЛЬ
+   ============================================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+:root {
+  --bg: #0a0a0f;
+  --card: #141424;
+  --ink: #eef1ff;
+  --mut: #7a809c;
+  --gold: #ffd700;
+  --red: #ff6b6b;
+  --blue: #4263eb;
+  --grad: linear-gradient(135deg, #ffd700, #f59e0b);
+}
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Навигация */
+.app-nav {
+  display: flex;
+  gap: 6px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  overflow-x: auto;
+}
+.app-nav button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: rgba(255,255,255,0.4);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.app-nav button:hover {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+.app-nav button.active {
+  background: var(--grad);
+  color: #1a1a2e;
+  box-shadow: 0 4px 20px rgba(255,215,0,0.25);
+}
+.app-nav button .badge {
+  background: var(--red);
+  color: #fff;
+  font-size: 9px;
+  padding: 1px 8px;
+  border-radius: 10px;
+  margin-left: 4px;
+}
+
+/* Контейнеры представлений */
+.view {
+  display: none;
+  height: calc(100vh - 64px);
+  overflow: hidden;
+  position: relative;
+}
+.view.active {
+  display: block;
+}
+.view iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: var(--bg);
+}
+
+/* Адаптив */
+@media (max-width: 550px) {
+  .app-nav {
+    padding: 8px 10px;
+    gap: 4px;
+  }
+  .app-nav button {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+  .view {
+    height: calc(100vh - 56px);
+  }
+}
+</style>
 </head>
 <body>
-  <div class="app-container">
-    <div class="nav-bar">
-      <div class="logo">🀄 Ханзи</div>
-      <button class="nav-btn active" data-app="hanzi" id="btnHanzi">
-        <span class="icon">🎮</span> Игра
-      </button>
-      <button class="nav-btn" data-app="hanmap" id="btnHanmap">
-        <span class="icon">📚</span> Словарь
-        <span class="badge">600</span>
-      </button>
-    </div>
-    <div class="iframe-wrapper">
-      <iframe id="frameHanzi" src="hanzi.html"></iframe>
-      <iframe id="frameHanmap" src="hanmap.html" class="hidden"></iframe>
-    </div>
-  </div>
-  <script>
-    const btnHanzi = document.getElementById('btnHanzi');
-    const btnHanmap = document.getElementById('btnHanmap');
-    const frameHanzi = document.getElementById('frameHanzi');
-    const frameHanmap = document.getElementById('frameHanmap');
-    let currentApp = localStorage.getItem('hanzi_app') || 'hanzi';
-    function switchApp(app) {
-      currentApp = app;
-      localStorage.setItem('hanzi_app', app);
-      btnHanzi.classList.toggle('active', app === 'hanzi');
-      btnHanmap.classList.toggle('active', app === 'hanmap');
-      frameHanzi.classList.toggle('hidden', app !== 'hanzi');
-      frameHanmap.classList.toggle('hidden', app !== 'hanmap');
-      setTimeout(() => {
-        const frame = app === 'hanzi' ? frameHanzi : frameHanmap;
-        if (frame) frame.style.height = '100%';
-      }, 100);
-    }
-    btnHanzi.addEventListener('click', () => switchApp('hanzi'));
-    btnHanmap.addEventListener('click', () => switchApp('hanmap'));
-    document.addEventListener('keydown', (e) => {
-      if (e.key === '1') switchApp('hanzi');
-      if (e.key === '2') switchApp('hanmap');
-    });
-    switchApp(currentApp);
-    window.addEventListener('resize', () => {
-      const frame = currentApp === 'hanzi' ? frameHanzi : frameHanmap;
-      if (frame) frame.style.height = '100%';
-    });
-  </script>
+
+<!-- Навигация -->
+<nav class="app-nav" id="appNav">
+  <button class="active" data-view="game">🎮 Игра</button>
+  <button data-view="dictionary">📚 Словарь <span class="badge">600</span></button>
+</nav>
+
+<!-- Представление: Игра -->
+<div class="view active" id="view-game">
+  <iframe id="gameFrame" src="hanzi.html"></iframe>
+</div>
+
+<!-- Представление: Словарь -->
+<div class="view" id="view-dictionary">
+  <iframe id="dictFrame" src="hanmap.html"></iframe>
+</div>
+
+<script>
+// ============================================================
+//  ГЛАВНОЕ ПРИЛОЖЕНИЕ — НАВИГАЦИЯ
+// ============================================================
+
+const nav = document.getElementById('appNav');
+const views = {
+  game: document.getElementById('view-game'),
+  dictionary: document.getElementById('view-dictionary')
+};
+const frames = {
+  game: document.getElementById('gameFrame'),
+  dictionary: document.getElementById('dictFrame')
+};
+
+let currentView = localStorage.getItem('hanzi_view') || 'game';
+
+// Переключение
+function switchView(view) {
+  if (!views[view]) return;
+  
+  currentView = view;
+  localStorage.setItem('hanzi_view', view);
+  
+  // Обновляем кнопки
+  nav.querySelectorAll('button').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.view === view);
+  });
+  
+  // Обновляем представления
+  Object.keys(views).forEach(key => {
+    views[key].classList.toggle('active', key === view);
+  });
+  
+  // Перезагружаем iframe при первом открытии
+  if (view === 'dictionary' && !window._dictLoaded) {
+    window._dictLoaded = true;
+    // Даём время на загрузку
+    setTimeout(() => {
+      try {
+        frames.dictionary.src = frames.dictionary.src;
+      } catch(e) {}
+    }, 100);
+  }
+  if (view === 'game' && !window._gameLoaded) {
+    window._gameLoaded = true;
+    setTimeout(() => {
+      try {
+        frames.game.src = frames.game.src;
+      } catch(e) {}
+    }, 100);
+  }
+}
+
+// Клики по кнопкам
+nav.addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if (btn && btn.dataset.view) {
+    switchView(btn.dataset.view);
+  }
+});
+
+// Горячие клавиши
+document.addEventListener('keydown', (e) => {
+  if (e.key === '1') switchView('game');
+  if (e.key === '2') switchView('dictionary');
+});
+
+// Запуск
+switchView(currentView);
+
+console.log('✅ Hanzi App загружена');
+console.log('📚 Используется база из app.js');
+</script>
+
 </body>
 </html>
