@@ -24,8 +24,6 @@
       flex-direction: column;
       background: #0a0a0f;
     }
-
-    /* ——— Верхняя панель ——— */
     .nav-bar {
       display: flex;
       align-items: center;
@@ -89,8 +87,6 @@
       border-radius: 20px;
       font-weight: 700;
     }
-
-    /* ——— Iframe ——— */
     .iframe-wrapper {
       flex: 1;
       width: 100%;
@@ -107,7 +103,6 @@
     .iframe-wrapper iframe.hidden {
       display: none;
     }
-
     @media (max-width: 600px) {
       .nav-bar {
         padding: 8px 12px;
@@ -126,7 +121,6 @@
 </head>
 <body>
   <div class="app-container">
-    <!-- Панель навигации -->
     <div class="nav-bar">
       <div class="logo">🀄 Ханзи</div>
       <button class="nav-btn active" data-app="hanzi" id="btnHanzi">
@@ -137,62 +131,39 @@
         <span class="badge">600</span>
       </button>
     </div>
-
-    <!-- Контейнер для iframe -->
     <div class="iframe-wrapper">
       <iframe id="frameHanzi" src="hanzi.html"></iframe>
       <iframe id="frameHanmap" src="hanmap.html" class="hidden"></iframe>
     </div>
   </div>
-
   <script>
     const btnHanzi = document.getElementById('btnHanzi');
     const btnHanmap = document.getElementById('btnHanmap');
     const frameHanzi = document.getElementById('frameHanzi');
     const frameHanmap = document.getElementById('frameHanmap');
-
-    // Проверяем сохранённое состояние
     let currentApp = localStorage.getItem('hanzi_app') || 'hanzi';
-
     function switchApp(app) {
       currentApp = app;
       localStorage.setItem('hanzi_app', app);
-
-      // Кнопки
       btnHanzi.classList.toggle('active', app === 'hanzi');
       btnHanmap.classList.toggle('active', app === 'hanmap');
-
-      // Iframe
       frameHanzi.classList.toggle('hidden', app !== 'hanzi');
       frameHanmap.classList.toggle('hidden', app !== 'hanmap');
-
-      // Обновляем высоту iframe
       setTimeout(() => {
         const frame = app === 'hanzi' ? frameHanzi : frameHanmap;
-        if (frame) {
-          frame.style.height = '100%';
-        }
+        if (frame) frame.style.height = '100%';
       }, 100);
     }
-
     btnHanzi.addEventListener('click', () => switchApp('hanzi'));
     btnHanmap.addEventListener('click', () => switchApp('hanmap'));
-
-    // Горячие клавиши: 1 — игра, 2 — словарь
     document.addEventListener('keydown', (e) => {
       if (e.key === '1') switchApp('hanzi');
       if (e.key === '2') switchApp('hanmap');
     });
-
-    // Загружаем последнее состояние
     switchApp(currentApp);
-
-    // Обновляем при изменении размера
     window.addEventListener('resize', () => {
       const frame = currentApp === 'hanzi' ? frameHanzi : frameHanmap;
-      if (frame) {
-        frame.style.height = '100%';
-      }
+      if (frame) frame.style.height = '100%';
     });
   </script>
 </body>
