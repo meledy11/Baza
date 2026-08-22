@@ -58,6 +58,7 @@ body{display:flex;flex-direction:column;align-items:center;}
     pointer-events:none;
 }
 
+/* Цвета клеток (всегда 0-5 для совместимости со всеми темами) */
 .t1 .c0{background:#8b3a3a;}.t1 .c1{background:#2d5a5a;}.t1 .c2{background:#3a4a6b;}.t1 .c3{background:#8a6d3b;}.t1 .c4{background:#5a3a5a;}.t1 .c5{background:#6b5a4a;}
 .t2 .c0{background:#a04040;}.t2 .c1{background:#3a6b6b;}.t2 .c2{background:#4a5a7b;}.t2 .c3{background:#9a7d4b;}.t2 .c4{background:#6a4a6a;}.t2 .c5{background:#7b6a5a;}
 .t3 .c0{background:#7a2a2a;}.t3 .c1{background:#1d4a4a;}.t3 .c2{background:#2a3a5b;}.t3 .c3{background:#7a5d2b;}.t3 .c4{background:#4a2a4a;}.t3 .c5{background:#5b4a3a;}
@@ -128,11 +129,12 @@ body{display:flex;flex-direction:column;align-items:center;}
 .shake{animation:shake 0.4s cubic-bezier(.36,.07,.19,.97) both;}
 @keyframes shake{10%,90%{transform:translate3d(-1px,0,0);}20%,80%{transform:translate3d(2px,0,0);}30%,50%,70%{transform:translate3d(-4px,0,0);}40%,60%{transform:translate3d(4px,0,0);}}
 
-/* --- Стили для окна результатов уровня (УВЕЛИЧЕННЫЕ) --- */
+/* --- Стили для окна результатов уровня (АДАПТИВНЫЕ КУБИКИ) --- */
 .jade-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-    gap: 15px;
+    /* Адаптивная сетка: минимум 85px, иначе растягиваем */
+    grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
+    gap: 12px;
     margin-bottom: 25px;
     justify-content: center;
 }
@@ -153,6 +155,7 @@ body{display:flex;flex-direction:column;align-items:center;}
     overflow: hidden;
     cursor: pointer;
     transition: transform 0.2s;
+    min-height: 110px; /* Минимальная высота для выравнивания */
 }
 .jade-card:active { transform: scale(0.95); }
 .jade-card::before {
@@ -169,6 +172,7 @@ body{display:flex;flex-direction:column;align-items:center;}
     text-shadow: 0 4px 8px rgba(0,0,0,0.6), 0 0 20px rgba(255,255,255,0.2); 
     margin-bottom: 5px; 
     z-index: 2;
+    line-height: 1;
 }
 .jade-py { 
     font-size: 1rem; 
@@ -179,13 +183,19 @@ body{display:flex;flex-direction:column;align-items:center;}
     z-index: 2;
 }
 .jade-ru { 
-    font-size: 0.9rem; 
+    font-size: 0.85rem; 
     color: #ffd700; 
     font-weight: bold; 
     text-transform: uppercase; 
-    letter-spacing: 1px; 
+    letter-spacing: 0.5px; 
     text-shadow: 0 2px 4px rgba(0,0,0,0.8);
     z-index: 2;
+    text-align: center;
+    /* Разрешаем перенос слов и многострочность */
+    white-space: normal;
+    word-wrap: break-word;
+    line-height: 1.2;
+    max-width: 100%;
 }
 .jade-emo { 
     font-size: 1.5rem; 
@@ -361,14 +371,16 @@ if(typeof DB !== 'undefined' && DB.length > 0) {
     }
 } else { LEVELS = DB_FALLBACK; }
 
-var MAX_COLORS = 10;
+// Глобальная карта цветов для иероглифов (чтобы цвет был привязан к символу навсегда)
+var COLOR_MAP = {}; 
+
 var state = {
     board: [], score: 0, level: 1, goal: 800, 
     coins: 100, crystals: 5, 
     shufFree: 3, hintFree: 3,
     busy: false, sel: -1, combo: 0,
     circle: 1,
-    foundChars: [] // Для хранения найденных на уровне символов
+    foundChars: [] 
 };
 
 var PRICE_HINT = 50, PRICE_SHUF = 80, PRICE_BOMB = 5;
@@ -580,11 +592,14 @@ function randChar() {
     var idx = Math.floor(Math.random() * set.length);
     var c = set[idx];
     
-    // ---- БОЛЬШЕ ЦВЕТОВ В КАЖДОМ КРУГЕ ----
-    var totalLevels = LEVELS.length;
-    var circle = Math.floor((state.level - 1) / totalLevels) + 1;
-    var extraColors = Math.min(circle - 1, 4); // максимум +4 цвета
-    var colorIdx = (idx + circle * 3) % Math.min(5 + extraColors, MAX_COLORS);
+    // ---- УНИКАЛЬНЫЙ ЦВЕТ ДЛЯ КАЖДОГО ИЕРОГЛИФА ----
+    // Используем глобальную карту, чтобы "人" всегда был одного цвета
+    if (!COLOR_MAP[c.h]) {
+        // Присваиваем следующий свободный цвет (0-5)
+        var keys = Object.keys(COLOR_MAP);
+        COLOR_MAP[c.h] = keys.length % 6; 
+    }
+    var colorIdx = COLOR_MAP[c.h];
     // -----------------------------------------
     
     return {h:c.h, p:c.p, r:c.r, e:c.e, c:colorIdx, sp:null};
