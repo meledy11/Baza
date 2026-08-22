@@ -150,7 +150,114 @@ body{display:flex;flex-direction:column;align-items:center;}
 .c78{background:linear-gradient(145deg,#8a9080,#5a6a5a);} /* Олива */
 .c79{background:linear-gradient(145deg,#b0a090,#7a6a5a);} /* Патина */
 
-/* Спец. бонусы поверх градиента */
+/* ============================================================
+   БАРХАТИСТОСТЬ И ТЕКСТУРЫ — УНИКАЛЬНЫЕ ДЛЯ КАЖДОГО УРОВНЯ
+   ============================================================ */
+
+/* УРОВЕНЬ 1: Бархатная киноварь — мягкое матовое свечение */
+.level-effect-1 .c{box-shadow: inset 1px 1px 3px rgba(255,220,200,0.2), inset -1px -1px 3px rgba(0,0,0,0.4), 2px 3px 8px rgba(0,0,0,0.5), 0 0 20px rgba(200,100,50,0.08);}
+.level-effect-1 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 30% 20%, rgba(255,200,180,0.1), transparent 60%);pointer-events:none;z-index:0;}
+
+/* УРОВЕНЬ 2: Шёлковый нефрит — переливающийся блеск */
+.level-effect-2 .c{box-shadow: inset 1px 1px 3px rgba(200,255,220,0.2), inset -1px -1px 3px rgba(0,0,0,0.4), 2px 3px 8px rgba(0,0,0,0.5), 0 0 25px rgba(100,200,150,0.08);}
+.level-effect-2 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:linear-gradient(135deg, rgba(200,255,230,0.12) 0%, transparent 40%, rgba(200,255,230,0.05) 100%);pointer-events:none;z-index:0;}
+
+/* УРОВЕНЬ 3: Мраморный индиго — каменная текстура с прожилками */
+.level-effect-3 .c{box-shadow: inset 1px 1px 3px rgba(200,220,255,0.2), inset -1px -1px 3px rgba(0,0,0,0.4), 2px 3px 8px rgba(0,0,0,0.5), 0 0 25px rgba(100,150,255,0.06);}
+.level-effect-3 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 2px, transparent 2px, transparent 8px);pointer-events:none;z-index:0;}
+
+/* УРОВЕНЬ 4: Золотое сечение — тёплый металлический блеск */
+.level-effect-4 .c{box-shadow: inset 1px 1px 3px rgba(255,220,150,0.25), inset -1px -1px 3px rgba(0,0,0,0.4), 2px 3px 8px rgba(0,0,0,0.5), 0 0 30px rgba(255,200,100,0.1);}
+.level-effect-4 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 60% 30%, rgba(255,220,150,0.12), transparent 50%), radial-gradient(circle at 30% 70%, rgba(255,200,100,0.06), transparent 40%);pointer-events:none;z-index:0;}
+
+/* УРОВЕНЬ 5: Хрустальная слива — прозрачный блеск с преломлением */
+.level-effect-5 .c{box-shadow: inset 1px 1px 4px rgba(255,200,255,0.2), inset -1px -1px 4px rgba(0,0,0,0.3), 2px 3px 8px rgba(0,0,0,0.5), 0 0 30px rgba(200,150,255,0.08);}
+.level-effect-5 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 40% 40%, rgba(255,255,255,0.1), transparent 50%), radial-gradient(circle at 70% 70%, rgba(255,200,255,0.05), transparent 40%);pointer-events:none;z-index:0;}
+
+/* УРОВЕНЬ 6: Жемчужный персик — перламутровый перелив */
+.level-effect-6 .c{box-shadow: inset 1px 1px 3px rgba(255,230,210,0.25), inset -1px -1px 3px rgba(0,0,0,0.3), 2px 3px 8px rgba(0,0,0,0.5), 0 0 20px rgba(255,200,180,0.06);}
+.level-effect-6 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 30%, rgba(255,220,200,0.06) 100%);pointer-events:none;z-index:0;}
+
+/* УРОВЕНЬ 7: Агатовый коралл — полосатая текстура */
+.level-effect-7 .c{box-shadow: inset 1px 1px 3px rgba(255,200,180,0.2), inset -1px -1px 3px rgba(0,0,0,0.4), 2px 3px 8px rgba(0,0,0,0.5), 0 0 20px rgba(200,150,100,0.06);}
+.level-effect-7 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:repeating-linear-gradient(0deg, rgba(255,200,180,0.04) 0px, rgba(255,200,180,0.04) 3px, transparent 3px, transparent 12px);pointer-events:none;z-index:0;}
+
+/* УРОВЕНЬ 8: Патиновая бронза — благородный налёт времени */
+.level-effect-8 .c{box-shadow: inset 1px 1px 3px rgba(200,180,160,0.2), inset -1px -1px 3px rgba(0,0,0,0.4), 2px 3px 8px rgba(0,0,0,0.5), 0 0 20px rgba(150,180,160,0.06);}
+.level-effect-8 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 50% 80%, rgba(100,200,180,0.06), transparent 50%), radial-gradient(circle at 20% 20%, rgba(200,180,160,0.04), transparent 40%);pointer-events:none;z-index:0;}
+
+/* УРОВЕНЬ 9: Бархатный изумруд — глубокое матовое свечение */
+.level-effect-9 .c{box-shadow: inset 1px 1px 4px rgba(150,255,200,0.15), inset -1px -1px 4px rgba(0,0,0,0.4), 2px 3px 8px rgba(0,0,0,0.5), 0 0 30px rgba(100,200,150,0.08);animation:velvetPulse 3s ease-in-out infinite alternate;}
+.level-effect-9 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 40% 30%, rgba(150,255,200,0.06), transparent 60%);pointer-events:none;z-index:0;}
+@keyframes velvetPulse{0%{filter:brightness(1);}100%{filter:brightness(1.04);}}
+
+/* УРОВЕНЬ 10: Шёлковый сапфир — переливающийся синий */
+.level-effect-10 .c{box-shadow: inset 1px 1px 4px rgba(200,220,255,0.2), inset -1px -1px 4px rgba(0,0,0,0.3), 2px 3px 8px rgba(0,0,0,0.5), 0 0 30px rgba(100,150,255,0.08);}
+.level-effect-10 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:linear-gradient(135deg, rgba(200,220,255,0.08) 0%, transparent 30%, rgba(200,220,255,0.04) 100%);pointer-events:none;z-index:0;}
+
+/* УРОВЕНЬ 11: Мраморный янтарь — тёплая каменная текстура */
+.level-effect-11 .c{box-shadow: inset 1px 1px 3px rgba(255,220,150,0.2), inset -1px -1px 3px rgba(0,0,0,0.4), 2px 3px 8px rgba(0,0,0,0.5), 0 0 25px rgba(255,200,100,0.08);}
+.level-effect-11 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:repeating-linear-gradient(135deg, rgba(255,220,150,0.04) 0px, rgba(255,220,150,0.04) 2px, transparent 2px, transparent 10px);pointer-events:none;z-index:0;}
+
+/* УРОВЕНЬ 12: Хрустальный аметист — фиолетовый блеск */
+.level-effect-12 .c{box-shadow: inset 1px 1px 4px rgba(220,200,255,0.2), inset -1px -1px 4px rgba(0,0,0,0.3), 2px 3px 8px rgba(0,0,0,0.5), 0 0 30px rgba(200,150,255,0.08);}
+.level-effect-12 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.06), transparent 40%), radial-gradient(circle at 70% 30%, rgba(200,150,255,0.04), transparent 50%);pointer-events:none;z-index:0;}
+
+/* УРОВЕНЬ 13: Жемчужный бежевый — перламутровый свет */
+.level-effect-13 .c{box-shadow: inset 1px 1px 3px rgba(255,240,220,0.25), inset -1px -1px 3px rgba(0,0,0,0.3), 2px 3px 8px rgba(0,0,0,0.5), 0 0 20px rgba(255,220,200,0.06);}
+.level-effect-13 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 30% 70%, rgba(255,255,255,0.06), transparent 50%);pointer-events:none;z-index:0;}
+
+/* УРОВЕНЬ 14: Агатовый графит — тёмная полосатая текстура */
+.level-effect-14 .c{box-shadow: inset 1px 1px 3px rgba(200,200,220,0.15), inset -1px -1px 3px rgba(0,0,0,0.5), 2px 3px 8px rgba(0,0,0,0.6), 0 0 20px rgba(150,150,180,0.04);}
+.level-effect-14 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 2px, transparent 2px, transparent 8px);pointer-events:none;z-index:0;}
+
+/* УРОВЕНЬ 15: Патиновое серебро — благородный металлический блеск */
+.level-effect-15 .c{box-shadow: inset 1px 1px 4px rgba(220,220,240,0.2), inset -1px -1px 4px rgba(0,0,0,0.3), 2px 3px 8px rgba(0,0,0,0.5), 0 0 30px rgba(200,200,220,0.06);}
+.level-effect-15 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 60% 40%, rgba(255,255,255,0.06), transparent 50%), radial-gradient(circle at 30% 70%, rgba(200,220,255,0.04), transparent 40%);pointer-events:none;z-index:0;}
+
+/* УРОВЕНЬ 16: Бархатная олива — глубокий матовый зелёный */
+.level-effect-16 .c{box-shadow: inset 1px 1px 4px rgba(200,255,210,0.15), inset -1px -1px 4px rgba(0,0,0,0.4), 2px 3px 8px rgba(0,0,0,0.5), 0 0 25px rgba(150,200,150,0.06);}
+.level-effect-16 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 40% 60%, rgba(200,255,210,0.05), transparent 60%);pointer-events:none;z-index:0;}
+
+/* ===== ЭФФЕКТЫ ДЛЯ 2-ГО КРУГА (усиленные текстуры) ===== */
+.circle-2 .c{filter:brightness(1.04) saturate(1.03);}
+.circle-2.level-effect-1 .c::before{background:radial-gradient(circle at 30% 20%, rgba(255,200,180,0.15), transparent 60%);}
+.circle-2.level-effect-2 .c::before{background:linear-gradient(135deg, rgba(200,255,230,0.16) 0%, transparent 40%, rgba(200,255,230,0.08) 100%);}
+.circle-2.level-effect-3 .c::before{background:repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 2px, transparent 2px, transparent 8px);}
+.circle-2.level-effect-4 .c::before{background:radial-gradient(circle at 60% 30%, rgba(255,220,150,0.16), transparent 50%), radial-gradient(circle at 30% 70%, rgba(255,200,100,0.08), transparent 40%);}
+.circle-2.level-effect-5 .c::before{background:radial-gradient(circle at 40% 40%, rgba(255,255,255,0.12), transparent 50%), radial-gradient(circle at 70% 70%, rgba(255,200,255,0.08), transparent 40%);}
+.circle-2.level-effect-6 .c::before{background:linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 30%, rgba(255,220,200,0.08) 100%);}
+.circle-2.level-effect-7 .c::before{background:repeating-linear-gradient(0deg, rgba(255,200,180,0.06) 0px, rgba(255,200,180,0.06) 3px, transparent 3px, transparent 12px);}
+.circle-2.level-effect-8 .c::before{background:radial-gradient(circle at 50% 80%, rgba(100,200,180,0.08), transparent 50%), radial-gradient(circle at 20% 20%, rgba(200,180,160,0.06), transparent 40%);}
+.circle-2.level-effect-9 .c::before{background:radial-gradient(circle at 40% 30%, rgba(150,255,200,0.08), transparent 60%);}
+.circle-2.level-effect-10 .c::before{background:linear-gradient(135deg, rgba(200,220,255,0.1) 0%, transparent 30%, rgba(200,220,255,0.06) 100%);}
+.circle-2.level-effect-11 .c::before{background:repeating-linear-gradient(135deg, rgba(255,220,150,0.06) 0px, rgba(255,220,150,0.06) 2px, transparent 2px, transparent 10px);}
+.circle-2.level-effect-12 .c::before{background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.08), transparent 40%), radial-gradient(circle at 70% 30%, rgba(200,150,255,0.06), transparent 50%);}
+.circle-2.level-effect-13 .c::before{background:radial-gradient(circle at 30% 70%, rgba(255,255,255,0.08), transparent 50%);}
+.circle-2.level-effect-14 .c::before{background:repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 2px, transparent 2px, transparent 8px);}
+.circle-2.level-effect-15 .c::before{background:radial-gradient(circle at 60% 40%, rgba(255,255,255,0.08), transparent 50%), radial-gradient(circle at 30% 70%, rgba(200,220,255,0.06), transparent 40%);}
+.circle-2.level-effect-16 .c::before{background:radial-gradient(circle at 40% 60%, rgba(200,255,210,0.08), transparent 60%);}
+
+/* ===== ЭФФЕКТЫ ДЛЯ 3-ГО КРУГА (супер-текстуры) ===== */
+.circle-3 .c{filter:brightness(1.08) saturate(1.06);}
+.circle-3 .c::before{opacity:1.5!important;}
+.circle-3.level-effect-1 .c::before{background:radial-gradient(circle at 30% 20%, rgba(255,200,180,0.2), transparent 60%);}
+.circle-3.level-effect-2 .c::before{background:linear-gradient(135deg, rgba(200,255,230,0.2) 0%, transparent 40%, rgba(200,255,230,0.12) 100%);}
+.circle-3.level-effect-3 .c::before{background:repeating-linear-gradient(45deg, rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 2px, transparent 2px, transparent 8px);}
+.circle-3.level-effect-4 .c::before{background:radial-gradient(circle at 60% 30%, rgba(255,220,150,0.2), transparent 50%), radial-gradient(circle at 30% 70%, rgba(255,200,100,0.12), transparent 40%);}
+.circle-3.level-effect-5 .c::before{background:radial-gradient(circle at 40% 40%, rgba(255,255,255,0.15), transparent 50%), radial-gradient(circle at 70% 70%, rgba(255,200,255,0.1), transparent 40%);}
+.circle-3.level-effect-6 .c::before{background:linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 30%, rgba(255,220,200,0.1) 100%);}
+.circle-3.level-effect-7 .c::before{background:repeating-linear-gradient(0deg, rgba(255,200,180,0.08) 0px, rgba(255,200,180,0.08) 3px, transparent 3px, transparent 12px);}
+.circle-3.level-effect-8 .c::before{background:radial-gradient(circle at 50% 80%, rgba(100,200,180,0.1), transparent 50%), radial-gradient(circle at 20% 20%, rgba(200,180,160,0.08), transparent 40%);}
+.circle-3.level-effect-9 .c::before{background:radial-gradient(circle at 40% 30%, rgba(150,255,200,0.1), transparent 60%);}
+.circle-3.level-effect-10 .c::before{background:linear-gradient(135deg, rgba(200,220,255,0.14) 0%, transparent 30%, rgba(200,220,255,0.08) 100%);}
+.circle-3.level-effect-11 .c::before{background:repeating-linear-gradient(135deg, rgba(255,220,150,0.08) 0px, rgba(255,220,150,0.08) 2px, transparent 2px, transparent 10px);}
+.circle-3.level-effect-12 .c::before{background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1), transparent 40%), radial-gradient(circle at 70% 30%, rgba(200,150,255,0.08), transparent 50%);}
+.circle-3.level-effect-13 .c::before{background:radial-gradient(circle at 30% 70%, rgba(255,255,255,0.1), transparent 50%);}
+.circle-3.level-effect-14 .c::before{background:repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 2px, transparent 2px, transparent 8px);}
+.circle-3.level-effect-15 .c::before{background:radial-gradient(circle at 60% 40%, rgba(255,255,255,0.1), transparent 50%), radial-gradient(circle at 30% 70%, rgba(200,220,255,0.08), transparent 40%);}
+.circle-3.level-effect-16 .c::before{background:radial-gradient(circle at 40% 60%, rgba(200,255,210,0.1), transparent 60%);}
+
 .c.sp-bomb{border:2px solid #d4af37;box-shadow:0 0 15px rgba(212,175,55,.4);}
 .c.sp-laser{border:2px solid #7fb5b0;box-shadow:0 0 15px rgba(127,181,176,.4);}
 .c.sp-star{border:2px solid #9b72aa;box-shadow:0 0 15px rgba(155,114,170,.4);}
@@ -211,71 +318,6 @@ body{display:flex;flex-direction:column;align-items:center;}
 
 .shake{animation:shake 0.4s cubic-bezier(.36,.07,.19,.97) both;}
 @keyframes shake{10%,90%{transform:translate3d(-1px,0,0);}20%,80%{transform:translate3d(2px,0,0);}30%,50%,70%{transform:translate3d(-4px,0,0);}40%,60%{transform:translate3d(4px,0,0);}}
-
-/* ===== ЭФФЕКТЫ ДЛЯ КАЖДОГО УРОВНЯ (16 разных) ===== */
-.level-effect-1 .c{box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4), 0 0 15px rgba(200,100,50,.1);}
-.level-effect-2 .c{box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4), 0 0 20px rgba(212,175,55,.08);}
-.level-effect-3 .c{box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4), 0 0 25px rgba(100,150,255,.08);}
-.level-effect-4 .c{box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4), 0 0 20px rgba(255,200,100,.1);}
-.level-effect-5 .c{box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4), 0 0 25px rgba(180,100,220,.08);}
-.level-effect-6 .c{box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4), 0 0 15px rgba(200,180,150,.08);}
-.level-effect-7 .c{box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4), 0 0 20px rgba(200,200,220,.05);}
-.level-effect-8 .c{box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4), 0 0 15px rgba(200,180,150,.06);}
-.level-effect-9 .c{box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4), 0 0 30px rgba(255,150,50,.12);animation:glowPulse 2s ease-in-out infinite alternate;}
-.level-effect-10 .c{box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4), 0 0 25px rgba(150,255,200,.08);}
-.level-effect-11 .c{box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4), 0 0 30px rgba(100,150,255,.1);}
-.level-effect-12 .c{box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4), 0 0 25px rgba(255,200,100,.12);animation:goldenGlow 3s ease-in-out infinite alternate;}
-.level-effect-13 .c{box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4), 0 0 25px rgba(200,150,255,.08);}
-.level-effect-14 .c{box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4), 0 0 15px rgba(200,150,100,.06);}
-.level-effect-15 .c{box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4), 0 0 25px rgba(200,200,220,.08);}
-.level-effect-16 .c{box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4), 0 0 20px rgba(100,200,180,.06);}
-
-/* ЭФФЕКТЫ ДЛЯ 2-ГО КРУГА (усиленные) */
-.circle-2 .c{filter:brightness(1.05) saturate(1.05);}
-.circle-2.level-effect-1 .c{box-shadow: inset 1px 1px 3px rgba(255,255,255,.2), inset -1px -1px 3px rgba(0,0,0,.3), 2px 3px 8px rgba(0,0,0,.5), 0 0 25px rgba(200,100,50,.15);}
-.circle-2.level-effect-2 .c{box-shadow: inset 1px 1px 3px rgba(255,255,255,.2), inset -1px -1px 3px rgba(0,0,0,.3), 2px 3px 8px rgba(0,0,0,.5), 0 0 30px rgba(212,175,55,.12);}
-.circle-2.level-effect-3 .c{box-shadow: inset 1px 1px 3px rgba(255,255,255,.2), inset -1px -1px 3px rgba(0,0,0,.3), 2px 3px 8px rgba(0,0,0,.5), 0 0 35px rgba(100,150,255,.12);}
-.circle-2.level-effect-4 .c{box-shadow: inset 1px 1px 3px rgba(255,255,255,.2), inset -1px -1px 3px rgba(0,0,0,.3), 2px 3px 8px rgba(0,0,0,.5), 0 0 30px rgba(255,200,100,.15);}
-.circle-2.level-effect-5 .c{box-shadow: inset 1px 1px 3px rgba(255,255,255,.2), inset -1px -1px 3px rgba(0,0,0,.3), 2px 3px 8px rgba(0,0,0,.5), 0 0 35px rgba(180,100,220,.12);}
-.circle-2.level-effect-6 .c{box-shadow: inset 1px 1px 3px rgba(255,255,255,.2), inset -1px -1px 3px rgba(0,0,0,.3), 2px 3px 8px rgba(0,0,0,.5), 0 0 25px rgba(200,180,150,.12);}
-.circle-2.level-effect-7 .c{box-shadow: inset 1px 1px 3px rgba(255,255,255,.2), inset -1px -1px 3px rgba(0,0,0,.3), 2px 3px 8px rgba(0,0,0,.5), 0 0 30px rgba(200,200,220,.08);}
-.circle-2.level-effect-8 .c{box-shadow: inset 1px 1px 3px rgba(255,255,255,.2), inset -1px -1px 3px rgba(0,0,0,.3), 2px 3px 8px rgba(0,0,0,.5), 0 0 25px rgba(200,180,150,.1);}
-.circle-2.level-effect-9 .c{box-shadow: inset 1px 1px 3px rgba(255,255,255,.2), inset -1px -1px 3px rgba(0,0,0,.3), 2px 3px 8px rgba(0,0,0,.5), 0 0 40px rgba(255,150,50,.18);}
-.circle-2.level-effect-10 .c{box-shadow: inset 1px 1px 3px rgba(255,255,255,.2), inset -1px -1px 3px rgba(0,0,0,.3), 2px 3px 8px rgba(0,0,0,.5), 0 0 35px rgba(150,255,200,.12);}
-.circle-2.level-effect-11 .c{box-shadow: inset 1px 1px 3px rgba(255,255,255,.2), inset -1px -1px 3px rgba(0,0,0,.3), 2px 3px 8px rgba(0,0,0,.5), 0 0 40px rgba(100,150,255,.15);}
-.circle-2.level-effect-12 .c{box-shadow: inset 1px 1px 3px rgba(255,255,255,.2), inset -1px -1px 3px rgba(0,0,0,.3), 2px 3px 8px rgba(0,0,0,.5), 0 0 35px rgba(255,200,100,.18);}
-.circle-2.level-effect-13 .c{box-shadow: inset 1px 1px 3px rgba(255,255,255,.2), inset -1px -1px 3px rgba(0,0,0,.3), 2px 3px 8px rgba(0,0,0,.5), 0 0 35px rgba(200,150,255,.12);}
-.circle-2.level-effect-14 .c{box-shadow: inset 1px 1px 3px rgba(255,255,255,.2), inset -1px -1px 3px rgba(0,0,0,.3), 2px 3px 8px rgba(0,0,0,.5), 0 0 25px rgba(200,150,100,.1);}
-.circle-2.level-effect-15 .c{box-shadow: inset 1px 1px 3px rgba(255,255,255,.2), inset -1px -1px 3px rgba(0,0,0,.3), 2px 3px 8px rgba(0,0,0,.5), 0 0 35px rgba(200,200,220,.12);}
-.circle-2.level-effect-16 .c{box-shadow: inset 1px 1px 3px rgba(255,255,255,.2), inset -1px -1px 3px rgba(0,0,0,.3), 2px 3px 8px rgba(0,0,0,.5), 0 0 30px rgba(100,200,180,.1);}
-
-/* ЭФФЕКТЫ ДЛЯ 3-ГО КРУГА (супер-эффекты) */
-.circle-3 .c{filter:brightness(1.1) saturate(1.1);}
-.circle-3.level-effect-1 .c{box-shadow: inset 1px 1px 4px rgba(255,255,255,.25), inset -1px -1px 4px rgba(0,0,0,.35), 2px 3px 10px rgba(0,0,0,.6), 0 0 40px rgba(200,100,50,.2);}
-.circle-3.level-effect-2 .c{box-shadow: inset 1px 1px 4px rgba(255,255,255,.25), inset -1px -1px 4px rgba(0,0,0,.35), 2px 3px 10px rgba(0,0,0,.6), 0 0 45px rgba(212,175,55,.16);}
-.circle-3.level-effect-3 .c{box-shadow: inset 1px 1px 4px rgba(255,255,255,.25), inset -1px -1px 4px rgba(0,0,0,.35), 2px 3px 10px rgba(0,0,0,.6), 0 0 50px rgba(100,150,255,.16);}
-.circle-3.level-effect-4 .c{box-shadow: inset 1px 1px 4px rgba(255,255,255,.25), inset -1px -1px 4px rgba(0,0,0,.35), 2px 3px 10px rgba(0,0,0,.6), 0 0 45px rgba(255,200,100,.2);}
-.circle-3.level-effect-5 .c{box-shadow: inset 1px 1px 4px rgba(255,255,255,.25), inset -1px -1px 4px rgba(0,0,0,.35), 2px 3px 10px rgba(0,0,0,.6), 0 0 50px rgba(180,100,220,.16);}
-.circle-3.level-effect-6 .c{box-shadow: inset 1px 1px 4px rgba(255,255,255,.25), inset -1px -1px 4px rgba(0,0,0,.35), 2px 3px 10px rgba(0,0,0,.6), 0 0 40px rgba(200,180,150,.16);}
-.circle-3.level-effect-7 .c{box-shadow: inset 1px 1px 4px rgba(255,255,255,.25), inset -1px -1px 4px rgba(0,0,0,.35), 2px 3px 10px rgba(0,0,0,.6), 0 0 45px rgba(200,200,220,.12);}
-.circle-3.level-effect-8 .c{box-shadow: inset 1px 1px 4px rgba(255,255,255,.25), inset -1px -1px 4px rgba(0,0,0,.35), 2px 3px 10px rgba(0,0,0,.6), 0 0 40px rgba(200,180,150,.14);}
-.circle-3.level-effect-9 .c{box-shadow: inset 1px 1px 4px rgba(255,255,255,.25), inset -1px -1px 4px rgba(0,0,0,.35), 2px 3px 10px rgba(0,0,0,.6), 0 0 55px rgba(255,150,50,.22);animation:glowPulse 1.5s ease-in-out infinite alternate;}
-.circle-3.level-effect-10 .c{box-shadow: inset 1px 1px 4px rgba(255,255,255,.25), inset -1px -1px 4px rgba(0,0,0,.35), 2px 3px 10px rgba(0,0,0,.6), 0 0 50px rgba(150,255,200,.16);}
-.circle-3.level-effect-11 .c{box-shadow: inset 1px 1px 4px rgba(255,255,255,.25), inset -1px -1px 4px rgba(0,0,0,.35), 2px 3px 10px rgba(0,0,0,.6), 0 0 55px rgba(100,150,255,.2);}
-.circle-3.level-effect-12 .c{box-shadow: inset 1px 1px 4px rgba(255,255,255,.25), inset -1px -1px 4px rgba(0,0,0,.35), 2px 3px 10px rgba(0,0,0,.6), 0 0 50px rgba(255,200,100,.22);animation:goldenGlow 2s ease-in-out infinite alternate;}
-.circle-3.level-effect-13 .c{box-shadow: inset 1px 1px 4px rgba(255,255,255,.25), inset -1px -1px 4px rgba(0,0,0,.35), 2px 3px 10px rgba(0,0,0,.6), 0 0 50px rgba(200,150,255,.16);}
-.circle-3.level-effect-14 .c{box-shadow: inset 1px 1px 4px rgba(255,255,255,.25), inset -1px -1px 4px rgba(0,0,0,.35), 2px 3px 10px rgba(0,0,0,.6), 0 0 40px rgba(200,150,100,.14);}
-.circle-3.level-effect-15 .c{box-shadow: inset 1px 1px 4px rgba(255,255,255,.25), inset -1px -1px 4px rgba(0,0,0,.35), 2px 3px 10px rgba(0,0,0,.6), 0 0 50px rgba(200,200,220,.16);}
-.circle-3.level-effect-16 .c{box-shadow: inset 1px 1px 4px rgba(255,255,255,.25), inset -1px -1px 4px rgba(0,0,0,.35), 2px 3px 10px rgba(0,0,0,.6), 0 0 45px rgba(100,200,180,.14);}
-
-@keyframes glowPulse{
-    0%{filter:brightness(1);}
-    100%{filter:brightness(1.1);}
-}
-@keyframes goldenGlow{
-    0%{filter:brightness(1);}
-    100%{filter:brightness(1.1);}
-}
 
 /* ===== КАРТОЧКИ В МОДАЛКЕ ===== */
 .jade-grid {
