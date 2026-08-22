@@ -333,7 +333,6 @@ if(typeof DB !== 'undefined' && DB.length > 0) {
     }
 } else { LEVELS = DB_FALLBACK; }
 
-// Глобальная карта цветов - каждому иероглифу свой уникальный цвет
 var COLOR_MAP = {}; 
 var colorCounter = 0;
 
@@ -348,40 +347,21 @@ var state = {
 
 var PRICE_HINT = 50, PRICE_SHUF = 80, PRICE_BOMB = 5;
 
-// Генерация уникального цвета для иероглифа
 function getCharColor(char) {
     if (!COLOR_MAP[char]) {
-        // Используем золотое сечение для равномерного распределения оттенков
-        var hue = (colorCounter * 137.508) % 360; // 137.508 - угол золотого сечения
-        var saturation = 45 + (colorCounter % 3) * 10; // 45-65%
-        var lightness = 35 + (colorCounter % 4) * 5; // 35-50%
+        var hue = (colorCounter * 137.508) % 360;
+        var saturation = 55 + (colorCounter % 3) * 10; // 55-75% - более насыщенные
+        var lightness = 38 + (colorCounter % 4) * 5; // 38-53% - ярче
         
         COLOR_MAP[char] = {
-            bg: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
-            hue: hue
-        };
-        colorCounter++;
-    }
-    return COLOR_MAP[char];
-}
-
-function getThemeStyle(level) {
-    var hue = ((level - 1) * 37) % 360;
-    var satBase = 25 + (level % 5) * 5;
-    var lightBase = 8 + (level % 3) * 2;
-    var gradientType = level % 4;
-    var bgStyle = '';
-    
-    if (gradientType === 0) {
-        bgStyle = `radial-gradient(circle at center, hsl(${hue}, ${satBase}%, ${lightBase + 8}%) 0%, hsl(${hue}, ${satBase - 10}%, ${lightBase}%) 100%)`;
+            bg: `hsl(<LaTex>id_32</LaTex>{saturation}%, <LaTex>id_31</LaTex>{hue}, <LaTex>id_30</LaTex>{lightBase + 12}%) 0%, hsl(<LaTex>id_29</LaTex>{satBase - 15}%, <LaTex>id_28</LaTex>{accentHue}, <LaTex>id_27</LaTex>{lightBase - 5}%) 100%)`;
     } else if (gradientType === 1) {
-        bgStyle = `radial-gradient(circle at 20% 30%, hsl(${hue}, ${satBase}%, ${lightBase + 10}%) 0%, hsl(${hue}, ${satBase - 10}%, ${lightBase}%) 100%)`;
-    } else if (gradientType === 2) {
-        var angle = (level * 45) % 360;
-        bgStyle = `linear-gradient(${angle}deg, hsl(${hue}, ${satBase}%, ${lightBase + 6}%) 0%, hsl(${hue}, ${satBase - 10}%, ${lightBase}%) 100%)`;
+        // Двойной радиальный с контрастом
+        bgStyle = `radial-gradient(circle at 30% 20%, hsl(<LaTex>id_26</LaTex>{satBase}%, <LaTex>id_25</LaTex>{hue}, <LaTex>id_24</LaTex>{lightBase + 10}%) 0%, hsl(<LaTex>id_23</LaTex>{satBase - 15}%, <LaTex>id_22</LaTex>{angle}deg, hsl(<LaTex>id_21</LaTex>{satBase}%, <LaTex>id_20</LaTex>{hue}, <LaTex>id_19</LaTex>{lightBase}%) 40%, hsl(<LaTex>id_18</LaTex>{satBase - 10}%, <LaTex>id_17</LaTex>{hue}, <LaTex>id_16</LaTex>{lightBase + 15}%) 0%, hsl(<LaTex>id_15</LaTex>{satBase}%, <LaTex>id_14</LaTex>{accentHue}, <LaTex>id_13</LaTex>{lightBase}%) 50%, hsl(<LaTex>id_12</LaTex>{satBase - 15}%, <LaTex>id_11</LaTex>{accentHue}, <LaTex>id_10</LaTex>{lightBase + 12}%) 0%, hsl(<LaTex>id_9</LaTex>{satBase}%, <LaTex>id_8</LaTex>{hue}, <LaTex>id_7</LaTex>{lightBase}%) 100%)`;
     } else {
-        var hue2 = (hue + 30) % 360;
-        bgStyle = `radial-gradient(circle at 70% 70%, hsl(${hue2}, ${satBase}%, ${lightBase + 5}%) 0%, transparent 50%), radial-gradient(circle at center, hsl(${hue}, ${satBase}%, ${lightBase + 8}%) 0%, hsl(${hue}, ${satBase - 10}%, ${lightBase}%) 100%)`;
+        // Тройной радиальный
+        var hue2 = (hue + 120) % 360;
+        bgStyle = `radial-gradient(circle at 20% 30%, hsl(<LaTex>id_6</LaTex>{satBase}%, <LaTex>id_5</LaTex>{hue2}, <LaTex>id_4</LaTex>{lightBase + 8}%) 0%, transparent 40%), radial-gradient(circle at center, hsl(<LaTex>id_3</LaTex>{satBase - 10}%, <LaTex>id_2</LaTex>{hue}, <LaTex>id_1</LaTex>{lightBase - 5}%) 100%)`;
     }
     
     return bgStyle;
@@ -586,7 +566,6 @@ function randChar() {
     var idx = Math.floor(Math.random() * set.length);
     var c = set[idx];
     
-    // Получаем уникальный цвет для этого иероглифа
     var colorData = getCharColor(c.h);
     
     return {h:c.h, p:c.p, r:c.r, e:c.e, bgColor:colorData.bg, sp:null};
@@ -1034,7 +1013,6 @@ function render() {
         el.style.width=cellPx+'px'; 
         el.style.height=cellPx+'px';
         
-        // Применяем уникальный цвет для каждого иероглифа
         if(d && d.bgColor) {
             el.style.background = d.bgColor;
         }
@@ -1111,30 +1089,4 @@ function saveProgress() {
         coins: state.coins, 
         cry: state.crystals, 
         sf: state.shufFree, 
-        hf: state.hintFree
-    }));
-}
-
-function loadProgress() {
-    var s = localStorage.getItem('hanzi_save');
-    if(s) {
-        try {
-            var d = JSON.parse(s);
-            state.level = d.lvl || 1;
-            state.coins = d.coins || 0;
-            state.crystals = d.cry || 0;
-            state.shufFree = d.sf || 3;
-            state.hintFree = d.hf || 3;
-        } catch(e) {}
-    }
-}
-
-init();
-
-console.log('✅ Hanzi: Нефрит и Золото загружена!');
-console.log('🎨 Каждый иероглиф имеет свой уникальный цвет!');
-console.log('📐 Сложные формы: L, T, Квадрат 2×2, 5+ в ряд, 6+ в ряд');
-</script>
-</body>
-</html>
-
+       
