@@ -9,15 +9,7 @@
 html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#0a0a0f;color:#fff;touch-action:none;}
 body{display:flex;flex-direction:column;align-items:center;}
 
-.bg{position:fixed;inset:0;z-index:0;transition:background 1s ease;}
-.bg.t1{background:radial-gradient(circle at center, #2b1d2e 0%, #0a0510 100%);}
-.bg.t2{background:radial-gradient(circle at center, #1a2b25 0%, #050f0a 100%);}
-.bg.t3{background:radial-gradient(circle at center, #2e1a1a 0%, #100505 100%);}
-.bg.t4{background:radial-gradient(circle at center, #1a202e 0%, #050810 100%);}
-.bg.t5{background:radial-gradient(circle at center, #2e261a 0%, #100c05 100%);}
-.bg.t6{background:radial-gradient(circle at center, #1a2e2e 0%, #051010 100%);}
-.bg.t7{background:radial-gradient(circle at center, #2e1a26 0%, #10050c 100%);}
-.bg.t8{background:radial-gradient(circle at center, #1f1f1f 0%, #000000 100%);}
+.bg{position:fixed;inset:0;z-index:0;transition:background 1.5s ease;}
 
 .hdr{z-index:10;width:100%;max-width:600px;display:flex;justify-content:space-between;align-items:center;padding:6px 10px;}
 .logo{font-size:1rem;font-weight:800;color:#d4af37;text-shadow:0 2px 4px rgba(0,0,0,.5);letter-spacing:1px;}
@@ -57,16 +49,6 @@ body{display:flex;flex-direction:column;align-items:center;}
     border-radius:8px 8px 50% 50%;
     pointer-events:none;
 }
-
-/* Цвета клеток (всегда 0-5 для совместимости со всеми темами) */
-.t1 .c0{background:#8b3a3a;}.t1 .c1{background:#2d5a5a;}.t1 .c2{background:#3a4a6b;}.t1 .c3{background:#8a6d3b;}.t1 .c4{background:#5a3a5a;}.t1 .c5{background:#6b5a4a;}
-.t2 .c0{background:#a04040;}.t2 .c1{background:#3a6b6b;}.t2 .c2{background:#4a5a7b;}.t2 .c3{background:#9a7d4b;}.t2 .c4{background:#6a4a6a;}.t2 .c5{background:#7b6a5a;}
-.t3 .c0{background:#7a2a2a;}.t3 .c1{background:#1d4a4a;}.t3 .c2{background:#2a3a5b;}.t3 .c3{background:#7a5d2b;}.t3 .c4{background:#4a2a4a;}.t3 .c5{background:#5b4a3a;}
-.t4 .c0{background:#9b4b4b;}.t4 .c1{background:#4d7a7a;}.t4 .c2{background:#5a6a8b;}.t4 .c3{background:#aa8d5b;}.t4 .c4{background:#7a5a7a;}.t4 .c5{background:#8b7a6a;}
-.t5 .c0{background:#6b2020;}.t5 .c1{background:#0d3a3a;}.t5 .c2{background:#1a2a4b;}.t5 .c3{background:#6a4d1b;}.t5 .c4{background:#3a1a3a;}.t5 .c5{background:#4b3a2a;}
-.t6 .c0{background:#b05050;}.t6 .c1{background:#5d8a8a;}.t6 .c2{background:#6a7a9b;}.t6 .c3{background:#ba9d6b;}.t6 .c4{background:#8a6a8a;}.t6 .c5{background:#9b8a7a;}
-.t7 .c0{background:#7b3030;}.t7 .c1{background:#2d5050;}.t7 .c2{background:#3a4a6b;}.t7 .c3{background:#8a6d3b;}.t7 .c4{background:#5a3a5a;}.t7 .c5{background:#6b5a4a;}
-.t8 .c0{background:#8b3a3a;}.t8 .c1{background:#2d5a5a;}.t8 .c2{background:#3a4a6b;}.t8 .c3{background:#8a6d3b;}.t8 .c4{background:#5a3a5a;}.t8 .c5{background:#6b5a4a;}
 
 .c.sp-bomb{border:2px solid #d4af37;box-shadow:0 0 15px rgba(212,175,55,.4);}
 .c.sp-laser{border:2px solid #7fb5b0;box-shadow:0 0 15px rgba(127,181,176,.4);}
@@ -129,10 +111,8 @@ body{display:flex;flex-direction:column;align-items:center;}
 .shake{animation:shake 0.4s cubic-bezier(.36,.07,.19,.97) both;}
 @keyframes shake{10%,90%{transform:translate3d(-1px,0,0);}20%,80%{transform:translate3d(2px,0,0);}30%,50%,70%{transform:translate3d(-4px,0,0);}40%,60%{transform:translate3d(4px,0,0);}}
 
-/* --- Стили для окна результатов уровня (АДАПТИВНЫЕ КУБИКИ) --- */
 .jade-grid {
     display: grid;
-    /* Адаптивная сетка: минимум 85px, иначе растягиваем */
     grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
     gap: 12px;
     margin-bottom: 25px;
@@ -155,7 +135,7 @@ body{display:flex;flex-direction:column;align-items:center;}
     overflow: hidden;
     cursor: pointer;
     transition: transform 0.2s;
-    min-height: 110px; /* Минимальная высота для выравнивания */
+    min-height: 110px;
 }
 .jade-card:active { transform: scale(0.95); }
 .jade-card::before {
@@ -166,7 +146,7 @@ body{display:flex;flex-direction:column;align-items:center;}
     pointer-events: none;
 }
 .jade-char { 
-    font-size: 3.2rem; /* Очень крупно */
+    font-size: 3.2rem;
     font-weight: 900; 
     color: #fff; 
     text-shadow: 0 4px 8px rgba(0,0,0,0.6), 0 0 20px rgba(255,255,255,0.2); 
@@ -191,7 +171,6 @@ body{display:flex;flex-direction:column;align-items:center;}
     text-shadow: 0 2px 4px rgba(0,0,0,0.8);
     z-index: 2;
     text-align: center;
-    /* Разрешаем перенос слов и многострочность */
     white-space: normal;
     word-wrap: break-word;
     line-height: 1.2;
@@ -214,7 +193,7 @@ body{display:flex;flex-direction:column;align-items:center;}
 </head>
 <body>
 
-<div class="bg t1" id="bg"></div>
+<div class="bg" id="bg"></div>
 
 <div class="hdr">
   <div>
@@ -235,7 +214,7 @@ body{display:flex;flex-direction:column;align-items:center;}
   <div class="pl"><span>Цель: <b id="uGl">800</b></span><span id="uTheme">Уровень 1</span></div>
 </div>
 
-<div class="ba"><div id="board" class="t1"></div></div>
+<div class="ba"><div id="board"></div></div>
 
 <div class="bar">
   <button class="btn" id="bSh" onclick="G.action('shuffle')">🔀<span id="cSh">3</span><small>Беспл.</small></button>
@@ -245,7 +224,6 @@ body{display:flex;flex-direction:column;align-items:center;}
   <button class="btn" onclick="G.showTut()">❓</button>
 </div>
 
-<!-- Окно туториала -->
 <div class="overlay" id="tov">
   <div class="modal">
     <h2>🔊 Включите звук</h2>
@@ -254,24 +232,18 @@ body{display:flex;flex-direction:column;align-items:center;}
   </div>
 </div>
 
-<!-- Окно результатов уровня -->
 <div class="overlay" id="levelCompleteOverlay">
   <div class="modal" style="max-width: 450px;">
     <h2>✨ Уровень пройден!</h2>
     <p>Вы изучили новые иероглифы:</p>
     
-    <div class="jade-grid" id="jadeGrid">
-        <!-- Сюда скрипт добавит карточки -->
-    </div>
+    <div class="jade-grid" id="jadeGrid"></div>
 
     <button onclick="G.nextLevelFromModal()" style="margin-top: 10px;">Продолжить ➜</button>
   </div>
 </div>
 
 <script>
-// ============================================================
-//  ЗВУКОВОЙ ДВИЖОК & TTS
-// ============================================================
 var audioCtx = null;
 function initAudio() {
     if(!audioCtx) {
@@ -322,34 +294,24 @@ function playSound(type, comboCount) {
     }
 }
 
-// Функция для озвучивания китайских слов
 function speakChinese(text) {
     if ('speechSynthesis' in window) {
-        // Отменяем предыдущую речь
         window.speechSynthesis.cancel();
-        
         var utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'zh-CN'; // Китайский язык
-        utterance.rate = 0.8; // Немного медленнее для обучения
+        utterance.lang = 'zh-CN';
+        utterance.rate = 0.8;
         utterance.pitch = 1.1;
-        
-        // Пытаемся найти китайский голос
         var voices = window.speechSynthesis.getVoices();
         var zhVoice = voices.find(v => v.lang.includes('zh'));
         if (zhVoice) utterance.voice = zhVoice;
-        
         window.speechSynthesis.speak(utterance);
     }
 }
 
-// Предзагрузка голосов (нужно для Chrome)
 if ('speechSynthesis' in window) {
     window.speechSynthesis.getVoices();
 }
 
-// ============================================================
-//  КОНФИГУРАЦИЯ
-// ============================================================
 var RANKS = ["Новичок","Ученик","Мастер","Эксперт","Гуру","Магистр","Мудрец","Император"];
 var NC=6, NR=8, TOT=NC*NR;
 var DB_FALLBACK = [
@@ -371,8 +333,9 @@ if(typeof DB !== 'undefined' && DB.length > 0) {
     }
 } else { LEVELS = DB_FALLBACK; }
 
-// Глобальная карта цветов для иероглифов (чтобы цвет был привязан к символу навсегда)
+// Глобальная карта цветов - каждому иероглифу свой уникальный цвет
 var COLOR_MAP = {}; 
+var colorCounter = 0;
 
 var state = {
     board: [], score: 0, level: 1, goal: 800, 
@@ -385,9 +348,45 @@ var state = {
 
 var PRICE_HINT = 50, PRICE_SHUF = 80, PRICE_BOMB = 5;
 
-// ============================================================
-//  ПОИСК ВСЕХ ФОРМ (ВКЛЮЧАЯ L, T, КВАДРАТЫ 2×2)
-// ============================================================
+// Генерация уникального цвета для иероглифа
+function getCharColor(char) {
+    if (!COLOR_MAP[char]) {
+        // Используем золотое сечение для равномерного распределения оттенков
+        var hue = (colorCounter * 137.508) % 360; // 137.508 - угол золотого сечения
+        var saturation = 45 + (colorCounter % 3) * 10; // 45-65%
+        var lightness = 35 + (colorCounter % 4) * 5; // 35-50%
+        
+        COLOR_MAP[char] = {
+            bg: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
+            hue: hue
+        };
+        colorCounter++;
+    }
+    return COLOR_MAP[char];
+}
+
+function getThemeStyle(level) {
+    var hue = ((level - 1) * 37) % 360;
+    var satBase = 25 + (level % 5) * 5;
+    var lightBase = 8 + (level % 3) * 2;
+    var gradientType = level % 4;
+    var bgStyle = '';
+    
+    if (gradientType === 0) {
+        bgStyle = `radial-gradient(circle at center, hsl(${hue}, ${satBase}%, ${lightBase + 8}%) 0%, hsl(${hue}, ${satBase - 10}%, ${lightBase}%) 100%)`;
+    } else if (gradientType === 1) {
+        bgStyle = `radial-gradient(circle at 20% 30%, hsl(${hue}, ${satBase}%, ${lightBase + 10}%) 0%, hsl(${hue}, ${satBase - 10}%, ${lightBase}%) 100%)`;
+    } else if (gradientType === 2) {
+        var angle = (level * 45) % 360;
+        bgStyle = `linear-gradient(${angle}deg, hsl(${hue}, ${satBase}%, ${lightBase + 6}%) 0%, hsl(${hue}, ${satBase - 10}%, ${lightBase}%) 100%)`;
+    } else {
+        var hue2 = (hue + 30) % 360;
+        bgStyle = `radial-gradient(circle at 70% 70%, hsl(${hue2}, ${satBase}%, ${lightBase + 5}%) 0%, transparent 50%), radial-gradient(circle at center, hsl(${hue}, ${satBase}%, ${lightBase + 8}%) 0%, hsl(${hue}, ${satBase - 10}%, ${lightBase}%) 100%)`;
+    }
+    
+    return bgStyle;
+}
+
 function findAllCombinations(bd) {
     var results = [], used = {};
     
@@ -535,9 +534,6 @@ function getNeighbors(idx) {
     return res;
 }
 
-// ============================================================
-//  ЛОГИКА ИГРЫ С УСЛОЖНЕНИЕМ ПО КРУГАМ
-// ============================================================
 function init() {
     loadProgress();
     updateUI();
@@ -557,19 +553,17 @@ function startLevel() {
     state.score = 0;
     state.busy = false;
     state.sel = -1;
-    state.foundChars = []; // Очищаем список найденных
+    state.foundChars = [];
     
-    // ---- УСЛОЖНЕНИЕ ПОСЛЕ КАЖДОГО КРУГА ----
     var totalLevels = LEVELS.length;
     state.circle = Math.floor((state.level - 1) / totalLevels) + 1;
     var baseGoal = 800 + (state.level * 150);
-    var mult = 1 + (state.circle - 1) * 0.35; // +35% за каждый круг
+    var mult = 1 + (state.circle - 1) * 0.35;
     state.goal = Math.floor(baseGoal * mult);
-    // -----------------------------------------
     
-    var themeIdx = (state.level - 1) % 8;
-    document.getElementById('bg').className = 'bg t' + (themeIdx+1);
-    document.getElementById('board').className = 't' + (themeIdx+1);
+    var bgStyle = getThemeStyle(state.level);
+    document.getElementById('bg').style.background = bgStyle;
+    
     document.getElementById('uTheme').innerText = "Уровень " + state.level + " (Круг " + state.circle + ")";
     document.getElementById('uCircle').innerText = state.circle;
     
@@ -592,22 +586,12 @@ function randChar() {
     var idx = Math.floor(Math.random() * set.length);
     var c = set[idx];
     
-    // ---- УНИКАЛЬНЫЙ ЦВЕТ ДЛЯ КАЖДОГО ИЕРОГЛИФА ----
-    // Используем глобальную карту, чтобы "人" всегда был одного цвета
-    if (!COLOR_MAP[c.h]) {
-        // Присваиваем следующий свободный цвет (0-5)
-        var keys = Object.keys(COLOR_MAP);
-        COLOR_MAP[c.h] = keys.length % 6; 
-    }
-    var colorIdx = COLOR_MAP[c.h];
-    // -----------------------------------------
+    // Получаем уникальный цвет для этого иероглифа
+    var colorData = getCharColor(c.h);
     
-    return {h:c.h, p:c.p, r:c.r, e:c.e, c:colorIdx, sp:null};
+    return {h:c.h, p:c.p, r:c.r, e:c.e, bgColor:colorData.bg, sp:null};
 }
 
-// ============================================================
-//  ОСНОВНАЯ ЛОГИКА РЕШЕНИЯ
-// ============================================================
 async function resolve(matches, shapes) {
     if(matches.length===0) { state.combo=0; checkWin(); return; }
     state.combo++;
@@ -725,28 +709,20 @@ function checkWin() {
     state.busy = false;
     if(state.score >= state.goal) {
         playSound('win', 0);
-        
-        // Показываем окно с результатами вместо мгновенного перехода
         showLevelComplete();
-        
     } else if(!anyMove()) {
         reshuffleBoard();
     }
     updateUI();
 }
 
-// ============================================================
-//  ОКНО РЕЗУЛЬТАТОВ УРОВНЯ
-// ============================================================
 function showLevelComplete() {
     var overlay = document.getElementById('levelCompleteOverlay');
     var grid = document.getElementById('jadeGrid');
     grid.innerHTML = '';
     
-    // Получаем набор символов текущего уровня
     var currentSet = LEVELS[(state.level - 1) % LEVELS.length];
     
-    // Создаем карточки с задержкой анимации
     currentSet.forEach(function(char, index) {
         var card = document.createElement('div');
         card.className = 'jade-card';
@@ -758,7 +734,6 @@ function showLevelComplete() {
             '<div class="jade-ru">' + char.r + '</div>' +
             '<div class="jade-emo">' + char.e + '</div>';
             
-        // Добавляем клик для прослушивания
         card.onclick = function() { speakChinese(char.h); };
         
         grid.appendChild(card);
@@ -766,7 +741,6 @@ function showLevelComplete() {
     
     overlay.classList.add('show');
     
-    // Автоматически произносим первый символ через небольшую паузу
     setTimeout(function() {
         if(currentSet.length > 0) speakChinese(currentSet[0].h);
     }, 800);
@@ -780,9 +754,6 @@ function showToast(msg) {
     setTimeout(() => el.remove(), 2000);
 }
 
-// ============================================================
-//  УПРАВЛЕНИЕ
-// ============================================================
 var dragStart = -1, isDrag = false, startX=0, startY=0;
 
 function getIdx(e) {
@@ -885,9 +856,6 @@ async function trySwap(a,b) {
     }
 }
 
-// ============================================================
-//  МАГАЗИН И КНОПКИ
-// ============================================================
 var G = {
     action: function(type) {
         if(state.busy) return;
@@ -939,7 +907,6 @@ var G = {
     },
     nextLevelFromModal: function() {
         document.getElementById('levelCompleteOverlay').classList.remove('show');
-        // Останавливаем речь при выходе
         window.speechSynthesis.cancel();
         
         state.level++;
@@ -1037,9 +1004,6 @@ function reshuffleBoard(silent) {
     if(!silent) { render(); updateUI(); }
 }
 
-// ============================================================
-//  ОТРИСОВКА
-// ============================================================
 var cellPx=0;
 function calcSize() {
     var ba=document.querySelector('.ba');
@@ -1065,9 +1029,16 @@ function render() {
     for(var i=0; i<TOT; i++) {
         var d=state.board[i];
         var el=document.createElement('div');
-        el.className='c c'+(d?d.c:0);
+        el.className='c';
         el.dataset.i=i;
-        el.style.width=cellPx+'px'; el.style.height=cellPx+'px';
+        el.style.width=cellPx+'px'; 
+        el.style.height=cellPx+'px';
+        
+        // Применяем уникальный цвет для каждого иероглифа
+        if(d && d.bgColor) {
+            el.style.background = d.bgColor;
+        }
+        
         if(i===state.sel) el.classList.add('sel');
         
         if(d) {
@@ -1134,9 +1105,6 @@ function sleep(ms) {
     return new Promise(function(r) { setTimeout(r, ms); });
 }
 
-// ============================================================
-//  СОХРАНЕНИЕ
-// ============================================================
 function saveProgress() {
     localStorage.setItem('hanzi_save', JSON.stringify({
         lvl: state.level, 
@@ -1161,14 +1129,11 @@ function loadProgress() {
     }
 }
 
-// ============================================================
-//  ЗАПУСК
-// ============================================================
 init();
 
 console.log('✅ Hanzi: Нефрит и Золото загружена!');
+console.log('🎨 Каждый иероглиф имеет свой уникальный цвет!');
 console.log('📐 Сложные формы: L, T, Квадрат 2×2, 5+ в ряд, 6+ в ряд');
-console.log('🔄 Бесконечные уровни с усложнением после каждого круга!');
 </script>
 </body>
 </html>
