@@ -137,84 +137,91 @@ body{display:flex;flex-direction:column;align-items:center;}
 .c79{background:linear-gradient(145deg,#b0a090,#7a6a5a);}
 
 /* ============================================================
-   ЭФФЕКТЫ ДЛЯ КАЖДОГО УРОВНЯ (16 УНИКАЛЬНЫХ)
+   БЛАГОРОДНЫЕ БАРХАТИСТЫЕ ЭФФЕКТЫ ДЛЯ КАЖДОГО УРОВНЯ (16)
    ============================================================ */
 
-/* ЭФФЕКТ 1: ДЫМЧАТОЕ СВЕЧЕНИЕ */
-.level-effect-1 .c{animation:velvetGlow 3s ease-in-out infinite alternate;}
-@keyframes velvetGlow{0%{box-shadow:0 0 20px rgba(200,180,160,0.1),inset 0 0 20px rgba(200,180,160,0.02)}100%{box-shadow:0 0 40px rgba(200,180,160,0.2),inset 0 0 40px rgba(200,180,160,0.08)}}
+/* ЭФФЕКТ 1: БАРХАТНОЕ СВЕЧЕНИЕ */
+.level-effect-1 .c{animation:velvet 3s ease-in-out infinite alternate;border-color:rgba(255,240,230,0.08);}
+.level-effect-1 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 40% 30%,rgba(255,240,230,0.04),transparent 60%);pointer-events:none;z-index:1}
+@keyframes velvet{0%{box-shadow:0 0 20px rgba(200,180,160,0.03),inset 0 0 30px rgba(255,240,230,0.02)}100%{box-shadow:0 0 35px rgba(200,180,160,0.08),inset 0 0 40px rgba(255,240,230,0.05)}}
 
-/* ЭФФЕКТ 2: МЯГКИЙ ПЕРЕЛИВ */
-.level-effect-2 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:linear-gradient(135deg,rgba(255,240,230,0.06) 0%,transparent 50%,rgba(240,230,255,0.04) 100%);background-size:300% 300%;animation:softShift 4s ease-in-out infinite;pointer-events:none;z-index:1}
-@keyframes softShift{0%{background-position:0% 0%;opacity:0.3}50%{background-position:100% 100%;opacity:0.6}100%{background-position:0% 0%;opacity:0.3}}
+/* ЭФФЕКТ 2: НЕФРИТОВАЯ ГЛАДЬ */
+.level-effect-2 .c{border-color:rgba(180,220,200,0.1);}
+.level-effect-2 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:linear-gradient(135deg,rgba(200,255,230,0.04) 0%,transparent 50%,rgba(180,220,200,0.02) 100%);pointer-events:none;z-index:1}
 
-/* ЭФФЕКТ 3: МАТОВАЯ ДЫМКА */
-.level-effect-3 .c{filter:contrast(0.98) brightness(1.02);}
-.level-effect-3 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 50% 50%,rgba(255,255,255,0.04),transparent 70%);animation:mist 4s ease-in-out infinite;pointer-events:none;z-index:1}
-@keyframes mist{0%,100%{transform:scale(0.8);opacity:0.3}50%{transform:scale(1.2);opacity:0.6}}
+/* ЭФФЕКТ 3: КИНОВАРНАЯ ГЛУБИНА */
+.level-effect-3 .c{border-color:rgba(180,120,100,0.1);}
+.level-effect-3 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 60% 40%,rgba(200,160,140,0.03),transparent 50%),radial-gradient(circle at 30% 70%,rgba(180,120,100,0.02),transparent 40%);pointer-events:none;z-index:1}
 
-/* ЭФФЕКТ 4: МЯГКИЙ БЛЕСК */
-.level-effect-4 .c::after{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,0.06) 0%,transparent 50%);animation:softShine 3s ease-in-out infinite;pointer-events:none;z-index:1}
-@keyframes softShine{0%{opacity:0.2;transform:scale(1)}50%{opacity:0.6;transform:scale(1.2)}100%{opacity:0.2;transform:scale(1)}}
+/* ЭФФЕКТ 4: ИНДИГО-ДЫМКА */
+.level-effect-4 .c{border-color:rgba(160,180,220,0.1);}
+.level-effect-4 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 30% 50%,rgba(200,210,240,0.03),transparent 60%),radial-gradient(circle at 70% 50%,rgba(160,180,220,0.02),transparent 50%);animation:indigoMist 4s ease-in-out infinite;pointer-events:none;z-index:1}
+@keyframes indigoMist{0%,100%{opacity:0.3}50%{opacity:0.6}}
 
-/* ЭФФЕКТ 5: ЖЕМЧУЖНЫЙ ОТЛИВ */
-.level-effect-5 .c{border-color:rgba(255,255,255,0.06) !important;}
-.level-effect-5 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 40% 60%,rgba(255,255,255,0.05) 0%,transparent 50%),radial-gradient(circle at 70% 20%,rgba(255,220,240,0.03) 0%,transparent 40%);animation:pearl 4s ease-in-out infinite;pointer-events:none;z-index:1}
-@keyframes pearl{0%,100%{opacity:0.3}50%{opacity:0.7}}
+/* ЭФФЕКТ 5: ЗОЛОТАЯ ПЫЛЬЦА */
+.level-effect-5 .c{border-color:rgba(200,180,120,0.12);}
+.level-effect-5 .c::after{content:'·';position:absolute;font-size:0.3rem;color:rgba(212,175,55,0.2);animation:goldDust 3s ease-in-out infinite;pointer-events:none;z-index:5}
+@keyframes goldDust{0%,100%{opacity:0;transform:translate(0,0) scale(0.5)}50%{opacity:0.5;transform:translate(4px,-6px) scale(1.8)}}
 
-/* ЭФФЕКТ 6: СЕРЕБРЯНАЯ ПЫЛЬ */
-.level-effect-6 .c::after{content:'·';position:absolute;font-size:0.4rem;color:rgba(255,255,255,0.2);animation:dust 3s ease-in-out infinite;pointer-events:none;z-index:5}
-@keyframes dust{0%,100%{opacity:0;transform:translate(0,0) scale(0.5)}50%{opacity:0.5;transform:translate(3px,-5px) scale(1.5)}}
+/* ЭФФЕКТ 6: ЖЕМЧУЖНЫЙ СВЕТ */
+.level-effect-6 .c{border-color:rgba(255,240,230,0.06);}
+.level-effect-6 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 40% 60%,rgba(255,255,255,0.04),transparent 50%),radial-gradient(circle at 70% 20%,rgba(255,220,240,0.02),transparent 40%);animation:pearlGlow 4s ease-in-out infinite;pointer-events:none;z-index:1}
+@keyframes pearlGlow{0%,100%{opacity:0.2}50%{opacity:0.5}}
 
-/* ЭФФЕКТ 7: МРАМОРНЫЙ УЗОР */
-.level-effect-7 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:repeating-linear-gradient(45deg,rgba(255,255,255,0.015) 0px,rgba(255,255,255,0.015) 2px,transparent 2px,transparent 8px);animation:marble 6s linear infinite;pointer-events:none;z-index:1}
-@keyframes marble{0%{background-position:0 0}100%{background-position:30px 30px}}
+/* ЭФФЕКТ 7: ШЁЛКОВАЯ ГЛАДЬ */
+.level-effect-7 .c{border-color:rgba(200,180,200,0.08);}
+.level-effect-7 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:linear-gradient(135deg,rgba(220,200,230,0.04) 0%,transparent 40%,rgba(200,180,200,0.02) 100%);background-size:200% 200%;animation:silkFlow 3s ease-in-out infinite;pointer-events:none;z-index:1}
+@keyframes silkFlow{0%{background-position:0% 0%;opacity:0.2}50%{background-position:100% 100%;opacity:0.5}100%{background-position:0% 0%;opacity:0.2}}
 
-/* ЭФФЕКТ 8: ПЕРЛАМУТРОВЫЙ ПЕРЕЛИВ */
-.level-effect-8 .c{animation:iridescent 4s ease-in-out infinite;}
-@keyframes iridescent{0%{filter:hue-rotate(-10deg) brightness(1)}50%{filter:hue-rotate(10deg) brightness(1.04)}100%{filter:hue-rotate(-10deg) brightness(1)}}
+/* ЭФФЕКТ 8: МРАМОРНАЯ ХОЛОДНОСТЬ */
+.level-effect-8 .c{border-color:rgba(180,190,200,0.08);}
+.level-effect-8 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:repeating-linear-gradient(45deg,rgba(200,210,220,0.015) 0px,rgba(200,210,220,0.015) 2px,transparent 2px,transparent 8px);pointer-events:none;z-index:1}
 
-/* ЭФФЕКТ 9: ТУМАННАЯ ДЫМКА */
-.level-effect-9 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 30% 70%,rgba(200,200,220,0.04) 0%,transparent 60%),radial-gradient(circle at 70% 30%,rgba(220,210,200,0.03) 0%,transparent 50%);animation:fog 5s ease-in-out infinite;pointer-events:none;z-index:1}
-@keyframes fog{0%,100%{opacity:0.2}50%{opacity:0.5}}
+/* ЭФФЕКТ 9: АГАТОВАЯ ПОЛОСА */
+.level-effect-9 .c{border-color:rgba(180,160,200,0.08);}
+.level-effect-9 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:repeating-linear-gradient(0deg,rgba(200,180,220,0.015) 0px,rgba(200,180,220,0.015) 3px,transparent 3px,transparent 12px);pointer-events:none;z-index:1}
 
-/* ЭФФЕКТ 10: СТАРЫЙ КАМЕНЬ */
-.level-effect-10 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:repeating-linear-gradient(0deg,rgba(200,190,180,0.02) 0px,rgba(200,190,180,0.02) 1px,transparent 1px,transparent 4px);pointer-events:none;z-index:1}
+/* ЭФФЕКТ 10: ПАТИНОВЫЙ НАЛЁТ */
+.level-effect-10 .c{border-color:rgba(160,180,170,0.08);}
+.level-effect-10 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 50% 80%,rgba(100,200,180,0.03),transparent 50%),radial-gradient(circle at 20% 20%,rgba(180,170,160,0.02),transparent 40%);pointer-events:none;z-index:1}
 
-/* ЭФФЕКТ 11: МЯГКИЙ ШЁЛК */
-.level-effect-11 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:linear-gradient(135deg,rgba(255,240,235,0.05) 0%,transparent 40%,rgba(235,240,255,0.04) 100%);background-size:200% 200%;animation:silk 3s ease-in-out infinite;pointer-events:none;z-index:1}
-@keyframes silk{0%{background-position:0% 0%;opacity:0.2}50%{background-position:100% 100%;opacity:0.5}100%{background-position:0% 0%;opacity:0.2}}
+/* ЭФФЕКТ 11: МЯГКИЙ БАРХАТ */
+.level-effect-11 .c{border-color:rgba(220,200,190,0.06);}
+.level-effect-11 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 50% 50%,rgba(255,240,230,0.02),transparent 70%);animation:velvetSoft 4s ease-in-out infinite;pointer-events:none;z-index:1}
+@keyframes velvetSoft{0%,100%{opacity:0.1}50%{opacity:0.4}}
 
-/* ЭФФЕКТ 12: БЛАГОРОДНЫЙ НАЛЁТ */
-.level-effect-12 .c{box-shadow:inset 1px 1px 3px rgba(255,255,255,0.04),inset -1px -1px 3px rgba(0,0,0,0.04),2px 3px 8px rgba(0,0,0,0.15);}
-.level-effect-12 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 50% 80%,rgba(180,170,160,0.02),transparent 50%);pointer-events:none;z-index:1}
+/* ЭФФЕКТ 12: ХРУСТАЛЬНАЯ ГРАНЬ */
+.level-effect-12 .c{border-color:rgba(200,210,230,0.06);}
+.level-effect-12 .c::before{content:'';position:absolute;inset:-1px;border-radius:9px;background:linear-gradient(135deg,rgba(255,255,255,0.03) 0%,transparent 40%,rgba(200,220,255,0.02) 100%);pointer-events:none;z-index:1}
 
-/* ЭФФЕКТ 13: СВЕТЛАЯ ДЫМКА */
-.level-effect-13 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 60% 40%,rgba(255,255,255,0.03) 0%,transparent 50%);animation:lightMist 4s ease-in-out infinite;pointer-events:none;z-index:1}
-@keyframes lightMist{0%,100%{opacity:0.1}50%{opacity:0.4}}
+/* ЭФФЕКТ 13: ДРЕВЕСНОЕ ТЕПЛО */
+.level-effect-13 .c{border-color:rgba(200,180,160,0.06);}
+.level-effect-13 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:repeating-linear-gradient(45deg,rgba(200,180,150,0.015) 0px,rgba(200,180,150,0.015) 1px,transparent 1px,transparent 5px);pointer-events:none;z-index:1}
 
-/* ЭФФЕКТ 14: ЗЕМЛИСТАЯ ТЕКСТУРА */
-.level-effect-14 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 30% 40%,rgba(200,180,150,0.02) 0%,transparent 40%),radial-gradient(circle at 70% 60%,rgba(180,160,140,0.015) 0%,transparent 30%);pointer-events:none;z-index:1}
+/* ЭФФЕКТ 14: ТУМАННАЯ ДЫМКА */
+.level-effect-14 .c{border-color:rgba(200,200,210,0.06);}
+.level-effect-14 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 30% 70%,rgba(200,200,220,0.02),transparent 60%),radial-gradient(circle at 70% 30%,rgba(220,210,200,0.015),transparent 50%);animation:foggy 5s ease-in-out infinite;pointer-events:none;z-index:1}
+@keyframes foggy{0%,100%{opacity:0.1}50%{opacity:0.4}}
 
-/* ЭФФЕКТ 15: ХРУСТАЛЬНАЯ ГРАНЬ */
-.level-effect-15 .c{border-color:rgba(200,210,230,0.08) !important;}
-.level-effect-15 .c::before{content:'';position:absolute;inset:-1px;border-radius:9px;background:linear-gradient(135deg,rgba(255,255,255,0.02) 0%,transparent 40%,rgba(200,220,255,0.02) 100%);pointer-events:none;z-index:1}
+/* ЭФФЕКТ 15: СЕРЕБРЯНЫЙ ИНЕЙ */
+.level-effect-15 .c{border-color:rgba(220,220,235,0.06);}
+.level-effect-15 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 60% 40%,rgba(255,255,255,0.03),transparent 50%),radial-gradient(circle at 30% 70%,rgba(200,220,255,0.02),transparent 40%);animation:snowDust 3s ease-in-out infinite;pointer-events:none;z-index:1}
+@keyframes snowDust{0%,100%{opacity:0.1}50%{opacity:0.4}}
 
 /* ЭФФЕКТ 16: ГЛУБИННОЕ СВЕЧЕНИЕ */
-.level-effect-16 .c{animation:deepGlow 4s ease-in-out infinite alternate;}
-@keyframes deepGlow{0%{box-shadow:0 0 25px rgba(100,80,120,0.05),inset 0 0 25px rgba(100,80,120,0.02)}100%{box-shadow:0 0 50px rgba(100,80,120,0.12),inset 0 0 40px rgba(100,80,120,0.05)}}
+.level-effect-16 .c{border-color:rgba(180,160,180,0.08);}
+.level-effect-16 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 50% 50%,rgba(200,180,220,0.02),transparent 60%);animation:deepCandle 4s ease-in-out infinite alternate;pointer-events:none;z-index:1}
+@keyframes deepCandle{0%{opacity:0.1;transform:scale(0.9)}100%{opacity:0.4;transform:scale(1.1)}}
 
 /* ===== УСИЛЕНИЕ ЭФФЕКТОВ НА 2-М КРУГЕ ===== */
-.circle-2 .c{filter:brightness(1.02) saturate(1.02);}
-.circle-2 .c::before{opacity:1.3!important;}
-.circle-2 .c::after{opacity:1.3!important;}
-.circle-2 .c{animation-duration:0.85s!important;}
+.circle-2 .c{filter:brightness(1.02);}
+.circle-2 .c::before{opacity:1.4!important;}
+.circle-2 .c::after{opacity:1.4!important;}
 
 /* ===== УСИЛЕНИЕ ЭФФЕКТОВ НА 3-М КРУГЕ ===== */
-.circle-3 .c{filter:brightness(1.04) saturate(1.04);}
-.circle-3 .c::before{opacity:1.6!important;}
-.circle-3 .c::after{opacity:1.6!important;}
-.circle-3 .c{animation-duration:0.7s!important;}
+.circle-3 .c{filter:brightness(1.04);}
+.circle-3 .c::before{opacity:1.8!important;}
+.circle-3 .c::after{opacity:1.8!important;}
 
 .c.sp-bomb{border:2px solid #d4af37;box-shadow:0 0 15px rgba(212,175,55,.4);}
 .c.sp-laser{border:2px solid #7fb5b0;box-shadow:0 0 15px rgba(127,181,176,.4);}
@@ -482,80 +489,81 @@ if ('speechSynthesis' in window) window.speechSynthesis.getVoices();
 //  ИСПОЛЬЗУЕМ ВАШУ БАЗУ ИЕРОГЛИФОВ ИЗ app.js
 // ============================================================
 var LEVELS = [];
-for (var i = 0; i < Math.ceil(DB.length / 5); i++) {
-    var set = [];
-    for (var j = 0; j < 5; j++) {
-        var idx = (i * 5 + j) % DB.length;
-        var d = DB[idx];
-        set.push({
-            h: d[0],
-            p: d[1],
-            r: d[2],
-            e: d[3] || '🀄'
-        });
+if (typeof DB !== 'undefined' && DB.length > 0) {
+    for (var i = 0; i < Math.ceil(DB.length / 5); i++) {
+        var set = [];
+        for (var j = 0; j < 5; j++) {
+            var idx = (i * 5 + j) % DB.length;
+            var d = DB[idx];
+            set.push({
+                h: d[0],
+                p: d[1],
+                r: d[2],
+                e: d[3] || '🀄'
+            });
+        }
+        LEVELS.push(set);
     }
-    LEVELS.push(set);
 }
-
 console.log('✅ Загружено уровней: ' + LEVELS.length);
 
 // ============================================================
-//  16 ГРУПП ПО 5 ГАРМОНИЧНЫХ ЦВЕТОВ
+//  16 ГРУПП ПО 5 РАЗНЫХ ЦВЕТОВ
 // ============================================================
 var COLOR_GROUPS = [
-    ['c3','c5','c33','c36','c10'],
-    ['c64','c2','c75','c73','c63'],
-    ['c20','c65','c27','c73','c25'],
-    ['c8','c15','c28','c39','c44'],
-    ['c54','c17','c6','c25','c27'],
-    ['c3','c13','c20','c34','c40'],
-    ['c74','c15','c73','c45','c78'],
-    ['c2','c10','c77','c72','c33'],
-    ['c24','c71','c64','c73','c27'],
-    ['c7','c55','c54','c78','c70'],
-    ['c59','c2','c63','c78','c73'],
-    ['c8','c15','c26','c55','c47'],
-    ['c73','c17','c65','c45','c60'],
-    ['c2','c75','c77','c78','c7'],
-    ['c20','c65','c27','c71','c64'],
-    ['c3','c18','c28','c33','c42']
+    ['c3','c13','c20','c30','c40'],
+    ['c2','c10','c23','c35','c45'],
+    ['c3','c14','c24','c33','c42'],
+    ['c0','c15','c22','c31','c44'],
+    ['c6','c13','c25','c36','c43'],
+    ['c7','c12','c27','c38','c41'],
+    ['c8','c17','c28','c39','c44'],
+    ['c9','c19','c29','c32','c40'],
+    ['c1','c18','c22','c31','c41'],
+    ['c4','c14','c24','c34','c45'],
+    ['c2','c15','c23','c35','c42'],
+    ['c5','c10','c20','c33','c43'],
+    ['c7','c17','c25','c38','c44'],
+    ['c8','c19','c28','c39','c49'],
+    ['c9','c11','c27','c30','c48'],
+    ['c3','c13','c21','c36','c40']
 ];
 
 var GROUP_NAMES = [
-    "Винная + Глина + Охра + Шафран + Фисташка",
-    "Графит + Терракота + Хаки + Жемчуг + Дымчатый",
-    "Индиго + Серебро + Лаванда + Перламутр + Стальной",
-    "Махагон + Шалфей + Ночной синий + Песок + Лиловый",
-    "Кремовый + Мята + Персик + Серо-синий + Лавандовый",
-    "Бургундия + Изумруд + Индиго + Медь + Слива",
-    "Розовое дерево + Шалфей + Жемчуг + Сиреневый + Олива",
-    "Терракота + Нефрит + Песчаник + Сумеречный + Охра",
-    "Стальной синий + Морской + Графит + Слоновая кость + Лавандовый",
-    "Коралл + Песочный + Кремовый + Олива + Древесный",
-    "Светлый бежевый + Терракота + Дымчатый + Олива + Жемчуг",
-    "Махагон + Шалфей + Тёмный синий + Песок + Лиловый",
-    "Слоновая кость + Мята + Перламутр + Сиреневый + Серый",
-    "Терракота + Хаки + Песчаник + Олива + Коралл",
-    "Индиго + Серебро + Лаванда + Морской + Графит",
-    "Бургундия + Изумруд + Ночной синий + Бронза + Слива"
+    "Бургундия + Изумруд + Индиго + Золото + Слива",
+    "Терракота + Нефрит + Сапфир + Янтарь + Сиреневый",
+    "Бургундия + Оливковый + Стальной синий + Бронза + Слива",
+    "Киноварь + Шалфей + Индиго + Золото + Лиловый",
+    "Персик + Изумруд + Серо-синий + Шафран + Пурпур",
+    "Коралл + Нефрит тёмный + Лавандовый синий + Горчичный + Слива светлая",
+    "Махагон + Мята + Ночной синий + Песчаный + Лиловый тёмный",
+    "Ржавчина + Патина + Дымчатый синий + Золото тёмное + Фиолетовый",
+    "Киноварь св. + Тёмный изумруд + Индиго тёмный + Золото св. + Слива св.",
+    "Кирпичный + Оливковый + Стальной синий + Латунь + Сиреневый",
+    "Терракота + Шалфей + Сапфир + Янтарь + Слива тёмная",
+    "Глина + Нефрит + Индиго + Бронза + Пурпур",
+    "Коралл + Мята + Серо-синий + Горчичный + Лиловый",
+    "Махагон + Патина + Ночной синий + Песчаный + Фиолетово-серый",
+    "Ржавчина + Нефрит светлый + Лавандовый синий + Золото + Розово-серый",
+    "Бургундия + Изумруд + Индиго светлый + Шафран + Слива"
 ];
 
 var EFFECT_NAMES = [
-    "Дымчатое свечение",
-    "Мягкий перелив",
-    "Матовая дымка",
-    "Мягкий блеск",
-    "Жемчужный отлив",
-    "Серебряная пыль",
-    "Мраморный узор",
-    "Перламутровый перелив",
-    "Туманная дымка",
-    "Старый камень",
-    "Мягкий шёлк",
-    "Благородный налёт",
-    "Светлая дымка",
-    "Землистая текстура",
+    "Бархатное свечение",
+    "Нефритовая гладь",
+    "Киноварная глубина",
+    "Индиго-дымка",
+    "Золотая пыльца",
+    "Жемчужный свет",
+    "Шёлковая гладь",
+    "Мраморная холодность",
+    "Агатовая полоса",
+    "Патиновый налёт",
+    "Мягкий бархат",
     "Хрустальная грань",
+    "Древесное тепло",
+    "Туманная дымка",
+    "Серебряный иней",
     "Глубинное свечение"
 ];
 
@@ -774,7 +782,7 @@ function startLevel() {
     var effectName = EFFECT_NAMES[groupIdx] || "Сияние";
     
     var hue = (groupIdx * 45) % 360;
-    document.getElementById('bg').style.background = 'radial-gradient(circle at center, hsl('+hue+',30%,10%) 0%, hsl('+hue+',20%,5%) 100%)';
+    document.getElementById('bg').style.background = 'radial-gradient(circle at center, hsl('+hue+',25%,8%) 0%, hsl('+hue+',15%,4%) 100%)';
     
     var circleText = state.circle > 1 ? ' (Круг ' + state.circle + ')' : '';
     document.getElementById('uTheme').innerHTML = "Уровень " + state.level + " — <span style='color:#d4af37'>" + groupName + "</span> <span style='font-size:0.6rem;opacity:0.7'>✦ " + effectName + "</span>" + circleText;
@@ -1345,7 +1353,7 @@ function loadProgress() {
 init();
 
 console.log('✅ Hanzi: Нефрит и Золото загружена!');
-console.log('🎨 16 групп по 5 гармоничных цветов');
+console.log('🎨 16 групп по 5 РАЗНЫХ гармоничных цветов');
 console.log('✦ 16 уникальных благородных эффектов');
 console.log('🔄 На каждом круге эффекты усиливаются');
 console.log('📐 Сложные формы: L, T, Квадрат 2×2, 5+ в ряд, 6+ в ряд');
