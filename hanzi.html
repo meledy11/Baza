@@ -51,106 +51,10 @@ body{display:flex;flex-direction:column;align-items:center;}
 }
 
 /* ============================================================
-   ДОРАМНАЯ ПАЛИТРА — 80+ БЛАГОРОДНЫХ ОТТЕНКОВ (ОСНОВНЫЕ КЛАССЫ)
+   ДОРАМНАЯ ПАЛИТРА — БАЗА ДЛЯ ГЕНЕРАЦИИ
    ============================================================ */
+/* Мы используем эти классы как основу, но будем генерировать уникальные стили динамически */
 
-/* КРАСНЫЕ И ТЕРРАКОТОВЫЕ (0-9) */
-.c0{background:linear-gradient(145deg,#c47a5a,#8a4a2a);}
-.c1{background:linear-gradient(145deg,#d4886a,#a05a3a);}
-.c2{background:linear-gradient(145deg,#b06a4a,#7a3a2a);}
-.c3{background:linear-gradient(145deg,#8a4a3a,#5a2a1a);}
-.c4{background:linear-gradient(145deg,#a05a4a,#6a2a1a);}
-.c5{background:linear-gradient(145deg,#c06a50,#8a3a2a);}
-.c6{background:linear-gradient(145deg,#d49a7a,#a06a4a);}
-.c7{background:linear-gradient(145deg,#b08060,#8a5a40);}
-.c8{background:linear-gradient(145deg,#7a3a2a,#4a1a0a);}
-.c9{background:linear-gradient(145deg,#9a5a3a,#5a2a1a);}
-
-/* ЗЕЛЁНЫЕ И НЕФРИТОВЫЕ (10-19) */
-.c10{background:linear-gradient(145deg,#5a9a7a,#2a6a4a);}
-.c11{background:linear-gradient(145deg,#6aaa8a,#3a7a5a);}
-.c12{background:linear-gradient(145deg,#4a8a6a,#1a5a3a);}
-.c13{background:linear-gradient(145deg,#3a7a5a,#1a4a2a);}
-.c14{background:linear-gradient(145deg,#5a8a6a,#2a5a3a);}
-.c15{background:linear-gradient(145deg,#7aaa7a,#4a7a4a);}
-.c16{background:linear-gradient(145deg,#4a6a4a,#2a4a2a);}
-.c17{background:linear-gradient(145deg,#8aba8a,#5a8a5a);}
-.c18{background:linear-gradient(145deg,#2a5a3a,#1a3a1a);}
-.c19{background:linear-gradient(145deg,#6a9a7a,#3a6a4a);}
-
-/* СИНИЕ И ИНДИГО (20-29) */
-.c20{background:linear-gradient(145deg,#5a7aaa,#2a4a6a);}
-.c21{background:linear-gradient(145deg,#6a8aba,#3a5a8a);}
-.c22{background:linear-gradient(145deg,#4a6a8a,#1a3a5a);}
-.c23{background:linear-gradient(145deg,#3a5a7a,#1a2a4a);}
-.c24{background:linear-gradient(145deg,#5a7a9a,#2a4a6a);}
-.c25{background:linear-gradient(145deg,#7a8aaa,#4a5a7a);}
-.c26{background:linear-gradient(145deg,#4a5a7a,#2a3a5a);}
-.c27{background:linear-gradient(145deg,#8a9aba,#5a6a8a);}
-.c28{background:linear-gradient(145deg,#2a3a5a,#1a2a3a);}
-.c29{background:linear-gradient(145deg,#6a7a9a,#3a4a6a);}
-
-/* ЖЁЛТЫЕ И ЗОЛОТЫЕ (30-39) */
-.c30{background:linear-gradient(145deg,#c4a84a,#8a7a2a);}
-.c31{background:linear-gradient(145deg,#d4b85a,#9a8a3a);}
-.c32{background:linear-gradient(145deg,#b0983a,#6a5a1a);}
-.c33{background:linear-gradient(145deg,#aa8a3a,#5a4a1a);}
-.c34{background:linear-gradient(145deg,#c4a86a,#8a7a3a);}
-.c35{background:linear-gradient(145deg,#b09a4a,#6a5a2a);}
-.c36{background:linear-gradient(145deg,#d4c06a,#9a8a3a);}
-.c37{background:linear-gradient(145deg,#8a7a3a,#4a3a1a);}
-.c38{background:linear-gradient(145deg,#b8a05a,#7a6a2a);}
-.c39{background:linear-gradient(145deg,#c8b060,#8a7a3a);}
-
-/* ФИОЛЕТОВЫЕ И СЛИВОВЫЕ (40-49) */
-.c40{background:linear-gradient(145deg,#8a5a8a,#4a2a5a);}
-.c41{background:linear-gradient(145deg,#9a6a9a,#5a3a6a);}
-.c42{background:linear-gradient(145deg,#7a4a7a,#3a1a4a);}
-.c43{background:linear-gradient(145deg,#6a3a6a,#2a1a3a);}
-.c44{background:linear-gradient(145deg,#8a5a7a,#4a2a4a);}
-.c45{background:linear-gradient(145deg,#aa7a9a,#5a3a5a);}
-.c46{background:linear-gradient(145deg,#5a3a5a,#2a1a3a);}
-.c47{background:linear-gradient(145deg,#7a5a7a,#3a2a4a);}
-.c48{background:linear-gradient(145deg,#9a7a8a,#5a3a5a);}
-.c49{background:linear-gradient(145deg,#6a4a6a,#3a2a3a);}
-
-/* КОРИЧНЕВЫЕ И БЕЖЕВЫЕ (50-59) */
-.c50{background:linear-gradient(145deg,#8a7a5a,#4a3a2a);}
-.c51{background:linear-gradient(145deg,#9a8a6a,#5a4a3a);}
-.c52{background:linear-gradient(145deg,#7a6a4a,#3a2a1a);}
-.c53{background:linear-gradient(145deg,#b09a7a,#6a5a3a);}
-.c54{background:linear-gradient(145deg,#c4b09a,#8a7a5a);}
-.c55{background:linear-gradient(145deg,#a08870,#6a5a4a);}
-.c56{background:linear-gradient(145deg,#8a7a6a,#4a3a2a);}
-.c57{background:linear-gradient(145deg,#b09a8a,#7a6a5a);}
-.c58{background:linear-gradient(145deg,#6a5a4a,#3a2a1a);}
-.c59{background:linear-gradient(145deg,#c4b0a0,#8a7a6a);}
-
-/* СЕРЫЕ И ДЫМЧАТЫЕ (60-69) */
-.c60{background:linear-gradient(145deg,#8a8a8a,#5a5a5a);}
-.c61{background:linear-gradient(145deg,#9a9a9a,#6a6a6a);}
-.c62{background:linear-gradient(145deg,#7a7a7a,#4a4a4a);}
-.c63{background:linear-gradient(145deg,#aaa09a,#7a706a);}
-.c64{background:linear-gradient(145deg,#8a807a,#5a504a);}
-.c65{background:linear-gradient(145deg,#b0a8a0,#8a8078);}
-.c66{background:linear-gradient(145deg,#6a6a6a,#3a3a3a);}
-.c67{background:linear-gradient(145deg,#9a8a8a,#6a5a5a);}
-.c68{background:linear-gradient(145deg,#8a9a8a,#5a6a5a);}
-.c69{background:linear-gradient(145deg,#7a8a8a,#4a5a5a);}
-
-/* ДОПОЛНИТЕЛЬНЫЕ ДОРАМНЫЕ (70-79) */
-.c70{background:linear-gradient(145deg,#c4a090,#8a6a5a);}
-.c71{background:linear-gradient(145deg,#a0b0a0,#708070);}
-.c72{background:linear-gradient(145deg,#9098a0,#607080);}
-.c73{background:linear-gradient(145deg,#d4c8b0,#a09078);}
-.c74{background:linear-gradient(145deg,#c0a8a0,#907870);}
-.c75{background:linear-gradient(145deg,#a0a090,#707060);}
-.c76{background:linear-gradient(145deg,#b0a898,#807868);}
-.c77{background:linear-gradient(145deg,#c8b8a8,#908070);}
-.c78{background:linear-gradient(145deg,#8a9080,#5a6a5a);}
-.c79{background:linear-gradient(145deg,#b0a090,#7a6a5a);}
-
-/* Спец. бонусы поверх градиента */
 .c.sp-bomb{border:2px solid #d4af37;box-shadow:0 0 15px rgba(212,175,55,.4);}
 .c.sp-laser{border:2px solid #7fb5b0;box-shadow:0 0 15px rgba(127,181,176,.4);}
 .c.sp-star{border:2px solid #9b72aa;box-shadow:0 0 15px rgba(155,114,170,.4);}
@@ -413,7 +317,7 @@ function speakChinese(text) {
 if ('speechSynthesis' in window) window.speechSynthesis.getVoices();
 
 // ============================================================
-//  КОНФИГУРАЦИЯ
+//  КОНФИГУРАЦИЯ И ДАННЫЕ
 // ============================================================
 var RANKS = ["Новичок","Ученик","Мастер","Эксперт","Гуру","Магистр","Мудрец","Император"];
 var NC=6, NR=8, TOT=NC*NR;
@@ -436,20 +340,48 @@ if(typeof DB !== 'undefined' && DB.length > 0) {
     }
 } else { LEVELS = DB_FALLBACK; }
 
-// ===== ДОРАМНАЯ ПАЛИТРА (массив классов c0..c79) =====
-var DORAM_PALETTE = [];
-for(var i=0; i<80; i++) DORAM_PALETTE.push('c'+i);
+// ============================================================
+//  ЛОГИКА ЦВЕТОВ (5 ОТТЕНКОВ НА УРОВЕНЬ)
+// ============================================================
 
-// Сопоставление иероглифа → класс цвета (уникальный для каждого символа)
-var CHAR_COLOR_MAP = {};
-var nextColorIdx = 0;
+// Генератор благородных дорамных градиентов
+function getDoramGradient(index, circleOffset) {
+    // База: Красный, Зеленый, Синий, Желтый, Фиолетовый
+    // Смещаем Hue в зависимости от круга (circleOffset), чтобы цвета были разными
+    
+    var baseHues = [15, 140, 210, 45, 280]; // Оттенки
+    var hue = (baseHues[index % 5] + circleOffset) % 360;
+    
+    // Делаем цвета более сложными и "дорогими"
+    var sat = 40 + (index * 5) % 20; // Насыщенность
+    var light = 35 + (index * 7) % 20; // Светлота
+    
+    // Создаем градиент от светлого к темному того же оттенка
+    var c1 = `hsl(${hue}, ${sat}%, ${light+15}%)`;
+    var c2 = `hsl(${hue}, ${sat+10}%, ${light-10}%)`;
+    
+    return `linear-gradient(145deg, ${c1}, ${c2})`;
+}
 
-function getDoramColorForChar(char) {
-    if(!CHAR_COLOR_MAP[char]) {
-        CHAR_COLOR_MAP[char] = DORAM_PALETTE[nextColorIdx % DORAM_PALETTE.length];
-        nextColorIdx++;
+// Хранилище стилей для текущего уровня
+var currentLevelStyles = {};
+
+function prepareLevelColors(levelIdx, circle) {
+    currentLevelStyles = {};
+    var circleOffset = (circle - 1) * 40; // Сдвиг цветов каждый круг
+    
+    // Для 5 иероглифов создаем 5 уникальных CSS классов
+    for(var i=0; i<5; i++) {
+        var className = 'lvl-' + levelIdx + '-c' + i;
+        var gradient = getDoramGradient(i, circleOffset);
+        
+        // Добавляем стиль в документ
+        var styleEl = document.createElement('style');
+        styleEl.innerHTML = '.c.' + className + '{background:' + gradient + ';}';
+        document.head.appendChild(styleEl);
+        
+        currentLevelStyles[i] = className;
     }
-    return CHAR_COLOR_MAP[char];
 }
 
 // ============================================================
@@ -466,7 +398,7 @@ var state = {
 var PRICE_HINT = 50, PRICE_SHUF = 80, PRICE_BOMB = 5;
 
 // ============================================================
-//  ПОИСК КОМБИНАЦИЙ (L, T, квадрат, линии)
+//  ПОИСК КОМБИНАЦИЙ
 // ============================================================
 function findAllCombinations(bd) {
     var results = [], used = {};
@@ -651,6 +583,9 @@ function startLevel() {
     document.getElementById('uTheme').innerText = "Уровень " + state.level + " (Круг " + state.circle + ")";
     document.getElementById('uCircle').innerText = state.circle;
     
+    // ГЕНЕРАЦИЯ ЦВЕТОВ ДЛЯ ЭТОГО УРОВНЯ
+    prepareLevelColors(state.level, state.circle);
+    
     for(var i=0; i<TOT; i++) {
         var att = 0;
         do { 
@@ -669,8 +604,10 @@ function randChar() {
     var set = LEVELS[(state.level - 1) % LEVELS.length];
     var idx = Math.floor(Math.random() * set.length);
     var c = set[idx];
-    // ПОЛУЧАЕМ УНИКАЛЬНЫЙ ЦВЕТ ДЛЯ ЭТОГО ИЕРОГЛИФА
-    var colorClass = getDoramColorForChar(c.h);
+    
+    // Присваиваем цвет на основе индекса иероглифа в наборе (0..4)
+    // Это гарантирует, что у нас ровно 5 разных цветов на уровне
+    var colorClass = currentLevelStyles[idx] || 'c0';
     
     return {h:c.h, p:c.p, r:c.r, e:c.e, colorClass:colorClass, sp:null};
 }
@@ -807,8 +744,8 @@ function showLevelComplete() {
         var card = document.createElement('div');
         card.className = 'jade-card';
         
-        // Применяем УНИКАЛЬНЫЙ дорамный цвет для каждого иероглифа
-        var colorClass = getDoramColorForChar(char.h);
+        // Используем тот же уникальный цвет, что и в игре
+        var colorClass = currentLevelStyles[index] || 'c0';
         card.classList.add(colorClass);
         
         card.style.animationDelay = (index * 0.15) + 's';
@@ -979,8 +916,6 @@ var G = {
             state.hintFree = 3;
             state.score = 0;
             state.circle = 1;
-            CHAR_COLOR_MAP = {};
-            nextColorIdx = 0;
             localStorage.removeItem('hanzi_save');
             startLevel();
             showToast("🔄 Игра перезапущена!");
@@ -1120,7 +1055,7 @@ function render() {
         el.style.width=cellPx+'px'; 
         el.style.height=cellPx+'px';
         
-        // ПРИМЕНЯЕМ УНИКАЛЬНЫЙ ЦВЕТ ДЛЯ КАЖДОГО ИЕРОГЛИФА
+        // ПРИМЕНЯЕМ УНИКАЛЬНЫЙ ЦВЕТ ТЕКУЩЕГО УРОВНЯ
         if(d && d.colorClass) {
             el.classList.add(d.colorClass);
         }
@@ -1217,9 +1152,8 @@ function loadProgress() {
 
 init();
 
-console.log('✅ Hanzi: Нефрит и Золото (Дорамная палитра) загружена!');
-console.log('🎨 80+ благородных оттенков для каждого иероглифа');
-console.log('📐 Сложные формы: L, T, Квадрат 2×2, 5+ в ряд, 6+ в ряд');
+console.log('✅ Hanzi: Нефрит и Золото (Динамические цвета) загружена!');
 </script>
 </body>
 </html>
+
