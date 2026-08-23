@@ -1,367 +1,418 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>🀄 Ханзи: Нефрит и Золото</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;}
-html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#0a0a0f;color:#fff;touch-action:none;}
-body{display:flex;flex-direction:column;align-items:center;}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>🀄 Ханзи: Нефрит и Золото</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;}
+        html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#0a0a0f;color:#fff;touch-action:none;}
+        body{display:flex;flex-direction:column;align-items:center;}
 
-.bg{position:fixed;inset:0;z-index:0;transition:background 1.5s ease;}
+        .bg{position:fixed;inset:0;z-index:0;transition:background 1.5s ease;}
 
-.hdr{z-index:10;width:100%;max-width:600px;display:flex;justify-content:space-between;align-items:center;padding:6px 10px;}
-.logo{font-size:1rem;font-weight:800;color:#d4af37;text-shadow:0 2px 4px rgba(0,0,0,.5);letter-spacing:1px;}
-.rank{font-size:.55rem;color:#a89f91;letter-spacing:2px;text-transform:uppercase;margin-top:1px;font-weight:600;}
-.stats{display:flex;gap:4px;flex-wrap:wrap;}
-.stat{background:rgba(20,20,25,.6);border:1px solid rgba(212,175,55,.3);border-radius:5px;padding:3px 8px;font-size:.6rem;display:flex;align-items:center;gap:3px;backdrop-filter:blur(4px);}
-.stat b{font-size:.75rem;color:#e8dcc5;}
-.c-gold{color:#d4af37!important;} .c-grn{color:#5da399!important;} .c-cyan{color:#7fb5b0!important;} .c-pur{color:#9b72aa!important;}
+        .hdr{z-index:10;width:100%;max-width:600px;display:flex;justify-content:space-between;align-items:center;padding:6px 10px;}
+        .logo{font-size:1rem;font-weight:800;color:#d4af37;text-shadow:0 2px 4px rgba(0,0,0,.5);letter-spacing:1px;}
+        .rank{font-size:.55rem;color:#a89f91;letter-spacing:2px;text-transform:uppercase;margin-top:1px;font-weight:600;}
+        .stats{display:flex;gap:4px;flex-wrap:wrap;}
+        .stat{background:rgba(20,20,25,.6);border:1px solid rgba(212,175,55,.3);border-radius:5px;padding:3px 8px;font-size:.6rem;display:flex;align-items:center;gap:3px;backdrop-filter:blur(4px);}
+        .stat b{font-size:.75rem;color:#e8dcc5;}
+        .c-gold{color:#d4af37!important;} .c-grn{color:#5da399!important;} .c-cyan{color:#7fb5b0!important;} .c-pur{color:#9b72aa!important;}
 
-.pw{z-index:10;width:100%;max-width:600px;padding:0 12px 4px;}
-.pt{height:4px;background:rgba(0,0,0,.4);border-radius:3px;overflow:hidden;border:1px solid rgba(255,255,255,.05);}
-.pf{height:100%;background:linear-gradient(90deg,#8b3a3a,#d4af37);transition:width .5s ease-out;box-shadow:0 0 10px rgba(212,175,55,.3);}
-.pl{display:flex;justify-content:space-between;font-size:.55rem;color:#8c8276;margin-top:2px;font-weight:600;}
+        .pw{z-index:10;width:100%;max-width:600px;padding:0 12px 4px;}
+        .pt{height:4px;background:rgba(0,0,0,.4);border-radius:3px;overflow:hidden;border:1px solid rgba(255,255,255,.05);}
+        .pf{height:100%;background:linear-gradient(90deg,#8b3a3a,#d4af37);transition:width .5s ease-out;box-shadow:0 0 10px rgba(212,175,55,.3);}
+        .pl{display:flex;justify-content:space-between;font-size:.55rem;color:#8c8276;margin-top:2px;font-weight:600;}
 
-.ba{z-index:5;flex:1;width:100%;max-width:600px;display:flex;align-items:center;justify-content:center;padding:2px;}
-#board{
-    display:grid;
-    background:rgba(10,10,15,.4);
-    border-radius:10px;
-    padding:6px;
-    border:1px solid rgba(212,175,55,.15);
-    box-shadow:0 15px 40px rgba(0,0,0,.6), inset 0 0 30px rgba(0,0,0,.4);
-}
+        .ba{z-index:5;flex:1;width:100%;max-width:600px;display:flex;align-items:center;justify-content:center;padding:2px;}
+        #board{
+            display:grid;
+            background:rgba(10,10,15,.4);
+            border-radius:10px;
+            padding:6px;
+            border:1px solid rgba(212,175,55,.15);
+            box-shadow:0 15px 40px rgba(0,0,0,.6), inset 0 0 30px rgba(0,0,0,.4);
+        }
 
-.c{
-    position:relative;
-    border-radius:8px;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    cursor:pointer;
-    border:1px solid rgba(212,175,55,.25);
-    box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4);
-    transition: transform 0.25s cubic-bezier(.4,1.8,.6,1);
-    overflow:visible;
-}
-.c::after{
-    content:'';position:absolute;top:0;left:0;right:0;height:45%;
-    background:linear-gradient(to bottom, rgba(255,255,255,.08), transparent);
-    border-radius:8px 8px 50% 50%;
-    pointer-events:none;
-}
+        .c{
+            position:relative;
+            border-radius:8px;
+            display:flex;flex-direction:column;align-items:center;justify-content:center;
+            cursor:pointer;
+            border:1px solid rgba(212,175,55,.25);
+            box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4);
+            transition: transform 0.25s cubic-bezier(.4,1.8,.6,1);
+            overflow:visible;
+        }
+        .c::after{
+            content:'';position:absolute;top:0;left:0;right:0;height:45%;
+            background:linear-gradient(to bottom, rgba(255,255,255,.08), transparent);
+            border-radius:8px 8px 50% 50%;
+            pointer-events:none;
+        }
 
-/* ============================================================
-   ДОРАМНАЯ ПАЛИТРА — 80+ БЛАГОРОДНЫХ ОТТЕНКОВ
-   ============================================================ */
+        /* ============================================================
+           ДОРАМНАЯ ПАЛИТРА — 80+ БЛАГОРОДНЫХ ОТТЕНКОВ
+           ============================================================ */
 
-.c0{background:linear-gradient(145deg,#c47a5a,#8a4a2a);}
-.c1{background:linear-gradient(145deg,#d4886a,#a05a3a);}
-.c2{background:linear-gradient(145deg,#b06a4a,#7a3a2a);}
-.c3{background:linear-gradient(145deg,#8a4a3a,#5a2a1a);}
-.c4{background:linear-gradient(145deg,#a05a4a,#6a2a1a);}
-.c5{background:linear-gradient(145deg,#c06a50,#8a3a2a);}
-.c6{background:linear-gradient(145deg,#d49a7a,#a06a4a);}
-.c7{background:linear-gradient(145deg,#b08060,#8a5a40);}
-.c8{background:linear-gradient(145deg,#7a3a2a,#4a1a0a);}
-.c9{background:linear-gradient(145deg,#9a5a3a,#5a2a1a);}
-.c10{background:linear-gradient(145deg,#5a9a7a,#2a6a4a);}
-.c11{background:linear-gradient(145deg,#6aaa8a,#3a7a5a);}
-.c12{background:linear-gradient(145deg,#4a8a6a,#1a5a3a);}
-.c13{background:linear-gradient(145deg,#3a7a5a,#1a4a2a);}
-.c14{background:linear-gradient(145deg,#5a8a6a,#2a5a3a);}
-.c15{background:linear-gradient(145deg,#7aaa7a,#4a7a4a);}
-.c16{background:linear-gradient(145deg,#4a6a4a,#2a4a2a);}
-.c17{background:linear-gradient(145deg,#8aba8a,#5a8a5a);}
-.c18{background:linear-gradient(145deg,#2a5a3a,#1a3a1a);}
-.c19{background:linear-gradient(145deg,#6a9a7a,#3a6a4a);}
-.c20{background:linear-gradient(145deg,#5a7aaa,#2a4a6a);}
-.c21{background:linear-gradient(145deg,#6a8aba,#3a5a8a);}
-.c22{background:linear-gradient(145deg,#4a6a8a,#1a3a5a);}
-.c23{background:linear-gradient(145deg,#3a5a7a,#1a2a4a);}
-.c24{background:linear-gradient(145deg,#5a7a9a,#2a4a6a);}
-.c25{background:linear-gradient(145deg,#7a8aaa,#4a5a7a);}
-.c26{background:linear-gradient(145deg,#4a5a7a,#2a3a5a);}
-.c27{background:linear-gradient(145deg,#8a9aba,#5a6a8a);}
-.c28{background:linear-gradient(145deg,#2a3a5a,#1a2a3a);}
-.c29{background:linear-gradient(145deg,#6a7a9a,#3a4a6a);}
-.c30{background:linear-gradient(145deg,#c4a84a,#8a7a2a);}
-.c31{background:linear-gradient(145deg,#d4b85a,#9a8a3a);}
-.c32{background:linear-gradient(145deg,#b0983a,#6a5a1a);}
-.c33{background:linear-gradient(145deg,#aa8a3a,#5a4a1a);}
-.c34{background:linear-gradient(145deg,#c4a86a,#8a7a3a);}
-.c35{background:linear-gradient(145deg,#b09a4a,#6a5a2a);}
-.c36{background:linear-gradient(145deg,#d4c06a,#9a8a3a);}
-.c37{background:linear-gradient(145deg,#8a7a3a,#4a3a1a);}
-.c38{background:linear-gradient(145deg,#b8a05a,#7a6a2a);}
-.c39{background:linear-gradient(145deg,#c8b060,#8a7a3a);}
-.c40{background:linear-gradient(145deg,#8a5a8a,#4a2a5a);}
-.c41{background:linear-gradient(145deg,#9a6a9a,#5a3a6a);}
-.c42{background:linear-gradient(145deg,#7a4a7a,#3a1a4a);}
-.c43{background:linear-gradient(145deg,#6a3a6a,#2a1a3a);}
-.c44{background:linear-gradient(145deg,#8a5a7a,#4a2a4a);}
-.c45{background:linear-gradient(145deg,#aa7a9a,#5a3a5a);}
-.c46{background:linear-gradient(145deg,#5a3a5a,#2a1a3a);}
-.c47{background:linear-gradient(145deg,#7a5a7a,#3a2a4a);}
-.c48{background:linear-gradient(145deg,#9a7a8a,#5a3a5a);}
-.c49{background:linear-gradient(145deg,#6a4a6a,#3a2a3a);}
-.c50{background:linear-gradient(145deg,#8a7a5a,#4a3a2a);}
-.c51{background:linear-gradient(145deg,#9a8a6a,#5a4a3a);}
-.c52{background:linear-gradient(145deg,#7a6a4a,#3a2a1a);}
-.c53{background:linear-gradient(145deg,#b09a7a,#6a5a3a);}
-.c54{background:linear-gradient(145deg,#c4b09a,#8a7a5a);}
-.c55{background:linear-gradient(145deg,#a08870,#6a5a4a);}
-.c56{background:linear-gradient(145deg,#8a7a6a,#4a3a2a);}
-.c57{background:linear-gradient(145deg,#b09a8a,#7a6a5a);}
-.c58{background:linear-gradient(145deg,#6a5a4a,#3a2a1a);}
-.c59{background:linear-gradient(145deg,#c4b0a0,#8a7a6a);}
-.c60{background:linear-gradient(145deg,#8a8a8a,#5a5a5a);}
-.c61{background:linear-gradient(145deg,#9a9a9a,#6a6a6a);}
-.c62{background:linear-gradient(145deg,#7a7a7a,#4a4a4a);}
-.c63{background:linear-gradient(145deg,#aaa09a,#7a706a);}
-.c64{background:linear-gradient(145deg,#8a807a,#5a504a);}
-.c65{background:linear-gradient(145deg,#b0a8a0,#8a8078);}
-.c66{background:linear-gradient(145deg,#6a6a6a,#3a3a3a);}
-.c67{background:linear-gradient(145deg,#9a8a8a,#6a5a5a);}
-.c68{background:linear-gradient(145deg,#8a9a8a,#5a6a5a);}
-.c69{background:linear-gradient(145deg,#7a8a8a,#4a5a5a);}
-.c70{background:linear-gradient(145deg,#c4a090,#8a6a5a);}
-.c71{background:linear-gradient(145deg,#a0b0a0,#708070);}
-.c72{background:linear-gradient(145deg,#9098a0,#607080);}
-.c73{background:linear-gradient(145deg,#d4c8b0,#a09078);}
-.c74{background:linear-gradient(145deg,#c0a8a0,#907870);}
-.c75{background:linear-gradient(145deg,#a0a090,#707060);}
-.c76{background:linear-gradient(145deg,#b0a898,#807868);}
-.c77{background:linear-gradient(145deg,#c8b8a8,#908070);}
-.c78{background:linear-gradient(145deg,#8a9080,#5a6a5a);}
-.c79{background:linear-gradient(145deg,#b0a090,#7a6a5a);}
+        .c0{background:linear-gradient(145deg,#c47a5a,#8a4a2a);}
+        .c1{background:linear-gradient(145deg,#d4886a,#a05a3a);}
+        .c2{background:linear-gradient(145deg,#b06a4a,#7a3a2a);}
+        .c3{background:linear-gradient(145deg,#8a4a3a,#5a2a1a);}
+        .c4{background:linear-gradient(145deg,#a05a4a,#6a2a1a);}
+        .c5{background:linear-gradient(145deg,#c06a50,#8a3a2a);}
+        .c6{background:linear-gradient(145deg,#d49a7a,#a06a4a);}
+        .c7{background:linear-gradient(145deg,#b08060,#8a5a40);}
+        .c8{background:linear-gradient(145deg,#7a3a2a,#4a1a0a);}
+        .c9{background:linear-gradient(145deg,#9a5a3a,#5a2a1a);}
+        .c10{background:linear-gradient(145deg,#5a9a7a,#2a6a4a);}
+        .c11{background:linear-gradient(145deg,#6aaa8a,#3a7a5a);}
+        .c12{background:linear-gradient(145deg,#4a8a6a,#1a5a3a);}
+        .c13{background:linear-gradient(145deg,#3a7a5a,#1a4a2a);}
+        .c14{background:linear-gradient(145deg,#5a8a6a,#2a5a3a);}
+        .c15{background:linear-gradient(145deg,#7aaa7a,#4a7a4a);}
+        .c16{background:linear-gradient(145deg,#4a6a4a,#2a4a2a);}
+        .c17{background:linear-gradient(145deg,#8aba8a,#5a8a5a);}
+        .c18{background:linear-gradient(145deg,#2a5a3a,#1a3a1a);}
+        .c19{background:linear-gradient(145deg,#6a9a7a,#3a6a4a);}
+        .c20{background:linear-gradient(145deg,#5a7aaa,#2a4a6a);}
+        .c21{background:linear-gradient(145deg,#6a8aba,#3a5a8a);}
+        .c22{background:linear-gradient(145deg,#4a6a8a,#1a3a5a);}
+        .c23{background:linear-gradient(145deg,#3a5a7a,#1a2a4a);}
+        .c24{background:linear-gradient(145deg,#5a7a9a,#2a4a6a);}
+        .c25{background:linear-gradient(145deg,#7a8aaa,#4a5a7a);}
+        .c26{background:linear-gradient(145deg,#4a5a7a,#2a3a5a);}
+        .c27{background:linear-gradient(145deg,#8a9aba,#5a6a8a);}
+        .c28{background:linear-gradient(145deg,#2a3a5a,#1a2a3a);}
+        .c29{background:linear-gradient(145deg,#6a7a9a,#3a4a6a);}
+        .c30{background:linear-gradient(145deg,#c4a84a,#8a7a2a);}
+        .c31{background:linear-gradient(145deg,#d4b85a,#9a8a3a);}
+        .c32{background:linear-gradient(145deg,#b0983a,#6a5a1a);}
+        .c33{background:linear-gradient(145deg,#aa8a3a,#5a4a1a);}
+        .c34{background:linear-gradient(145deg,#c4a86a,#8a7a3a);}
+        .c35{background:linear-gradient(145deg,#b09a4a,#6a5a2a);}
+        .c36{background:linear-gradient(145deg,#d4c06a,#9a8a3a);}
+        .c37{background:linear-gradient(145deg,#8a7a3a,#4a3a1a);}
+        .c38{background:linear-gradient(145deg,#b8a05a,#7a6a2a);}
+        .c39{background:linear-gradient(145deg,#c8b060,#8a7a3a);}
+        .c40{background:linear-gradient(145deg,#8a5a8a,#4a2a5a);}
+        .c41{background:linear-gradient(145deg,#9a6a9a,#5a3a6a);}
+        .c42{background:linear-gradient(145deg,#7a4a7a,#3a1a4a);}
+        .c43{background:linear-gradient(145deg,#6a3a6a,#2a1a3a);}
+        .c44{background:linear-gradient(145deg,#8a5a7a,#4a2a4a);}
+        .c45{background:linear-gradient(145deg,#aa7a9a,#5a3a5a);}
+        .c46{background:linear-gradient(145deg,#5a3a5a,#2a1a3a);}
+        .c47{background:linear-gradient(145deg,#7a5a7a,#3a2a4a);}
+        .c48{background:linear-gradient(145deg,#9a7a8a,#5a3a5a);}
+        .c49{background:linear-gradient(145deg,#6a4a6a,#3a2a3a);}
+        .c50{background:linear-gradient(145deg,#8a7a5a,#4a3a2a);}
+        .c51{background:linear-gradient(145deg,#9a8a6a,#5a4a3a);}
+        .c52{background:linear-gradient(145deg,#7a6a4a,#3a2a1a);}
+        .c53{background:linear-gradient(145deg,#b09a7a,#6a5a3a);}
+        .c54{background:linear-gradient(145deg,#c4b09a,#8a7a5a);}
+        .c55{background:linear-gradient(145deg,#a08870,#6a5a4a);}
+        .c56{background:linear-gradient(145deg,#8a7a6a,#4a3a2a);}
+        .c57{background:linear-gradient(145deg,#b09a8a,#7a6a5a);}
+        .c58{background:linear-gradient(145deg,#6a5a4a,#3a2a1a);}
+        .c59{background:linear-gradient(145deg,#c4b0a0,#8a7a6a);}
+        .c60{background:linear-gradient(145deg,#8a8a8a,#5a5a5a);}
+        .c61{background:linear-gradient(145deg,#9a9a9a,#6a6a6a);}
+        .c62{background:linear-gradient(145deg,#7a7a7a,#4a4a4a);}
+        .c63{background:linear-gradient(145deg,#aaa09a,#7a706a);}
+        .c64{background:linear-gradient(145deg,#8a807a,#5a504a);}
+        .c65{background:linear-gradient(145deg,#b0a8a0,#8a8078);}
+        .c66{background:linear-gradient(145deg,#6a6a6a,#3a3a3a);}
+        .c67{background:linear-gradient(145deg,#9a8a8a,#6a5a5a);}
+        .c68{background:linear-gradient(145deg,#8a9a8a,#5a6a5a);}
+        .c69{background:linear-gradient(145deg,#7a8a8a,#4a5a5a);}
+        .c70{background:linear-gradient(145deg,#c4a090,#8a6a5a);}
+        .c71{background:linear-gradient(145deg,#a0b0a0,#708070);}
+        .c72{background:linear-gradient(145deg,#9098a0,#607080);}
+        .c73{background:linear-gradient(145deg,#d4c8b0,#a09078);}
+        .c74{background:linear-gradient(145deg,#c0a8a0,#907870);}
+        .c75{background:linear-gradient(145deg,#a0a090,#707060);}
+        .c76{background:linear-gradient(145deg,#b0a898,#807868);}
+        .c77{background:linear-gradient(145deg,#c8b8a8,#908070);}
+        .c78{background:linear-gradient(145deg,#8a9080,#5a6a5a);}
+        .c79{background:linear-gradient(145deg,#b0a090,#7a6a5a);}
 
-/* ============================================================
-   БЛАГОРОДНЫЕ БАРХАТИСТЫЕ ЭФФЕКТЫ ДЛЯ КАЖДОГО УРОВНЯ (16)
-   ============================================================ */
+        /* ============================================================
+           БЛАГОРОДНЫЕ БАРХАТИСТЫЕ ЭФФЕКТЫ (16 базовых + новые дорамные)
+           ============================================================ */
 
-/* ЭФФЕКТ 1: БАРХАТНОЕ СВЕЧЕНИЕ */
-.level-effect-1 .c{animation:velvet 3s ease-in-out infinite alternate;border-color:rgba(255,240,230,0.08);}
-.level-effect-1 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 40% 30%,rgba(255,240,230,0.04),transparent 60%);pointer-events:none;z-index:1}
-@keyframes velvet{0%{box-shadow:0 0 20px rgba(200,180,160,0.03),inset 0 0 30px rgba(255,240,230,0.02)}100%{box-shadow:0 0 35px rgba(200,180,160,0.08),inset 0 0 40px rgba(255,240,230,0.05)}}
+        /* Базовые эффекты 1-16 */
+        .level-effect-1 .c{animation:velvet 3s ease-in-out infinite alternate;border-color:rgba(255,240,230,0.08);}
+        .level-effect-1 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 40% 30%,rgba(255,240,230,0.04),transparent 60%);pointer-events:none;z-index:1}
+        @keyframes velvet{0%{box-shadow:0 0 20px rgba(200,180,160,0.03),inset 0 0 30px rgba(255,240,230,0.02)}100%{box-shadow:0 0 35px rgba(200,180,160,0.08),inset 0 0 40px rgba(255,240,230,0.05)}}
 
-/* ЭФФЕКТ 2: НЕФРИТОВАЯ ГЛАДЬ */
-.level-effect-2 .c{border-color:rgba(180,220,200,0.1);}
-.level-effect-2 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:linear-gradient(135deg,rgba(200,255,230,0.04) 0%,transparent 50%,rgba(180,220,200,0.02) 100%);pointer-events:none;z-index:1}
+        .level-effect-2 .c{border-color:rgba(180,220,200,0.1);}
+        .level-effect-2 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:linear-gradient(135deg,rgba(200,255,230,0.04) 0%,transparent 50%,rgba(180,220,200,0.02) 100%);pointer-events:none;z-index:1}
 
-/* ЭФФЕКТ 3: КИНОВАРНАЯ ГЛУБИНА */
-.level-effect-3 .c{border-color:rgba(180,120,100,0.1);}
-.level-effect-3 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 60% 40%,rgba(200,160,140,0.03),transparent 50%),radial-gradient(circle at 30% 70%,rgba(180,120,100,0.02),transparent 40%);pointer-events:none;z-index:1}
+        .level-effect-3 .c{border-color:rgba(180,120,100,0.1);}
+        .level-effect-3 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 60% 40%,rgba(200,160,140,0.03),transparent 50%),radial-gradient(circle at 30% 70%,rgba(180,120,100,0.02),transparent 40%);pointer-events:none;z-index:1}
 
-/* ЭФФЕКТ 4: ИНДИГО-ДЫМКА */
-.level-effect-4 .c{border-color:rgba(160,180,220,0.1);}
-.level-effect-4 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 30% 50%,rgba(200,210,240,0.03),transparent 60%),radial-gradient(circle at 70% 50%,rgba(160,180,220,0.02),transparent 50%);animation:indigoMist 4s ease-in-out infinite;pointer-events:none;z-index:1}
-@keyframes indigoMist{0%,100%{opacity:0.3}50%{opacity:0.6}}
+        .level-effect-4 .c{border-color:rgba(160,180,220,0.1);}
+        .level-effect-4 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 30% 50%,rgba(200,210,240,0.03),transparent 60%),radial-gradient(circle at 70% 50%,rgba(160,180,220,0.02),transparent 50%);animation:indigoMist 4s ease-in-out infinite;pointer-events:none;z-index:1}
+        @keyframes indigoMist{0%,100%{opacity:0.3}50%{opacity:0.6}}
 
-/* ЭФФЕКТ 5: ЗОЛОТАЯ ПЫЛЬЦА */
-.level-effect-5 .c{border-color:rgba(200,180,120,0.12);}
-.level-effect-5 .c::after{content:'·';position:absolute;font-size:0.3rem;color:rgba(212,175,55,0.2);animation:goldDust 3s ease-in-out infinite;pointer-events:none;z-index:5}
-@keyframes goldDust{0%,100%{opacity:0;transform:translate(0,0) scale(0.5)}50%{opacity:0.5;transform:translate(4px,-6px) scale(1.8)}}
+        .level-effect-5 .c{border-color:rgba(200,180,120,0.12);}
+        .level-effect-5 .c::after{content:'·';position:absolute;font-size:0.3rem;color:rgba(212,175,55,0.2);animation:goldDust 3s ease-in-out infinite;pointer-events:none;z-index:5}
+        @keyframes goldDust{0%,100%{opacity:0;transform:translate(0,0) scale(0.5)}50%{opacity:0.5;transform:translate(4px,-6px) scale(1.8)}}
 
-/* ЭФФЕКТ 6: ЖЕМЧУЖНЫЙ СВЕТ */
-.level-effect-6 .c{border-color:rgba(255,240,230,0.06);}
-.level-effect-6 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 40% 60%,rgba(255,255,255,0.04),transparent 50%),radial-gradient(circle at 70% 20%,rgba(255,220,240,0.02),transparent 40%);animation:pearlGlow 4s ease-in-out infinite;pointer-events:none;z-index:1}
-@keyframes pearlGlow{0%,100%{opacity:0.2}50%{opacity:0.5}}
+        .level-effect-6 .c{border-color:rgba(255,240,230,0.06);}
+        .level-effect-6 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 40% 60%,rgba(255,255,255,0.04),transparent 50%),radial-gradient(circle at 70% 20%,rgba(255,220,240,0.02),transparent 40%);animation:pearlGlow 4s ease-in-out infinite;pointer-events:none;z-index:1}
+        @keyframes pearlGlow{0%,100%{opacity:0.2}50%{opacity:0.5}}
 
-/* ЭФФЕКТ 7: ШЁЛКОВАЯ ГЛАДЬ */
-.level-effect-7 .c{border-color:rgba(200,180,200,0.08);}
-.level-effect-7 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:linear-gradient(135deg,rgba(220,200,230,0.04) 0%,transparent 40%,rgba(200,180,200,0.02) 100%);background-size:200% 200%;animation:silkFlow 3s ease-in-out infinite;pointer-events:none;z-index:1}
-@keyframes silkFlow{0%{background-position:0% 0%;opacity:0.2}50%{background-position:100% 100%;opacity:0.5}100%{background-position:0% 0%;opacity:0.2}}
+        .level-effect-7 .c{border-color:rgba(200,180,200,0.08);}
+        .level-effect-7 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:linear-gradient(135deg,rgba(220,200,230,0.04) 0%,transparent 40%,rgba(200,180,200,0.02) 100%);background-size:200% 200%;animation:silkFlow 3s ease-in-out infinite;pointer-events:none;z-index:1}
+        @keyframes silkFlow{0%{background-position:0% 0%;opacity:0.2}50%{background-position:100% 100%;opacity:0.5}100%{background-position:0% 0%;opacity:0.2}}
 
-/* ЭФФЕКТ 8: МРАМОРНАЯ ХОЛОДНОСТЬ */
-.level-effect-8 .c{border-color:rgba(180,190,200,0.08);}
-.level-effect-8 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:repeating-linear-gradient(45deg,rgba(200,210,220,0.015) 0px,rgba(200,210,220,0.015) 2px,transparent 2px,transparent 8px);pointer-events:none;z-index:1}
+        .level-effect-8 .c{border-color:rgba(180,190,200,0.08);}
+        .level-effect-8 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:repeating-linear-gradient(45deg,rgba(200,210,220,0.015) 0px,rgba(200,210,220,0.015) 2px,transparent 2px,transparent 8px);pointer-events:none;z-index:1}
 
-/* ЭФФЕКТ 9: АГАТОВАЯ ПОЛОСА */
-.level-effect-9 .c{border-color:rgba(180,160,200,0.08);}
-.level-effect-9 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:repeating-linear-gradient(0deg,rgba(200,180,220,0.015) 0px,rgba(200,180,220,0.015) 3px,transparent 3px,transparent 12px);pointer-events:none;z-index:1}
+        .level-effect-9 .c{border-color:rgba(180,160,200,0.08);}
+        .level-effect-9 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:repeating-linear-gradient(0deg,rgba(200,180,220,0.015) 0px,rgba(200,180,220,0.015) 3px,transparent 3px,transparent 12px);pointer-events:none;z-index:1}
 
-/* ЭФФЕКТ 10: ПАТИНОВЫЙ НАЛЁТ */
-.level-effect-10 .c{border-color:rgba(160,180,170,0.08);}
-.level-effect-10 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 50% 80%,rgba(100,200,180,0.03),transparent 50%),radial-gradient(circle at 20% 20%,rgba(180,170,160,0.02),transparent 40%);pointer-events:none;z-index:1}
+        .level-effect-10 .c{border-color:rgba(160,180,170,0.08);}
+        .level-effect-10 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 50% 80%,rgba(100,200,180,0.03),transparent 50%),radial-gradient(circle at 20% 20%,rgba(180,170,160,0.02),transparent 40%);pointer-events:none;z-index:1}
 
-/* ЭФФЕКТ 11: МЯГКИЙ БАРХАТ */
-.level-effect-11 .c{border-color:rgba(220,200,190,0.06);}
-.level-effect-11 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 50% 50%,rgba(255,240,230,0.02),transparent 70%);animation:velvetSoft 4s ease-in-out infinite;pointer-events:none;z-index:1}
-@keyframes velvetSoft{0%,100%{opacity:0.1}50%{opacity:0.4}}
+        .level-effect-11 .c{border-color:rgba(220,200,190,0.06);}
+        .level-effect-11 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 50% 50%,rgba(255,240,230,0.02),transparent 70%);animation:velvetSoft 4s ease-in-out infinite;pointer-events:none;z-index:1}
+        @keyframes velvetSoft{0%,100%{opacity:0.1}50%{opacity:0.4}}
 
-/* ЭФФЕКТ 12: ХРУСТАЛЬНАЯ ГРАНЬ */
-.level-effect-12 .c{border-color:rgba(200,210,230,0.06);}
-.level-effect-12 .c::before{content:'';position:absolute;inset:-1px;border-radius:9px;background:linear-gradient(135deg,rgba(255,255,255,0.03) 0%,transparent 40%,rgba(200,220,255,0.02) 100%);pointer-events:none;z-index:1}
+        .level-effect-12 .c{border-color:rgba(200,210,230,0.06);}
+        .level-effect-12 .c::before{content:'';position:absolute;inset:-1px;border-radius:9px;background:linear-gradient(135deg,rgba(255,255,255,0.03) 0%,transparent 40%,rgba(200,220,255,0.02) 100%);pointer-events:none;z-index:1}
 
-/* ЭФФЕКТ 13: ДРЕВЕСНОЕ ТЕПЛО */
-.level-effect-13 .c{border-color:rgba(200,180,160,0.06);}
-.level-effect-13 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:repeating-linear-gradient(45deg,rgba(200,180,150,0.015) 0px,rgba(200,180,150,0.015) 1px,transparent 1px,transparent 5px);pointer-events:none;z-index:1}
+        .level-effect-13 .c{border-color:rgba(200,180,160,0.06);}
+        .level-effect-13 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:repeating-linear-gradient(45deg,rgba(200,180,150,0.015) 0px,rgba(200,180,150,0.015) 1px,transparent 1px,transparent 5px);pointer-events:none;z-index:1}
 
-/* ЭФФЕКТ 14: ТУМАННАЯ ДЫМКА */
-.level-effect-14 .c{border-color:rgba(200,200,210,0.06);}
-.level-effect-14 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 30% 70%,rgba(200,200,220,0.02),transparent 60%),radial-gradient(circle at 70% 30%,rgba(220,210,200,0.015),transparent 50%);animation:foggy 5s ease-in-out infinite;pointer-events:none;z-index:1}
-@keyframes foggy{0%,100%{opacity:0.1}50%{opacity:0.4}}
+        .level-effect-14 .c{border-color:rgba(200,200,210,0.06);}
+        .level-effect-14 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 30% 70%,rgba(200,200,220,0.02),transparent 60%),radial-gradient(circle at 70% 30%,rgba(220,210,200,0.015),transparent 50%);animation:foggy 5s ease-in-out infinite;pointer-events:none;z-index:1}
+        @keyframes foggy{0%,100%{opacity:0.1}50%{opacity:0.4}}
 
-/* ЭФФЕКТ 15: СЕРЕБРЯНЫЙ ИНЕЙ */
-.level-effect-15 .c{border-color:rgba(220,220,235,0.06);}
-.level-effect-15 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 60% 40%,rgba(255,255,255,0.03),transparent 50%),radial-gradient(circle at 30% 70%,rgba(200,220,255,0.02),transparent 40%);animation:snowDust 3s ease-in-out infinite;pointer-events:none;z-index:1}
-@keyframes snowDust{0%,100%{opacity:0.1}50%{opacity:0.4}}
+        .level-effect-15 .c{border-color:rgba(220,220,235,0.06);}
+        .level-effect-15 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 60% 40%,rgba(255,255,255,0.03),transparent 50%),radial-gradient(circle at 30% 70%,rgba(200,220,255,0.02),transparent 40%);animation:snowDust 3s ease-in-out infinite;pointer-events:none;z-index:1}
+        @keyframes snowDust{0%,100%{opacity:0.1}50%{opacity:0.4}}
 
-/* ЭФФЕКТ 16: ГЛУБИННОЕ СВЕЧЕНИЕ */
-.level-effect-16 .c{border-color:rgba(180,160,180,0.08);}
-.level-effect-16 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 50% 50%,rgba(200,180,220,0.02),transparent 60%);animation:deepCandle 4s ease-in-out infinite alternate;pointer-events:none;z-index:1}
-@keyframes deepCandle{0%{opacity:0.1;transform:scale(0.9)}100%{opacity:0.4;transform:scale(1.1)}}
+        .level-effect-16 .c{border-color:rgba(180,160,180,0.08);}
+        .level-effect-16 .c::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(circle at 50% 50%,rgba(200,180,220,0.02),transparent 60%);animation:deepCandle 4s ease-in-out infinite alternate;pointer-events:none;z-index:1}
+        @keyframes deepCandle{0%{opacity:0.1;transform:scale(0.9)}100%{opacity:0.4;transform:scale(1.1)}}
 
-/* ===== УСИЛЕНИЕ ЭФФЕКТОВ НА 2-М КРУГЕ ===== */
-.circle-2 .c{filter:brightness(1.02);}
-.circle-2 .c::before{opacity:1.4!important;}
-.circle-2 .c::after{opacity:1.4!important;}
+        /* ===== НОВЫЕ ДОРАМНЫЕ ЭФФЕКТЫ (добавлены поверх базовых) ===== */
 
-/* ===== УСИЛЕНИЕ ЭФФЕКТОВ НА 3-М КРУГЕ ===== */
-.circle-3 .c{filter:brightness(1.04);}
-.circle-3 .c::before{opacity:1.8!important;}
-.circle-3 .c::after{opacity:1.8!important;}
+        /* Шёлковая дымка — нежные переливы */
+        .level-effect-doram-silk .c::before {
+            content:'';position:absolute;inset:0;border-radius:8px;
+            background: repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 3px, rgba(255,240,230,0.01) 3px, rgba(255,240,230,0.01) 8px);
+            pointer-events:none;z-index:1;animation:silkShimmer 6s linear infinite;
+        }
+        @keyframes silkShimmer{0%{background-position:0 0}100%{background-position:40px 40px}}
 
-.c.sp-bomb{border:2px solid #d4af37;box-shadow:0 0 15px rgba(212,175,55,.4);}
-.c.sp-laser{border:2px solid #7fb5b0;box-shadow:0 0 15px rgba(127,181,176,.4);}
-.c.sp-star{border:2px solid #9b72aa;box-shadow:0 0 15px rgba(155,114,170,.4);}
-.c.sp-rainbow{background:conic-gradient(#8b3a3a,#2d5a5a,#3a4a6b,#8a6d3b,#5a3a5a)!important;border:2px solid #d4af37!important;}
+        /* Бархатное марево — глубокое свечение */
+        .level-effect-doram-velvet .c::before {
+            content:'';position:absolute;inset:0;border-radius:8px;
+            background: radial-gradient(circle at 30% 40%, rgba(255,220,210,0.05), rgba(200,180,190,0.02) 60%, transparent 80%);
+            pointer-events:none;z-index:1;animation:velvetBreath 5s ease-in-out infinite alternate;
+        }
+        @keyframes velvetBreath{0%{opacity:0.2;transform:scale(0.95)}100%{opacity:0.6;transform:scale(1.05)}}
 
-.c .hz{font-size:1.4rem;font-weight:900;color:#f0e6d2;text-shadow:0 2px 4px rgba(0,0,0,.6),0 0 10px rgba(212,175,55,.1);z-index:2;line-height:1;}
-.c .py{font-size:.45rem;color:rgba(240,230,210,.8);z-index:2;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.4);margin-top:1px;}
-.c .ru{
-    font-size:.45rem;
-    font-weight:700;
-    color:#f0e6d2;
-    background:rgba(0,0,0,.35);
-    padding:1px 4px;
-    border-radius:3px;
-    margin-top:1px;
-    z-index:3;
-    max-width:92%;
-    text-align:center;
-    word-wrap:break-word;
-    overflow-wrap:break-word;
-    white-space:normal;
-    line-height:1.1;
-    border:1px solid rgba(212,175,55,.1);
-}
-.c .emo{position:absolute;bottom:1px;left:2px;font-size:.45rem;opacity:.4;z-index:1;filter:sepia(0.3);}
-.c .badge{position:absolute;top:1px;right:2px;font-size:.6rem;z-index:4;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6));}
+        /* Жемчужное сияние — мягкий перламутр */
+        .level-effect-doram-pearl .c::before {
+            content:'';position:absolute;inset:0;border-radius:8px;
+            background: radial-gradient(circle at 60% 30%, rgba(255,255,255,0.06) 0%, transparent 40%), radial-gradient(circle at 20% 70%, rgba(255,220,240,0.03) 0%, transparent 50%);
+            pointer-events:none;z-index:1;animation:pearlShine 4s ease-in-out infinite alternate;
+        }
+        @keyframes pearlShine{0%{opacity:0.3}100%{opacity:0.7}}
 
-.c.sel{transform:scale(1.08);z-index:10;box-shadow:0 0 0 2px #d4af37,0 10px 25px rgba(0,0,0,.5);}
-.c.gone{animation:pop 0.3s forwards;}
-@keyframes pop{to{transform:scale(0);opacity:0;}}
-.c.drop{animation:drop 0.5s cubic-bezier(.175,.885,.32,1.275);}
-@keyframes drop{from{transform:translateY(-60px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-.c.best{animation:pulse 1.5s infinite;}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(212,175,55,.3);}70%{box-shadow:0 0 0 8px rgba(212,175,55,0);}100%{box-shadow:0 0 0 0 rgba(212,175,55,0);}}
-.c.shape-hl{animation:shapeFlash .6s ease-out forwards;border:2px solid #fff!important;}
-@keyframes shapeFlash{0%{box-shadow:0 0 0 0 rgba(255,255,255,0);transform:scale(1);}50%{box-shadow:0 0 40px 10px rgba(255,255,255,0.6);transform:scale(1.12);filter:brightness(1.5);}100%{box-shadow:0 0 0 0 rgba(255,255,255,0);transform:scale(1);}}
+        /* Туманная вуаль — мистическая дымка */
+        .level-effect-doram-mist .c::before {
+            content:'';position:absolute;inset:0;border-radius:8px;
+            background: radial-gradient(circle at 50% 60%, rgba(210,200,220,0.04), transparent 60%);
+            pointer-events:none;z-index:1;animation:mistFlow 7s ease-in-out infinite;
+        }
+        @keyframes mistFlow{0%,100%{opacity:0.1;transform:translate(0,0) scale(1)}50%{opacity:0.4;transform:translate(-5%,-5%) scale(1.1)}}
 
-.bar{z-index:10;width:100%;max-width:600px;display:flex;gap:4px;justify-content:center;padding:4px 8px;flex-wrap:wrap;}
-.btn{padding:6px 10px;border:none;border-radius:6px;font-weight:700;font-size:.6rem;cursor:pointer;color:#e8dcc5;background:rgba(20,20,25,.6);border:1px solid rgba(212,175,55,.2);display:flex;align-items:center;gap:3px;transition:.2s;backdrop-filter:blur(4px);}
-.btn:active{transform:scale(.95);}
-.btn.buy{border-color:rgba(212,175,55,.6);color:#d4af37;box-shadow:0 0 10px rgba(212,175,55,.1);}
-.btn small{font-size:.5rem;opacity:.7;}
-.btn.restart{background:rgba(212,175,55,.15);border-color:rgba(212,175,55,.4);color:#d4af37;}
+        /* Золотая пыльца — тёплое сияние */
+        .level-effect-doram-gold .c::before {
+            content:'';position:absolute;inset:0;border-radius:8px;
+            background: radial-gradient(circle at 40% 50%, rgba(212,175,55,0.05), transparent 60%);
+            pointer-events:none;z-index:1;animation:goldGlow 3s ease-in-out infinite alternate;
+        }
+        @keyframes goldGlow{0%{opacity:0.1}100%{opacity:0.4}}
 
-.overlay{position:fixed;inset:0;background:rgba(5,5,10,.95);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
-.overlay.show{display:flex;}
-.modal{background:linear-gradient(135deg,#1a1520,#0f0a15);border:1px solid rgba(212,175,55,.3);border-radius:16px;padding:30px;max-width:340px;width:90%;text-align:center;box-shadow:0 25px 50px rgba(0,0,0,.7);}
-.modal h2{color:#d4af37;margin-bottom:10px;font-size:1.4rem;letter-spacing:1px;}
-.modal p{font-size:.9rem;color:#a89f91;margin-bottom:20px;line-height:1.6;}
-.modal button{background:linear-gradient(135deg,#8b3a3a,#5a2020);border:1px solid rgba(212,175,55,.4);padding:12px 30px;border-radius:8px;font-weight:bold;color:#f0e6d2;cursor:pointer;font-size:1rem;letter-spacing:1px;transition:.2s;}
-.modal button:hover{box-shadow:0 0 15px rgba(139,58,58,.4);}
+        /* Атласный перелив — сатиновый блеск */
+        .level-effect-doram-satin .c::before {
+            content:'';position:absolute;inset:0;border-radius:8px;
+            background: linear-gradient(135deg, rgba(255,240,230,0.03) 0%, rgba(180,200,220,0.02) 30%, rgba(230,210,240,0.02) 60%, rgba(255,240,230,0.03) 100%);
+            background-size: 300% 300%;
+            pointer-events:none;z-index:1;animation:satinFlow 8s ease-in-out infinite;
+        }
+        @keyframes satinFlow{0%{background-position:0% 0%}50%{background-position:100% 100%}100%{background-position:0% 0%}}
 
-.fpts{position:absolute;pointer-events:none;z-index:50;font-weight:bold;color:#d4af37;text-shadow:0 2px 4px rgba(0,0,0,.6);animation:floatUp 1s forwards;}
-@keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1;}100%{transform:translateY(-40px) scale(1.2);opacity:0;}}
+        /* Кристальный иней — холодный блеск */
+        .level-effect-doram-crystal .c::before {
+            content:'';position:absolute;inset:0;border-radius:8px;
+            background: radial-gradient(circle at 70% 30%, rgba(200,230,255,0.04) 0%, transparent 50%), radial-gradient(circle at 30% 70%, rgba(180,200,230,0.02) 0%, transparent 50%);
+            pointer-events:none;z-index:1;animation:crystalShine 3s ease-in-out infinite alternate;
+        }
+        @keyframes crystalShine{0%{opacity:0.2}100%{opacity:0.5}}
 
-.particle{position:fixed;pointer-events:none;z-index:1000;font-size:1.5rem;will-change:transform,opacity;animation:fly 1.2s ease-out forwards;}
-@keyframes fly{0%{transform:translate(0,0) scale(0.5) rotate(0deg);opacity:1;}100%{transform:translate(var(--tx),var(--ty)) scale(1.5) rotate(var(--rot));opacity:0;}}
+        /* ===== УСИЛЕНИЕ ЭФФЕКТОВ НА КРУГАХ ===== */
+        .circle-2 .c{filter:brightness(1.02);}
+        .circle-2 .c::before{opacity:1.4!important;}
+        .circle-2 .c::after{opacity:1.4!important;}
 
-.shake{animation:shake 0.4s cubic-bezier(.36,.07,.19,.97) both;}
-@keyframes shake{10%,90%{transform:translate3d(-1px,0,0);}20%,80%{transform:translate3d(2px,0,0);}30%,50%,70%{transform:translate3d(-4px,0,0);}40%,60%{transform:translate3d(4px,0,0);}}
+        .circle-3 .c{filter:brightness(1.04);}
+        .circle-3 .c::before{opacity:1.8!important;}
+        .circle-3 .c::after{opacity:1.8!important;}
 
-.jade-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
-    gap: 12px;
-    margin-bottom: 25px;
-    justify-content: center;
-}
-.jade-card {
-    border: 2px solid rgba(212,175,55,.5);
-    border-radius: 12px;
-    padding: 15px 5px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transform: translateY(30px) scale(0.8);
-    animation: jadePop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05);
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.2s;
-    min-height: 110px;
-}
-.jade-card:active { transform: scale(0.95); }
-.jade-card::before {
-    content: '';
-    position: absolute;
-    top: -50%; left: -50%; width: 200%; height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-    pointer-events: none;
-}
-.jade-card .jade-char { 
-    font-size: 3.2rem;
-    font-weight: 900; 
-    color: #fff; 
-    text-shadow: 0 4px 8px rgba(0,0,0,0.6), 0 0 20px rgba(255,255,255,0.2); 
-    margin-bottom: 5px; 
-    z-index: 2;
-    line-height: 1;
-}
-.jade-card .jade-py { 
-    font-size: 1rem; 
-    color: rgba(255,255,255,0.9); 
-    font-weight: 700; 
-    margin-bottom: 4px; 
-    letter-spacing: 1px;
-    z-index: 2;
-}
-.jade-card .jade-ru { 
-    font-size: 0.85rem; 
-    color: #ffd700; 
-    font-weight: bold; 
-    text-transform: uppercase; 
-    letter-spacing: 0.5px; 
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-    z-index: 2;
-    text-align: center;
-    white-space: normal;
-    word-wrap: break-word;
-    line-height: 1.2;
-    max-width: 100%;
-}
-.jade-card .jade-emo { 
-    font-size: 1.5rem; 
-    position: absolute; 
-    bottom: 5px; 
-    right: 8px; 
-    opacity: 0.6; 
-    filter: grayscale(0.3);
-    z-index: 1;
-}
+        .circle-4 .c{filter:brightness(1.06);}
+        .circle-4 .c::before{opacity:2.2!important;}
+        .circle-4 .c::after{opacity:2.2!important;}
 
-@keyframes jadePop {
-    to { opacity: 1; transform: translateY(0) scale(1); }
-}
-</style>
+        .circle-5 .c{filter:brightness(1.08);}
+        .circle-5 .c::before{opacity:2.6!important;}
+        .circle-5 .c::after{opacity:2.6!important;}
+
+        .c.sp-bomb{border:2px solid #d4af37;box-shadow:0 0 15px rgba(212,175,55,.4);}
+        .c.sp-laser{border:2px solid #7fb5b0;box-shadow:0 0 15px rgba(127,181,176,.4);}
+        .c.sp-star{border:2px solid #9b72aa;box-shadow:0 0 15px rgba(155,114,170,.4);}
+        .c.sp-rainbow{background:conic-gradient(#8b3a3a,#2d5a5a,#3a4a6b,#8a6d3b,#5a3a5a)!important;border:2px solid #d4af37!important;}
+
+        .c .hz{font-size:1.4rem;font-weight:900;color:#f0e6d2;text-shadow:0 2px 4px rgba(0,0,0,.6),0 0 10px rgba(212,175,55,.1);z-index:2;line-height:1;}
+        .c .py{font-size:.45rem;color:rgba(240,230,210,.8);z-index:2;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.4);margin-top:1px;}
+        .c .ru{
+            font-size:.45rem;
+            font-weight:700;
+            color:#f0e6d2;
+            background:rgba(0,0,0,.35);
+            padding:1px 4px;
+            border-radius:3px;
+            margin-top:1px;
+            z-index:3;
+            max-width:92%;
+            text-align:center;
+            word-wrap:break-word;
+            overflow-wrap:break-word;
+            white-space:normal;
+            line-height:1.1;
+            border:1px solid rgba(212,175,55,.1);
+        }
+        .c .emo{position:absolute;bottom:1px;left:2px;font-size:.45rem;opacity:.4;z-index:1;filter:sepia(0.3);}
+        .c .badge{position:absolute;top:1px;right:2px;font-size:.6rem;z-index:4;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6));}
+
+        .c.sel{transform:scale(1.08);z-index:10;box-shadow:0 0 0 2px #d4af37,0 10px 25px rgba(0,0,0,.5);}
+        .c.gone{animation:pop 0.3s forwards;}
+        @keyframes pop{to{transform:scale(0);opacity:0;}}
+        .c.drop{animation:drop 0.5s cubic-bezier(.175,.885,.32,1.275);}
+        @keyframes drop{from{transform:translateY(-60px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+        .c.best{animation:pulse 1.5s infinite;}
+        @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(212,175,55,.3);}70%{box-shadow:0 0 0 8px rgba(212,175,55,0);}100%{box-shadow:0 0 0 0 rgba(212,175,55,0);}}
+        .c.shape-hl{animation:shapeFlash .6s ease-out forwards;border:2px solid #fff!important;}
+        @keyframes shapeFlash{0%{box-shadow:0 0 0 0 rgba(255,255,255,0);transform:scale(1);}50%{box-shadow:0 0 40px 10px rgba(255,255,255,0.6);transform:scale(1.12);filter:brightness(1.5);}100%{box-shadow:0 0 0 0 rgba(255,255,255,0);transform:scale(1);}}
+
+        .bar{z-index:10;width:100%;max-width:600px;display:flex;gap:4px;justify-content:center;padding:4px 8px;flex-wrap:wrap;}
+        .btn{padding:6px 10px;border:none;border-radius:6px;font-weight:700;font-size:.6rem;cursor:pointer;color:#e8dcc5;background:rgba(20,20,25,.6);border:1px solid rgba(212,175,55,.2);display:flex;align-items:center;gap:3px;transition:.2s;backdrop-filter:blur(4px);}
+        .btn:active{transform:scale(.95);}
+        .btn.buy{border-color:rgba(212,175,55,.6);color:#d4af37;box-shadow:0 0 10px rgba(212,175,55,.1);}
+        .btn small{font-size:.5rem;opacity:.7;}
+        .btn.restart{background:rgba(212,175,55,.15);border-color:rgba(212,175,55,.4);color:#d4af37;}
+
+        .overlay{position:fixed;inset:0;background:rgba(5,5,10,.95);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+        .overlay.show{display:flex;}
+        .modal{background:linear-gradient(135deg,#1a1520,#0f0a15);border:1px solid rgba(212,175,55,.3);border-radius:16px;padding:30px;max-width:340px;width:90%;text-align:center;box-shadow:0 25px 50px rgba(0,0,0,.7);}
+        .modal h2{color:#d4af37;margin-bottom:10px;font-size:1.4rem;letter-spacing:1px;}
+        .modal p{font-size:.9rem;color:#a89f91;margin-bottom:20px;line-height:1.6;}
+        .modal button{background:linear-gradient(135deg,#8b3a3a,#5a2020);border:1px solid rgba(212,175,55,.4);padding:12px 30px;border-radius:8px;font-weight:bold;color:#f0e6d2;cursor:pointer;font-size:1rem;letter-spacing:1px;transition:.2s;}
+        .modal button:hover{box-shadow:0 0 15px rgba(139,58,58,.4);}
+
+        .fpts{position:absolute;pointer-events:none;z-index:50;font-weight:bold;color:#d4af37;text-shadow:0 2px 4px rgba(0,0,0,.6);animation:floatUp 1s forwards;}
+        @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1;}100%{transform:translateY(-40px) scale(1.2);opacity:0;}}
+
+        .particle{position:fixed;pointer-events:none;z-index:1000;font-size:1.5rem;will-change:transform,opacity;animation:fly 1.2s ease-out forwards;}
+        @keyframes fly{0%{transform:translate(0,0) scale(0.5) rotate(0deg);opacity:1;}100%{transform:translate(var(--tx),var(--ty)) scale(1.5) rotate(var(--rot));opacity:0;}}
+
+        .shake{animation:shake 0.4s cubic-bezier(.36,.07,.19,.97) both;}
+        @keyframes shake{10%,90%{transform:translate3d(-1px,0,0);}20%,80%{transform:translate3d(2px,0,0);}30%,50%,70%{transform:translate3d(-4px,0,0);}40%,60%{transform:translate3d(4px,0,0);}}
+
+        .jade-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
+            gap: 12px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        .jade-card {
+            border: 2px solid rgba(212,175,55,.5);
+            border-radius: 12px;
+            padding: 15px 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(30px) scale(0.8);
+            animation: jadePop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+            min-height: 110px;
+        }
+        .jade-card:active { transform: scale(0.95); }
+        .jade-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .jade-card .jade-char { 
+            font-size: 3.2rem;
+            font-weight: 900; 
+            color: #fff; 
+            text-shadow: 0 4px 8px rgba(0,0,0,0.6), 0 0 20px rgba(255,255,255,0.2); 
+            margin-bottom: 5px; 
+            z-index: 2;
+            line-height: 1;
+        }
+        .jade-card .jade-py { 
+            font-size: 1rem; 
+            color: rgba(255,255,255,0.9); 
+            font-weight: 700; 
+            margin-bottom: 4px; 
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+        .jade-card .jade-ru { 
+            font-size: 0.85rem; 
+            color: #ffd700; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            z-index: 2;
+            text-align: center;
+            white-space: normal;
+            word-wrap: break-word;
+            line-height: 1.2;
+            max-width: 100%;
+        }
+        .jade-card .jade-emo { 
+            font-size: 1.5rem; 
+            position: absolute; 
+            bottom: 5px; 
+            right: 8px; 
+            opacity: 0.6; 
+            filter: grayscale(0.3);
+            z-index: 1;
+        }
+
+        @keyframes jadePop {
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+    </style>
 </head>
 <body>
 
@@ -567,6 +618,11 @@ var EFFECT_NAMES = [
     "Глубинное свечение"
 ];
 
+var DORAM_EFFECTS = [
+    'doram-silk', 'doram-velvet', 'doram-pearl', 'doram-mist', 
+    'doram-gold', 'doram-satin', 'doram-crystal'
+];
+
 var CHAR_COLOR_MAP = {};
 
 function getColorForChar(char, level) {
@@ -584,7 +640,7 @@ function getColorForChar(char, level) {
 // ============================================================
 //  СОСТОЯНИЕ ИГРЫ
 // ============================================================
-var RANKS = ["Новичок","Ученик","Мастер","Эксперт","Гуру","Магистр","Мудрец","Император"];
+var RANKS = ["Новичок","Ученик","Мастер","Эксперт","Гуру","Магистр","Мудрец","Император","Легенда","Бессмертный"];
 var NC = 6, NR = 8, TOT = NC * NR;
 
 var state = {
@@ -592,7 +648,7 @@ var state = {
     coins: 100, crystals: 5, 
     shufFree: 3, hintFree: 3,
     busy: false, sel: -1, combo: 0,
-    circle: 1
+    circle: 1, totalLevelsCompleted: 0
 };
 
 var PRICE_HINT = 50, PRICE_SHUF = 80, PRICE_BOMB = 5;
@@ -779,19 +835,23 @@ function startLevel() {
     
     var groupIdx = (state.level - 1) % COLOR_GROUPS.length;
     var groupName = GROUP_NAMES[groupIdx] || "Дорамные оттенки";
-    var effectName = EFFECT_NAMES[groupIdx] || "Сияние";
+    var effectName = EFFECT_NAMES[groupIdx % EFFECT_NAMES.length] || "Сияние";
+    var doramEffect = DORAM_EFFECTS[groupIdx % DORAM_EFFECTS.length];
     
     var hue = (groupIdx * 45) % 360;
     document.getElementById('bg').style.background = 'radial-gradient(circle at center, hsl('+hue+',25%,8%) 0%, hsl('+hue+',15%,4%) 100%)';
     
     var circleText = state.circle > 1 ? ' (Круг ' + state.circle + ')' : '';
-    document.getElementById('uTheme').innerHTML = "Уровень " + state.level + " — <span style='color:#d4af37'>" + groupName + "</span> <span style='font-size:0.6rem;opacity:0.7'>✦ " + effectName + "</span>" + circleText;
+    var levelText = state.level > 999 ? '∞ ' + (state.level % 100) : state.level;
+    document.getElementById('uTheme').innerHTML = "Уровень " + levelText + " — <span style='color:#d4af37'>" + groupName + "</span> <span style='font-size:0.6rem;opacity:0.7'>✦ " + effectName + "</span>" + circleText;
     document.getElementById('uCircle').innerText = state.circle;
     
     var boardEl = document.getElementById('board');
-    boardEl.className = 'level-effect-' + ((groupIdx % 16) + 1);
+    boardEl.className = 'level-effect-' + ((groupIdx % 16) + 1) + ' ' + doramEffect;
     if (state.circle === 2) boardEl.classList.add('circle-2');
-    else if (state.circle >= 3) boardEl.classList.add('circle-3');
+    else if (state.circle === 3) boardEl.classList.add('circle-3');
+    else if (state.circle === 4) boardEl.classList.add('circle-4');
+    else if (state.circle >= 5) boardEl.classList.add('circle-5');
     
     for(var i=0; i<TOT; i++) {
         var att = 0;
@@ -1116,6 +1176,7 @@ var G = {
             state.hintFree = 3;
             state.score = 0;
             state.circle = 1;
+            state.totalLevelsCompleted = 0;
             CHAR_COLOR_MAP = {};
             localStorage.removeItem('hanzi_save');
             startLevel();
@@ -1131,12 +1192,13 @@ var G = {
         document.getElementById('levelCompleteOverlay').classList.remove('show');
         window.speechSynthesis.cancel();
         
+        state.totalLevelsCompleted++;
         state.level++;
         state.shufFree = Math.min(state.shufFree+1, 5);
         state.hintFree = Math.min(state.hintFree+1, 5);
-        state.crystals += 2;
+        state.crystals += 2 + Math.floor(state.totalLevelsCompleted / 10);
         saveProgress();
-        showToast("🎉 Уровень пройден! +2 💎");
+        showToast("🎉 Уровень пройден! +" + (2 + Math.floor(state.totalLevelsCompleted / 10)) + " 💎");
         setTimeout(startLevel, 500);
     }
 };
@@ -1281,15 +1343,19 @@ function render() {
 
 function updateUI() {
     document.getElementById('uSc').innerText = state.score;
-    document.getElementById('uLv').innerText = state.level;
+    document.getElementById('uLv').innerText = state.level > 999 ? '∞' + (state.level % 100) : state.level;
     document.getElementById('uCoin').innerText = state.coins;
     document.getElementById('uCry').innerText = state.crystals;
     document.getElementById('uGl').innerText = state.goal;
     document.getElementById('pFill').style.width = Math.min(100, state.score/state.goal*100) + '%';
     document.getElementById('uCircle').innerText = state.circle;
     
-    var rIdx = Math.min(RANKS.length-1, Math.floor((state.level-1)/5));
-    document.getElementById('uRank').innerText = RANKS[rIdx];
+    var totalLevels = LEVELS.length;
+    var rankIndex = Math.min(RANKS.length-1, Math.floor((state.level - 1) / 5));
+    if (state.circle > 1) {
+        rankIndex = Math.min(RANKS.length-1, rankIndex + Math.floor(state.circle / 2));
+    }
+    document.getElementById('uRank').innerText = RANKS[rankIndex];
     
     var bSh = document.getElementById('bSh');
     var bHi = document.getElementById('bHi');
@@ -1332,7 +1398,8 @@ function saveProgress() {
         coins: state.coins, 
         cry: state.crystals, 
         sf: state.shufFree, 
-        hf: state.hintFree
+        hf: state.hintFree,
+        completed: state.totalLevelsCompleted
     }));
 }
 
@@ -1346,6 +1413,7 @@ function loadProgress() {
             state.crystals = d.cry || 0;
             state.shufFree = d.sf || 3;
             state.hintFree = d.hf || 3;
+            state.totalLevelsCompleted = d.completed || 0;
         } catch(e) {}
     }
 }
@@ -1354,8 +1422,9 @@ init();
 
 console.log('✅ Hanzi: Нефрит и Золото загружена!');
 console.log('🎨 16 групп по 5 РАЗНЫХ гармоничных цветов');
-console.log('✦ 16 уникальных благородных эффектов');
-console.log('🔄 На каждом круге эффекты усиливаются');
+console.log('✦ 16 уникальных благородных эффектов + дорамные текстуры');
+console.log('🔄 Бесконечные уровни с прогрессией кругов');
+console.log('🏆 Ранги до "Бессмертный"');
 console.log('📐 Сложные формы: L, T, Квадрат 2×2, 5+ в ряд, 6+ в ряд');
 </script>
 </body>
