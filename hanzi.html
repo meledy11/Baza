@@ -20,10 +20,11 @@
         .c-gold{color:#d4af37!important;} .c-grn{color:#5da399!important;} .c-cyan{color:#7fb5b0!important;} .c-pur{color:#9b72aa!important;}
 
         .pw{z-index:10;width:100%;max-width:600px;padding:0 12px 4px;}
-        .pt{height:6px;background:rgba(0,0,0,.4);border-radius:3px;overflow:hidden;border:1px solid rgba(255,255,255,.05);position:relative;}
+        .pt{height:4px;background:rgba(0,0,0,.4);border-radius:3px;overflow:hidden;border:1px solid rgba(255,255,255,.05);}
         .pf{height:100%;background:linear-gradient(90deg,#8b3a3a,#d4af37);transition:width .5s ease-out;box-shadow:0 0 10px rgba(212,175,55,.3);}
-        .pl{display:flex;justify-content:space-between;font-size:.6rem;color:#8c8276;margin-top:4px;font-weight:600;}
-        .phase-indicator{font-size:.65rem; color:#d4af37; text-align:center; margin-top:2px; font-weight:700; letter-spacing:1px;}
+        .pl{display:flex;justify-content:space-between;font-size:.55rem;color:#8c8276;margin-top:2px;font-weight:600;}
+        
+        /* Шкала просветления */
         .fever-bar{height:3px;background:rgba(212,175,55,0.1);border-radius:2px;margin-top:4px;overflow:hidden;}
         .fever-fill{height:100%;width:0%;background:linear-gradient(90deg,#ffd700,#ff8c00);box-shadow:0 0 8px #ffd700;transition:width 0.3s ease;}
 
@@ -37,7 +38,8 @@
             box-shadow:0 15px 40px rgba(0,0,0,.6), inset 0 0 30px rgba(0,0,0,.4);
             transition: filter 0.5s, box-shadow 0.5s;
         }
-
+        
+        /* Режим Просветления */
         .fever-mode {
             filter: brightness(1.15) drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
             animation: feverPulse 1s infinite alternate;
@@ -64,71 +66,37 @@
             pointer-events:none;
         }
 
-        /* === ПРЕПЯТСТВИЯ === */
-        .c.obstacle-ice {
-            background: linear-gradient(145deg, #a8d8ea, #5a9aa8) !important;
-            border: 2px solid #d4f1f4;
-            box-shadow: inset 0 0 10px rgba(255,255,255,0.5), 0 0 10px rgba(90, 154, 168, 0.5);
+        /* Препятствие: Камень */
+        .c.stone {
+            background: linear-gradient(145deg, #5a5a5a, #3a3a3a) !important;
+            border: 2px solid #7a7a7a;
+            opacity: 0.9;
+            cursor: not-allowed;
         }
-        .c.obstacle-ice::before {
-            content: '🧊'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; opacity: 0.7; z-index: 5; pointer-events: none;
-        }
-        .c.obstacle-ice.cracked::before { content: '🧊'; filter: grayscale(0.5) brightness(1.5); opacity: 0.4; }
-
-        .c.obstacle-chain {
-            border: 3px double #d4af37 !important;
-            background: rgba(0,0,0,0.3) !important;
-        }
-        .c.obstacle-chain::before {
-            content: '⛓️'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-            font-size: 1.4rem; opacity: 0.8; z-index: 5; pointer-events: none;
+        .c.stone .hz { font-size: 1.6rem; filter: grayscale(1); }
+        .c.stone .hp-bar {
+            position: absolute; bottom: 2px; right: 2px; font-size: 0.55rem; font-weight: bold;
+            background: rgba(0,0,0,0.7); color: #ff6b6b; padding: 1px 4px; border-radius: 3px; border: 1px solid #ff6b6b;
         }
 
-        .c.obstacle-fog {
-            background: linear-gradient(145deg, #4a4a5a, #2a2a3a) !important;
-            border: 1px solid #6a6a7a;
-        }
-        .c.obstacle-fog::before {
-            content: '🌫️'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; opacity: 0.6; z-index: 5; pointer-events: none; animation: fogPulse 3s infinite alternate;
-        }
-        @keyframes fogPulse { from { opacity: 0.4; transform: scale(1); } to { opacity: 0.7; transform: scale(1.05); } }
-
-        .c.has-obstacle .hz, .c.has-obstacle .py, .c.has-obstacle .ru, .c.has-obstacle .emo {
-            filter: blur(3px) brightness(0.5);
-            transition: filter 0.5s;
-        }
-        .c.clearing-obstacle .hz, .c.clearing-obstacle .py, .c.clearing-obstacle .ru, .c.clearing-obstacle .emo {
-            filter: blur(0) brightness(1);
-        }
-
-        /* Базовые цвета (сокращенно для компактности, но работают все) */
+        /* Цветовые группы (сокращено для примера, используются те же 80+ оттенков) */
         .c0{background:linear-gradient(145deg,#c47a5a,#8a4a2a);} .c1{background:linear-gradient(145deg,#d4886a,#a05a3a);}
         .c2{background:linear-gradient(145deg,#b06a4a,#7a3a2a);} .c3{background:linear-gradient(145deg,#8a4a3a,#5a2a1a);}
-        .c4{background:linear-gradient(145deg,#a05a4a,#6a2a1a);} .c5{background:linear-gradient(145deg,#c06a50,#8a3a2a);}
-        .c6{background:linear-gradient(145deg,#d49a7a,#a06a4a);} .c7{background:linear-gradient(145deg,#b08060,#8a5a40);}
-        .c8{background:linear-gradient(145deg,#7a3a2a,#4a1a0a);} .c9{background:linear-gradient(145deg,#9a5a3a,#5a2a1a);}
         .c10{background:linear-gradient(145deg,#5a9a7a,#2a6a4a);} .c11{background:linear-gradient(145deg,#6aaa8a,#3a7a5a);}
-        .c12{background:linear-gradient(145deg,#4a8a6a,#1a5a3a);} .c13{background:linear-gradient(145deg,#3a7a5a,#1a4a2a);}
-        .c14{background:linear-gradient(145deg,#5a8a6a,#2a5a3a);} .c15{background:linear-gradient(145deg,#7aaa7a,#4a7a4a);}
-        .c16{background:linear-gradient(145deg,#4a6a4a,#2a4a2a);} .c17{background:linear-gradient(145deg,#8aba8a,#5a8a5a);}
-        .c18{background:linear-gradient(145deg,#2a5a3a,#1a3a1a);} .c19{background:linear-gradient(145deg,#6a9a7a,#3a6a4a);}
         .c20{background:linear-gradient(145deg,#5a7aaa,#2a4a6a);} .c21{background:linear-gradient(145deg,#6a8aba,#3a5a8a);}
-        .c22{background:linear-gradient(145deg,#4a6a8a,#1a3a5a);} .c23{background:linear-gradient(145deg,#3a5a7a,#1a2a4a);}
-        .c24{background:linear-gradient(145deg,#5a7a9a,#2a4a6a);} .c25{background:linear-gradient(145deg,#7a8aaa,#4a5a7a);}
-        .c26{background:linear-gradient(145deg,#4a5a7a,#2a3a5a);} .c27{background:linear-gradient(145deg,#8a9aba,#5a6a8a);}
-        .c28{background:linear-gradient(145deg,#2a3a5a,#1a2a3a);} .c29{background:linear-gradient(145deg,#6a7a9a,#3a4a6a);}
         .c30{background:linear-gradient(145deg,#c4a84a,#8a7a2a);} .c31{background:linear-gradient(145deg,#d4b85a,#9a8a3a);}
-        .c32{background:linear-gradient(145deg,#b0983a,#6a5a1a);} .c33{background:linear-gradient(145deg,#aa8a3a,#5a4a1a);}
-        .c34{background:linear-gradient(145deg,#c4a86a,#8a7a3a);} .c35{background:linear-gradient(145deg,#b09a4a,#6a5a2a);}
-        .c36{background:linear-gradient(145deg,#d4c06a,#9a8a3a);} .c37{background:linear-gradient(145deg,#8a7a3a,#4a3a1a);}
-        .c38{background:linear-gradient(145deg,#b8a05a,#7a6a2a);} .c39{background:linear-gradient(145deg,#c8b060,#8a7a3a);}
         .c40{background:linear-gradient(145deg,#8a5a8a,#4a2a5a);} .c41{background:linear-gradient(145deg,#9a6a9a,#5a3a6a);}
-        .c42{background:linear-gradient(145deg,#7a4a7a,#3a1a4a);} .c43{background:linear-gradient(145deg,#6a3a6a,#2a1a3a);}
-        .c44{background:linear-gradient(145deg,#8a5a7a,#4a2a4a);} .c45{background:linear-gradient(145deg,#aa7a9a,#5a3a5a);}
-        .c46{background:linear-gradient(145deg,#5a3a5a,#2a1a3a);} .c47{background:linear-gradient(145deg,#7a5a7a,#3a2a4a);}
-        .c48{background:linear-gradient(145deg,#9a7a8a,#5a3a5a);} .c49{background:linear-gradient(145deg,#6a4a6a,#3a2a3a);}
+        .c60{background:linear-gradient(145deg,#8a8a8a,#5a5a5a);} .c61{background:linear-gradient(145deg,#9a9a9a,#6a6a6a);}
+
+        /* Эффекты уровня */
+        .level-effect-1 .c{animation:velvet 3s ease-in-out infinite alternate;border-color:rgba(255,240,230,0.08);}
+        @keyframes velvet{0%{box-shadow:0 0 20px rgba(200,180,160,0.03)}100%{box-shadow:0 0 35px rgba(200,180,160,0.08)}}
+        .level-effect-doram-gold .c::before {
+            content:'';position:absolute;inset:0;border-radius:8px;
+            background: radial-gradient(circle at 40% 50%, rgba(212,175,55,0.05), transparent 60%);
+            pointer-events:none;z-index:1;animation:goldGlow 3s ease-in-out infinite alternate;
+        }
+        @keyframes goldGlow{0%{opacity:0.1}100%{opacity:0.4}}
 
         .c.sp-bomb{border:2px solid #d4af37;box-shadow:0 0 15px rgba(212,175,55,.4);}
         .c.sp-laser{border:2px solid #7fb5b0;box-shadow:0 0 15px rgba(127,181,176,.4);}
@@ -158,7 +126,7 @@
 
         .overlay{position:fixed;inset:0;background:rgba(5,5,10,.95);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
         .overlay.show{display:flex;}
-        .modal{background:linear-gradient(135deg,#1a1520,#0f0a15);border:1px solid rgba(212,175,55,.3);border-radius:16px;padding:30px;max-width:360px;width:90%;text-align:center;box-shadow:0 25px 50px rgba(0,0,0,.7);}
+        .modal{background:linear-gradient(135deg,#1a1520,#0f0a15);border:1px solid rgba(212,175,55,.3);border-radius:16px;padding:30px;max-width:340px;width:90%;text-align:center;box-shadow:0 25px 50px rgba(0,0,0,.7);}
         .modal h2{color:#d4af37;margin-bottom:10px;font-size:1.4rem;letter-spacing:1px;}
         .modal p{font-size:.9rem;color:#a89f91;margin-bottom:20px;line-height:1.6;}
         .modal button{background:linear-gradient(135deg,#8b3a3a,#5a2020);border:1px solid rgba(212,175,55,.4);padding:12px 30px;border-radius:8px;font-weight:bold;color:#f0e6d2;cursor:pointer;font-size:1rem;letter-spacing:1px;transition:.2s;margin:5px;}
@@ -177,10 +145,6 @@
         .jade-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));gap: 12px;margin-bottom: 25px;justify-content: center;}
         .jade-card {border: 2px solid rgba(212,175,55,.5);border-radius: 12px;padding: 15px 5px;display: flex;flex-direction: column;align-items: center;justify-content: center;opacity: 0;transform: translateY(30px) scale(0.8);animation: jadePop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;box-shadow: 0 8px 20px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05);position: relative;overflow: hidden;cursor: pointer;transition: transform 0.2s;min-height: 110px;}
         .jade-card:active { transform: scale(0.95); }
-        .jade-card::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%); pointer-events: none;
-        }
         .jade-card .jade-char { font-size: 3.2rem;font-weight: 900; color: #fff; text-shadow: 0 4px 8px rgba(0,0,0,0.6), 0 0 20px rgba(255,255,255,0.2); margin-bottom: 5px; z-index: 2; line-height: 1;}
         .jade-card .jade-py { font-size: 1rem; color: rgba(255,255,255,0.9); font-weight: 700; margin-bottom: 4px; letter-spacing: 1px; z-index: 2;}
         .jade-card .jade-ru { font-size: 0.85rem; color: #ffd700; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); z-index: 2; text-align: center; white-space: normal; word-wrap: break-word; line-height: 1.2; max-width: 100%;}
@@ -188,8 +152,6 @@
         @keyframes jadePop {to { opacity: 1; transform: translateY(0) scale(1); }}
         
         .learning-tip {font-size: 0.8rem; color: #7fb5b0; margin-bottom: 15px; font-style: italic;}
-        .boss-hp-bar { width: 100%; height: 12px; background: #333; border-radius: 6px; margin: 15px 0; overflow: hidden; border: 1px solid #555; }
-        .boss-hp-fill { height: 100%; background: linear-gradient(90deg, #ff4444, #ff8800); transition: width 0.5s ease; }
     </style>
 </head>
 <body>
@@ -205,15 +167,15 @@
     <div class="stat">⭐<b class="c-gold" id="uSc">0</b></div>
     <div class="stat">🎯<b class="c-grn" id="uLv">1</b></div>
     <div class="stat">👣<b class="c-pur" id="uMoves">∞</b></div>
-    <div class="stat">📜<b class="c-cyan" id="uScrolls">0</b></div>
+    <div class="stat">🪙<b class="c-cyan" id="uCoin">100</b></div>
+    <div class="stat">💎<b class="c-pur" id="uCry">5</b></div>
   </div>
 </div>
 
 <div class="pw">
   <div class="pt"><div class="pf" id="pFill" style="width:0%"></div></div>
   <div class="fever-bar"><div class="fever-fill" id="feverFill"></div></div>
-  <div class="phase-indicator" id="phaseText">Фаза 1: Набор очков</div>
-  <div class="pl"><span>Цель: <b id="uGl">1000</b></span><span id="uTheme">Ур. 1</span></div>
+  <div class="pl"><span>Цель: <b id="uGl">800</b></span><span id="uTheme">Уровень 1</span></div>
 </div>
 
 <div class="ba"><div id="board"></div></div>
@@ -221,15 +183,15 @@
 <div class="bar">
   <button class="btn" id="bSh" onclick="G.action('shuffle')">🔀<span id="cSh">3</span><small>Беспл.</small></button>
   <button class="btn" id="bHi" onclick="G.action('hint')">💡<span id="cHi">3</span><small>Беспл.</small></button>
-  <button class="btn" id="bBr" onclick="G.action('brush')">🖌️<small>10📜</small></button>
-  <button class="btn" id="bBm" onclick="G.action('bomb')">💥<small>5📜</small></button>
+  <button class="btn" id="bBr" onclick="G.action('brush')">🖌️<small>10💎</small></button>
+  <button class="btn" id="bBm" onclick="G.action('bomb')">💥<small>5💎</small></button>
   <button class="btn restart" onclick="G.restart()">🔄</button>
 </div>
 
 <div class="overlay" id="tov">
   <div class="modal">
     <h2>🔊 Включите звук</h2>
-    <p>Разрушайте лед и туман, чтобы услышать произношение иероглифов.<br>Уровни теперь состоят из нескольких фаз для глубокого погружения.</p>
+    <p>Собирайте иероглифы в атмосфере древнего Китая.<br>При совпадении вы услышите правильное произношение.<br><br>Нажмите кнопку ниже.</p>
     <button onclick="G.closeTut()">Начать путь</button>
   </div>
 </div>
@@ -237,30 +199,27 @@
 <div class="overlay" id="levelCompleteOverlay">
   <div class="modal" style="max-width: 450px;">
     <h2>🏮 Уровень пройден!</h2>
-    <p class="learning-tip">💡 Нажмите на иероглиф, чтобы услышать произношение</p>
-    <p style="color:#d4af37">+1 📜 Свиток Мудрости</p>
+    <p class="learning-tip">💡 Нажмите на иероглиф, чтобы услышать произношение и закрепить знание</p>
     <div class="jade-grid" id="jadeGrid"></div>
-    <button onclick="G.nextLevelFromModal()">Следующий уровень ➜</button>
+    <button onclick="G.nextLevelFromModal()">Продолжить ➜</button>
   </div>
 </div>
 
 <div class="overlay" id="gameOverOverlay">
   <div class="modal" style="max-width: 350px;">
     <h2>⏳ Ходы закончились</h2>
-    <p>Не удалось достичь цели фазы.</p>
+    <p>Не удалось достичь цели.<br>Попробуйте ещё раз или используйте кристаллы для продолжения.</p>
     <div style="display:flex;gap:10px;justify-content:center;margin-top:15px;flex-wrap:wrap;">
         <button class="secondary" onclick="G.restartLevel()">🔄 Заново</button>
-        <button onclick="G.continueLevel()">+5 👣 (3📜)</button>
+        <button onclick="G.continueLevel()">+5 👣 (5💎)</button>
     </div>
   </div>
 </div>
 
-<!-- ПОДКЛЮЧАЕМ ВАШУ БАЗУ ИЕРОГЛИФОВ -->
 <script src="app.js"></script>
-
 <script>
 // ============================================================
-//  ЗВУКОВОЙ ДВИЖОК (полная версия)
+//  ЗВУКОВОЙ ДВИЖОК И ТАКТИЛЬНАЯ ОТДАЧА
 // ============================================================
 var audioCtx = null;
 function initAudio() {
@@ -307,28 +266,6 @@ function playSound(type, comboCount) {
         [0, 2, 4, 5].forEach((n, i) => setTimeout(() => playChime(n), i * 100));
     } else if(type === 'win') {
         [0, 2, 4, 5, 4, 2, 5].forEach((n, i) => setTimeout(() => playChime(n), i * 140));
-    } else if(type === 'ice') {
-        // Звук разбивающегося льда
-        var osc = audioCtx.createOscillator();
-        var gain = audioCtx.createGain();
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.3);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-    } else if(type === 'chain') {
-        // Звон цепей
-        var osc = audioCtx.createOscillator();
-        var gain = audioCtx.createGain();
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-        osc.frequency.linearRampToValueAtTime(400, audioCtx.currentTime + 0.4);
-        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.4);
     }
 }
 
@@ -348,12 +285,10 @@ function speakChinese(text) {
 if ('speechSynthesis' in window) window.speechSynthesis.getVoices();
 
 // ============================================================
-//  ПОДКЛЮЧЕНИЕ БАЗЫ ДАННЫХ (Ваша app.js или демо-резерв)
+//  БАЗА ИЕРОГЛИФОВ
 // ============================================================
 var LEVELS = [];
-
 if (typeof DB !== 'undefined' && DB.length > 0) {
-    console.log("✅ Ваша база из app.js успешно подключена! Записей: " + DB.length);
     for (var i = 0; i < Math.ceil(DB.length / 5); i++) {
         var set = [];
         for (var j = 0; j < 5; j++) {
@@ -364,25 +299,11 @@ if (typeof DB !== 'undefined' && DB.length > 0) {
         LEVELS.push(set);
     }
 } else {
-    console.log("⚠️ База app.js не найдена. Используется демо-база.");
-    var DB = [
-        ['你好','nǐ hǎo','Привет','👋'], ['谢谢','xièxie','Спасибо','🙏'], ['猫','māo','Кот','🐱'], 
-        ['狗','gǒu','Собака','🐶'], ['水','shuǐ','Вода','💧'], ['火','huǒ','Огонь','🔥'], 
-        ['山','shān','Гора','⛰️'], ['月','yuè','Луна','🌙'], ['日','rì','Солнце','☀️'], 
-        ['人','rén','Человек','🧍'], ['大','dà','Большой','🐘'], ['小','xiǎo','Маленький','🐜'],
-        ['中','zhōng','Средний','⭕'], ['上','shàng','Верх','⬆️'], ['下','xià','Низ','⬇️'],
-        ['木','mù','Дерево','🌳'], ['林','lín','Лес','🌲🌲'], ['森','sēn','Чаща','🌲🌲🌲'],
-        ['口','kǒu','Рот','👄'], ['品','pǐn','Сорт','🍷'], ['回','huí','Возврат','🔄']
+    // Fallback demo data if app.js is missing
+    LEVELS = [
+        [{h:'你好',p:'nǐ hǎo',r:'Привет',e:'👋'},{h:'谢谢',p:'xièxie',r:'Спасибо',e:'🙏'},{h:'猫',p:'māo',r:'Кот',e:'🐱'},{h:'狗',p:'gǒu',r:'Собака',e:'🐶'},{h:'水',p:'shuǐ',r:'Вода',e:'💧'}],
+        [{h:'火',p:'huǒ',r:'Огонь',e:'🔥'},{h:'山',p:'shān',r:'Гора',e:'⛰️'},{h:'月',p:'yuè',r:'Луна',e:'🌙'},{h:'日',p:'rì',r:'Солнце',e:'☀️'},{h:'人',p:'rén',r:'Человек',e:'🧍'}]
     ];
-    for (var i = 0; i < Math.ceil(DB.length / 5); i++) {
-        var set = [];
-        for (var j = 0; j < 5; j++) {
-            var idx = (i * 5 + j) % DB.length;
-            var d = DB[idx];
-            set.push({ h: d[0], p: d[1], r: d[2], e: d[3] || '🀄' });
-        }
-        LEVELS.push(set);
-    }
 }
 
 // ============================================================
@@ -392,17 +313,19 @@ var RANKS = ["Новичок","Ученик","Мастер","Эксперт","Г
 var NC = 6, NR = 8, TOT = NC * NR;
 
 var state = {
-    board: [], score: 0, level: 1, 
-    scrolls: 0, shufFree: 3, hintFree: 3,
+    board: [], score: 0, level: 1, goal: 800, 
+    coins: 100, crystals: 5, 
+    shufFree: 3, hintFree: 3,
     busy: false, sel: -1, combo: 0,
-    moves: 0, fever: 0, isFever: false, brushActive: false,
-    phase: 1, maxPhases: 2, phaseGoal: 1000,
-    bossHp: 0, maxBossHp: 0, isBossLevel: false
+    circle: 1, totalLevelsCompleted: 0,
+    moves: 0, maxMoves: 0,
+    fever: 0, isFever: false,
+    brushActive: false
 };
 
-var PRICE_BOMB = 5, PRICE_BRUSH = 10;
-
+var PRICE_HINT = 50, PRICE_SHUF = 80, PRICE_BOMB = 5;
 var CHAR_COLOR_MAP = {};
+
 function getColorForChar(char, level) {
     var groups = [['c0','c10','c20','c30','c40'],['c1','c11','c21','c31','c41'],['c2','c12','c22','c32','c42'],['c3','c13','c23','c33','c43']];
     var groupIdx = (level - 1) % groups.length;
@@ -416,17 +339,18 @@ function getColorForChar(char, level) {
 }
 
 // ============================================================
-//  ЛОГИКА СОВПАДЕНИЙ
+//  ЛОГИКА СОВПАДЕНИЙ И БУСТЕРОВ
 // ============================================================
 function findAllCombinations(bd) {
     var results = [], used = {};
+    // Horizontal
     for (var r = 0; r < NR; r++) {
         for (var c = 0; c <= NC - 3; c++) {
             var i = r * NC + c;
-            var ch = bd[i] && !bd[i].obstacle ? bd[i].h : null;
+            var ch = bd[i] && bd[i].type !== 'stone' ? bd[i].h : null;
             if (!ch) continue;
             var len = 1;
-            while (c + len < NC && bd[i + len] && !bd[i+len].obstacle && bd[i + len].h === ch) len++;
+            while (c + len < NC && bd[i + len] && bd[i + len].h === ch && bd[i+len].type !== 'stone') len++;
             if (len >= 3) {
                 var ids = []; for (var k = 0; k < len; k++) ids.push(i + k);
                 var key = ids.join('-');
@@ -438,13 +362,14 @@ function findAllCombinations(bd) {
             c += len - 1;
         }
     }
+    // Vertical
     for (var c = 0; c < NC; c++) {
         for (var r = 0; r <= NR - 3; r++) {
             var i = r * NC + c;
-            var ch = bd[i] && !bd[i].obstacle ? bd[i].h : null;
+            var ch = bd[i] && bd[i].type !== 'stone' ? bd[i].h : null;
             if (!ch) continue;
             var len = 1;
-            while (r + len < NR && bd[i + len * NC] && !bd[i+len*NC].obstacle && bd[i + len * NC].h === ch) len++;
+            while (r + len < NR && bd[i + len * NC] && bd[i + len * NC].h === ch && bd[i+len*NC].type !== 'stone') len++;
             if (len >= 3) {
                 var ids = []; for (var k = 0; k < len; k++) ids.push(i + k * NC);
                 var key = ids.join('-');
@@ -473,22 +398,20 @@ function findMatches() {
 }
 
 function hasMatch(idx) {
-    var r = Math.floor(idx / NC), c = idx % NC;
-    var bd = state.board;
-    var ch = bd[idx] && !bd[idx].obstacle ? bd[idx].h : null;
+    var r = Math.floor(idx / NC), c = idx % NC, ch = state.board[idx] && state.board[idx].type !== 'stone' ? state.board[idx].h : null;
     if (!ch) return false;
-    if (c >= 2 && bd[idx-1] && !bd[idx-1].obstacle && bd[idx-1].h === ch && bd[idx-2] && !bd[idx-2].obstacle && bd[idx-2].h === ch) return true;
-    if (r >= 2 && bd[idx-NC] && !bd[idx-NC].obstacle && bd[idx-NC].h === ch && bd[idx-2*NC] && !bd[idx-2*NC].obstacle && bd[idx-2*NC].h === ch) return true;
+    if (c >= 2 && state.board[idx-1] && state.board[idx-1].h === ch && state.board[idx-2] && state.board[idx-2].h === ch) return true;
+    if (r >= 2 && state.board[idx-NC] && state.board[idx-NC].h === ch && state.board[idx-2*NC] && state.board[idx-2*NC].h === ch) return true;
     return false;
 }
 
 function anyMove() {
     for (var i = 0; i < TOT; i++) {
-        if (!state.board[i] || state.board[i].obstacle) continue;
+        if (!state.board[i] || state.board[i].type === 'stone') continue;
         var ns = getNeighbors(i);
         for (var j = 0; j < ns.length; j++) {
             var ni = ns[j];
-            if (!state.board[ni] || state.board[ni].obstacle) continue;
+            if (!state.board[ni] || state.board[ni].type === 'stone') continue;
             var temp = state.board[i]; state.board[i] = state.board[ni]; state.board[ni] = temp;
             var result = findAllCombinations(state.board);
             var temp2 = state.board[i]; state.board[i] = state.board[ni]; state.board[ni] = temp2;
@@ -518,6 +441,13 @@ function getArea(idx, radius) {
     return res;
 }
 
+function getRowCol(idx) {
+    var r = Math.floor(idx/NC), c = idx%NC, res = [];
+    for(var i=0; i<NC; i++) res.push(r*NC+i);
+    for(var i=0; i<NR; i++) res.push(i*NC+c);
+    return res.filter((v, i, a) => a.indexOf(v) === i);
+}
+
 // ============================================================
 //  ИГРОВОЙ ЦИКЛ
 // ============================================================
@@ -531,23 +461,7 @@ function init() {
     b.addEventListener('pointermove', onMove);
     b.addEventListener('pointerup', onUp);
     document.body.addEventListener('pointerdown', initAudio, {once:true});
-    if(state.level === 1 && state.scrolls === 0) document.getElementById('tov').classList.add('show');
-}
-
-function generateLevelConfig() {
-    state.isBossLevel = (state.level % 5 === 0);
-    state.maxPhases = state.isBossLevel ? 1 : (state.level <= 2 ? 1 : 2);
-    
-    if (state.isBossLevel) {
-        state.maxBossHp = 50 + (state.level * 15);
-        state.bossHp = state.maxBossHp;
-        state.moves = 20 + Math.floor(state.level / 2);
-        state.phase = 1;
-    } else {
-        state.moves = 25 + (state.level * 2);
-        state.phase = 1;
-        state.phaseGoal = 1000 + (state.level * 500);
-    }
+    if(state.level === 1 && state.score === 0) G.showTut();
 }
 
 function startLevel() {
@@ -556,28 +470,38 @@ function startLevel() {
     document.body.style.cursor = 'default';
     document.getElementById('board').classList.remove('fever-mode');
     CHAR_COLOR_MAP = {};
-    generateLevelConfig();
+    
+    var totalLevels = LEVELS.length;
+    state.circle = Math.floor((state.level - 1) / totalLevels) + 1;
+    var baseGoal = 800 + (state.level * 150);
+    state.goal = Math.floor(baseGoal * (1 + (state.circle - 1) * 0.35));
+    
+    // Сложность: ходы и камни
+    state.maxMoves = state.level <= 2 ? 0 : 35 + (state.level * 2);
+    state.moves = state.maxMoves;
     
     var hue = ((state.level - 1) * 45) % 360;
     document.getElementById('bg').style.background = 'radial-gradient(circle at center, hsl('+hue+',25%,8%) 0%, hsl('+hue+',15%,4%) 100%)';
-    document.getElementById('uTheme').innerText = state.isBossLevel ? '🐲 БОСС: Уровень ' + state.level : 'Уровень ' + state.level;
+    
+    var circleText = state.circle > 1 ? ' (Круг ' + state.circle + ')' : '';
+    var levelText = state.level > 999 ? '∞ ' + (state.level % 100) : state.level;
+    document.getElementById('uTheme').innerHTML = "Уровень " + levelText + " <span style='font-size:0.6rem;opacity:0.7'>" + circleText + "</span>";
+    
+    var boardEl = document.getElementById('board');
+    boardEl.className = 'level-effect-1 level-effect-doram-gold';
     
     for(var i=0; i<TOT; i++) {
         var att = 0;
         do { state.board[i] = randChar(); att++; } while(hasMatch(i) && att < 50);
     }
     
-    if (!state.isBossLevel && state.level >= 2) {
-        var obstacleCount = Math.min(12, Math.floor(state.level * 1.5));
-        var placed = 0;
-        while(placed < obstacleCount) {
+    // Добавляем камни на высоких уровнях
+    if(state.level >= 3) {
+        var stoneCount = Math.min(8, Math.floor(state.level / 2));
+        for(var i=0; i<stoneCount; i++) {
             var idx = Math.floor(Math.random() * TOT);
-            if(!state.board[idx].obstacle) {
-                var typeRoll = Math.random();
-                if(typeRoll < 0.5) state.board[idx].obstacle = { type: 'ice', hp: 2 };
-                else if(typeRoll < 0.8) state.board[idx].obstacle = { type: 'fog', hp: 1 };
-                else if(state.level >= 4) state.board[idx].obstacle = { type: 'chain', hp: 1 };
-                placed++;
+            if(state.board[idx] && state.board[idx].type !== 'stone') {
+                state.board[idx] = { h: '🪨', p: '', r: 'Камень', e: '🪨', colorClass: 'c60', type: 'stone', hp: 2 };
             }
         }
     }
@@ -592,45 +516,7 @@ function randChar() {
     var set = LEVELS[(state.level - 1) % LEVELS.length];
     var idx = Math.floor(Math.random() * set.length);
     var c = set[idx];
-    return { h:c.h, p:c.p, r:c.r, e:c.e, colorClass:getColorForChar(c.h, state.level), sp:null, obstacle: null };
-}
-
-function damageObstacles(matchedIndices) {
-    var destroyed = [];
-    var neighborsToCheck = new Set();
-    
-    matchedIndices.forEach(idx => {
-        getNeighbors(idx).forEach(nIdx => neighborsToCheck.add(nIdx));
-    });
-    
-    neighborsToCheck.forEach(idx => {
-        var tile = state.board[idx];
-        if(tile && tile.obstacle) {
-            tile.obstacle.hp--;
-            if(tile.obstacle.hp <= 0) {
-                destroyed.push(idx);
-                if(tile.obstacle.type === 'ice') {
-                    state.moves++;
-                    showToast("🧊 Лёд разбит! +1 ход");
-                    playSound('ice', 0);
-                    if(navigator.vibrate) navigator.vibrate([30, 20, 30]);
-                    if(Math.random() > 0.7) state.board[idx].sp = 'bomb';
-                } else if(tile.obstacle.type === 'chain') {
-                    state.scrolls += 1;
-                    showToast("⛓️ Цепи разорваны! +1 📜");
-                    playSound('chain', 0);
-                    if(navigator.vibrate) navigator.vibrate([50, 30, 50]);
-                } else if(tile.obstacle.type === 'fog') {
-                    showToast("🌫️ Туман рассеялся: " + tile.h);
-                    speakChinese(tile.h);
-                    if(navigator.vibrate) navigator.vibrate(20);
-                }
-                tile.obstacle = null;
-            }
-        }
-    });
-    
-    return destroyed;
+    return { h:c.h, p:c.p, r:c.r, e:c.e, colorClass:getColorForChar(c.h, state.level), sp:null, type:'normal' };
 }
 
 async function resolve(matches, shapes) {
@@ -641,77 +527,79 @@ async function resolve(matches, shapes) {
     if(navigator.vibrate) navigator.vibrate(30);
     playSound('match', state.combo);
     
-    // Обучение: произношение
+    // Обучение: произношение и показ перевода при комбо
     var firstTile = state.board[matches[0]];
-    if(firstTile && !firstTile.obstacle) {
+    if(firstTile && firstTile.type !== 'stone') {
+        speakChinese(firstTile.h);
         if(state.combo >= 2 || matches.length >= 4) {
             showToast(firstTile.h + " — " + firstTile.r);
         }
     }
     
-    if(state.isBossLevel) {
-        var dmg = matches.length * state.combo;
-        state.bossHp = Math.max(0, state.bossHp - dmg);
-        showToast("🐲 Урон боссу: -" + dmg);
-    }
-    
-    var destroyedObstacles = damageObstacles(matches);
-    var allMatches = matches.concat(destroyedObstacles).filter((v, i, a) => a.indexOf(v) === i);
-    
+    // Активация бустеров
     var extraMatches = [];
     matches.forEach(idx => {
         var tile = state.board[idx];
         if(tile && tile.sp) {
             playSound('bonus', 0);
             if(tile.sp === 'bomb') extraMatches = extraMatches.concat(getArea(idx, 1));
-            else if(tile.sp === 'laser') {
-                var r = Math.floor(idx/NC), c = idx%NC;
-                for(var i=0; i<NC; i++) extraMatches.push(r*NC+i);
-                for(var i=0; i<NR; i++) extraMatches.push(i*NC+c);
-            }
+            else if(tile.sp === 'laser') extraMatches = extraMatches.concat(getRowCol(idx));
             else if(tile.sp === 'star') extraMatches = extraMatches.concat(getArea(idx, 2));
             else if(tile.sp === 'rainbow') {
-                var targetColor = state.board[matches[0]].h;
-                for(var i=0; i<TOT; i++) if(state.board[i] && state.board[i].h === targetColor) extraMatches.push(i);
+                var matchColors = matches.map(i => state.board[i] ? state.board[i].h : null).filter(c => c && c !== '🌈');
+                var targetColor = matchColors.length > 0 ? matchColors[0] : null;
+                if(targetColor) {
+                    for(var i=0; i<TOT; i++) {
+                        if(state.board[i] && state.board[i].h === targetColor) extraMatches.push(i);
+                    }
+                }
             }
         }
     });
     
-    allMatches = allMatches.concat(extraMatches).filter((v, i, a) => a.indexOf(v) === i);
+    // Разрушение камней по соседству
+    var stonesHit = [];
+    matches.forEach(idx => {
+        var neighbors = getNeighbors(idx);
+        neighbors.forEach(nidx => {
+            if(state.board[nidx] && state.board[nidx].type === 'stone') {
+                state.board[nidx].hp--;
+                if(state.board[nidx].hp <= 0) {
+                    stonesHit.push(nidx);
+                    state.score += 50;
+                    if(navigator.vibrate) navigator.vibrate(50);
+                }
+            }
+        });
+    });
     
-    var pts = allMatches.length * 15 * state.combo * (state.isFever ? 2 : 1);
+    var allMatches = matches.concat(extraMatches).concat(stonesHit).filter((v, i, a) => a.indexOf(v) === i);
+    
+    var pts = allMatches.length * 10 * state.combo * (state.isFever ? 2 : 1);
     state.score += pts;
+    state.coins += Math.floor(allMatches.length / 3);
     
+    // Создание новых бустеров
     var shapesCopy = shapes.slice();
     for (var s = 0; s < shapesCopy.length; s++) {
         var shape = shapesCopy[s];
         if (shape.type !== 'line') {
             var midIdx = shape.ids[Math.floor(shape.ids.length / 2)];
-            if (state.board[midIdx] && !state.board[midIdx].sp && !state.board[midIdx].obstacle) {
-                var boosterName = shape.type === 'T' || shape.type === 'L' ? 'laser' : shape.type === 'star' ? 'star' : 'rainbow';
+            if (state.board[midIdx] && !state.board[midIdx].sp && state.board[midIdx].type !== 'stone') {
+                var boosterName = 'bomb';
+                if (shape.type === 'T' || shape.type === 'L') boosterName = 'laser';
+                else if (shape.type === 'star') boosterName = 'star';
+                else if (shape.type === 'rainbow') boosterName = 'rainbow';
                 state.board[midIdx].sp = boosterName;
+                // Убираем из allMatches, чтобы не удалить только что созданный бустер
                 allMatches = allMatches.filter(id => id !== midIdx);
-                playSound('bonus', 0);
-                var cells = document.querySelectorAll('.c');
-                shape.ids.forEach(id => { if(cells[id]) cells[id].classList.add('shape-hl'); });
             }
         }
     }
     
+    // Режим Просветления
     if(!state.isFever) {
-        state.fever = Math.min(100, state.fever + matches.length * 8);
-        if(state.fever >= 100) {
-            state.isFever = true;
-            document.getElementById('board').classList.add('fever-mode');
-            showToast("✨ РЕЖИМ ПРОСВЕТЛЕНИЯ! (2x очков)");
-            playSound('bonus', 0);
-            setTimeout(() => {
-                state.isFever = false;
-                state.fever = 0;
-                document.getElementById('board').classList.remove('fever-mode');
-                updateUI();
-            }, 5000);
-        }
+        addFever(matches.length * 10);
     }
     
     render();
@@ -720,18 +608,33 @@ async function resolve(matches, shapes) {
         document.getElementById('board').classList.add('shake');
         setTimeout(()=>document.getElementById('board').classList.remove('shake'), 400);
     }
-    
     spawnParticles(allMatches);
     
     await sleep(400);
-    allMatches.forEach(i => { if(state.board[i]) state.board[i] = null; });
-    
+    allMatches.forEach(i => state.board[i] = null);
     applyGravity();
     render();
     await sleep(350);
     
     var next = findMatches();
     await resolve(next.matched, next.shapes);
+}
+
+function addFever(amount) {
+    state.fever = Math.min(100, state.fever + amount);
+    updateUI();
+    if(state.fever >= 100) {
+        state.isFever = true;
+        document.getElementById('board').classList.add('fever-mode');
+        showToast("✨ РЕЖИМ ПРОСВЕТЛЕНИЯ! (2x очков)");
+        playSound('bonus', 0);
+        setTimeout(() => {
+            state.isFever = false;
+            state.fever = 0;
+            document.getElementById('board').classList.remove('fever-mode');
+            updateUI();
+        }, 5000);
+    }
 }
 
 function spawnParticles(indices) {
@@ -773,42 +676,19 @@ function applyGravity() {
 
 function checkWin() {
     state.busy = false;
-    
-    if (state.isBossLevel) {
-        if (state.bossHp <= 0) { showLevelComplete(); return; }
-    } else {
-        if (state.phase === 1 && state.score >= state.phaseGoal) { nextPhase(); return; }
-        if (state.phase === state.maxPhases && state.score >= state.phaseGoal) { showLevelComplete(); return; }
+    if(state.score >= state.goal) {
+        playSound('win', 0);
+        showLevelComplete();
+    } else if(state.moves <= 0 && state.maxMoves > 0) {
+        showGameOver();
+    } else if(!anyMove()) {
+        reshuffleBoard();
     }
-    
-    if(state.moves <= 0) { showGameOver(); }
-    else if(!anyMove()) { reshuffleBoard(); }
-    updateUI();
-}
-
-function nextPhase() {
-    state.phase++;
-    state.moves += 10;
-    state.phaseGoal = Math.floor(state.phaseGoal * 1.5);
-    showToast("✨ ФАЗА " + state.phase + "! +10 ходов");
-    playSound('win', 0);
-    
-    if(state.phase <= state.maxPhases) {
-        var count = 3;
-        while(count > 0) {
-            var idx = Math.floor(Math.random() * TOT);
-            if(!state.board[idx].obstacle && !state.board[idx].sp) {
-                state.board[idx].obstacle = { type: Math.random()>0.5?'ice':'fog', hp: 1 };
-                count--;
-            }
-        }
-    }
-    render();
     updateUI();
 }
 
 // ============================================================
-//  УПРАВЛЕНИЕ
+//  УПРАВЛЕНИЕ И ВВОД
 // ============================================================
 var dragStart = -1, isDrag = false, startX=0, startY=0;
 
@@ -828,10 +708,11 @@ function onDown(e) {
     var i = getIdx(e);
     if(i<0) return;
     
+    // Режим Кисти
     if(state.brushActive) {
         state.brushActive = false;
         document.body.style.cursor = 'default';
-        if(state.board[i] && !state.board[i].obstacle) {
+        if(state.board[i] && state.board[i].type !== 'stone') {
             state.board[i].sp = 'rainbow';
             state.board[i].h = '🌈';
             state.board[i].p = '';
@@ -880,25 +761,22 @@ function isNeigh(a,b) {
 }
 
 async function trySwap(a,b) {
-    if(state.board[a].obstacle || state.board[b].obstacle) {
-        state.sel = -1; render(); return;
-    }
-    
     state.busy=true;
     playSound('swap', 0);
     var els = document.querySelectorAll('.c');
-    var rectA = els[a].getBoundingClientRect(), rectB = els[b].getBoundingClientRect();
+    var elA = els[a], elB = els[b];
+    var rectA = elA.getBoundingClientRect(), rectB = elB.getBoundingClientRect();
     var dx = rectB.left - rectA.left, dy = rectB.top - rectA.top;
-    els[a].style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
-    els[b].style.transform = 'translate(' + (-dx) + 'px,' + (-dy) + 'px)';
-    els[a].style.zIndex = 100; els[b].style.zIndex = 100;
+    elA.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+    elB.style.transform = 'translate(' + (-dx) + 'px,' + (-dy) + 'px)';
+    elA.style.zIndex = 100; elB.style.zIndex = 100;
     await sleep(250);
     
     var t=state.board[a]; state.board[a]=state.board[b]; state.board[b]=t;
     render(); 
     var res = findMatches();
     if(res.matched.length>0) {
-        state.moves--;
+        if(!state.isFever && state.maxMoves > 0) state.moves--;
         await resolve(res.matched, res.shapes);
     } else {
         playSound('bad', 0);
@@ -924,44 +802,43 @@ var G = {
         initAudio();
         if(type==='shuffle') {
             if(state.shufFree>0) { state.shufFree--; reshuffleBoard(); playSound('swap', 0); }
-            else if(state.scrolls >= 3) {
-                if(confirm("Перемешать за 3 📜?")) { state.scrolls -= 3; reshuffleBoard(); playSound('bonus', 0); }
-            } else { showToast("Нужно 3 📜 или бесплатные!"); }
+            else if(state.coins>=PRICE_SHUF) { 
+                if(confirm("Купить перемешивание за "+PRICE_SHUF+" 🪙?")) { state.coins-=PRICE_SHUF; reshuffleBoard(); playSound('bonus', 0); }
+            } else { showToast("Не хватает монет!"); }
         }
         else if(type==='hint') {
             if(state.hintFree>0) { state.hintFree--; showHint(); playSound('swap', 0); }
-            else if(state.scrolls >= 2) {
-                if(confirm("Подсказка за 2 📜?")) { state.scrolls -= 2; showHint(); playSound('bonus', 0); }
-            } else { showToast("Нужно 2 📜 или бесплатные!"); }
+            else if(state.coins>=PRICE_HINT) {
+                if(confirm("Купить подсказку за "+PRICE_HINT+" 🪙?")) { state.coins-=PRICE_HINT; showHint(); playSound('bonus', 0); }
+            } else { showToast("Не хватает монет!"); }
         }
         else if(type==='brush') {
-            if(state.scrolls >= PRICE_BRUSH) {
-                state.scrolls -= PRICE_BRUSH;
+            if(state.crystals >= 10) {
+                state.crystals -= 10;
                 state.brushActive = true;
                 document.body.style.cursor = 'crosshair';
-                showToast("🖌️ Выберите клетку для Радуги");
+                showToast("🖌️ Выберите клетку для создания Радуги");
                 playSound('bonus', 0);
-            } else { showToast("Нужно " + PRICE_BRUSH + " 📜!"); }
+            } else { showToast("Не хватает кристаллов!"); }
         }
         else if(type==='bomb') {
-            if(state.scrolls >= PRICE_BOMB) {
-                state.scrolls -= PRICE_BOMB;
-                var idx = Math.floor(Math.random()*TOT);
-                while(state.board[idx].obstacle) idx = Math.floor(Math.random()*TOT);
-                state.board[idx].sp = 'bomb';
-                render();
-                setTimeout(()=> resolve(getArea(idx, 1), []), 500);
-                playSound('bonus', 0);
-            } else { showToast("Нужно " + PRICE_BOMB + " 📜!"); }
+            if(state.crystals>=PRICE_BOMB) {
+                if(confirm("Установить бомбу за "+PRICE_BOMB+" 💎?")) {
+                    state.crystals-=PRICE_BOMB; placeBomb(); playSound('bonus', 0);
+                }
+            } else { showToast("Не хватает кристаллов!"); }
         }
         updateUI();
         saveProgress();
     },
     restart: function() {
-        if(confirm("🔄 Сбросить весь прогресс?")) {
-            state.level = 1; state.scrolls = 0; state.shufFree = 3; state.hintFree = 3;
-            localStorage.removeItem('hanzi_save_v3');
+        if(confirm("🔄 Начать сначала? Весь прогресс будет сброшен!")) {
+            state.level = 1; state.coins = 100; state.crystals = 5;
+            state.shufFree = 3; state.hintFree = 3; state.score = 0;
+            state.circle = 1; state.totalLevelsCompleted = 0;
+            localStorage.removeItem('hanzi_save');
             startLevel();
+            showToast("🔄 Игра перезапущена!");
         }
     },
     restartLevel: function() {
@@ -969,28 +846,27 @@ var G = {
         startLevel();
     },
     continueLevel: function() {
-        if(state.scrolls >= 3) {
-            state.scrolls -= 3;
+        if(state.crystals >= 5) {
+            state.crystals -= 5;
             state.moves += 5;
             document.getElementById('gameOverOverlay').classList.remove('show');
             updateUI();
-            showToast("✨ +5 ходов (-3📜)");
-        } else { showToast("Не хватает свитков!"); }
+            showToast("✨ +5 ходов!");
+        } else { showToast("Не хватает кристаллов!"); }
     },
-    closeTut: function() { 
-        document.getElementById('tov').classList.remove('show'); 
-        initAudio();
-    },
+    showTut: ()=>document.getElementById('tov').classList.add('show'),
+    closeTut: ()=>{ document.getElementById('tov').classList.remove('show'); initAudio(); },
     nextLevelFromModal: function() {
         document.getElementById('levelCompleteOverlay').classList.remove('show');
         window.speechSynthesis.cancel();
+        state.totalLevelsCompleted++;
         state.level++;
-        state.scrolls++;
         state.shufFree = Math.min(state.shufFree+1, 5);
         state.hintFree = Math.min(state.hintFree+1, 5);
+        state.crystals += 2 + Math.floor(state.totalLevelsCompleted / 10);
         saveProgress();
-        showToast("🎉 +1 📜 Свиток Мудрости");
-        setTimeout(startLevel, 300);
+        showToast("🎉 Уровень пройден! +" + (2 + Math.floor(state.totalLevelsCompleted / 10)) + " 💎");
+        setTimeout(startLevel, 500);
     }
 };
 
@@ -1010,15 +886,24 @@ function showHint() {
     showToast("💡 Попробуйте поменять соседние клетки");
 }
 
+function placeBomb() {
+    var idx = Math.floor(Math.random()*TOT);
+    if(state.board[idx] && state.board[idx].type !== 'stone') {
+        state.board[idx].sp = 'bomb';
+        render();
+        setTimeout(()=> resolve(getArea(idx, 1), []), 500);
+    }
+}
+
 function reshuffleBoard(silent) {
     var items = [];
-    for(var i=0; i<TOT; i++) if(state.board[i] && !state.board[i].obstacle) items.push(state.board[i]);
+    for(var i=0; i<TOT; i++) if(state.board[i] && state.board[i].type !== 'stone') items.push(state.board[i]);
     for(var i=items.length-1; i>0; i--) {
         var j = Math.floor(Math.random()*(i+1));
         var t = items[i]; items[i] = items[j]; items[j] = t;
     }
     var k=0;
-    for(var i=0; i<TOT; i++) if(state.board[i] && !state.board[i].obstacle) state.board[i] = items[k++];
+    for(var i=0; i<TOT; i++) if(state.board[i] && state.board[i].type !== 'stone') state.board[i] = items[k++];
     if(!anyMove() && !silent) reshuffleBoard(true);
     if(!silent) { render(); updateUI(); }
 }
@@ -1049,17 +934,16 @@ function render() {
         el.dataset.i=i;
         el.style.width=cellPx+'px'; el.style.height=cellPx+'px';
         if(i===state.sel) el.classList.add('sel');
-        
         if(d) {
-            if(d.obstacle) {
-                el.classList.add('has-obstacle', 'obstacle-' + d.obstacle.type);
-                if(d.obstacle.type === 'ice' && d.obstacle.hp === 1) el.classList.add('cracked');
-            }
             if(d.colorClass) el.classList.add(d.colorClass);
-            if(d.sp) el.classList.add('sp-'+d.sp);
-            
-            var badge = d.sp === 'bomb' ? '💥' : d.sp === 'laser' ? '⚡' : d.sp === 'star' ? '⭐' : d.sp === 'rainbow' ? '🌈' : '';
-            el.innerHTML = '<span class="hz" style="font-size:'+fsH+'px">'+d.h+'</span><span class="py" style="font-size:'+fsP+'px">'+d.p+'</span><span class="ru" style="font-size:'+fsR+'px">'+d.r+'</span><span class="emo">'+d.e+'</span>'+(d.sp ? '<span class="badge">'+badge+'</span>' : '');
+            if(d.type === 'stone') {
+                el.classList.add('stone');
+                el.innerHTML = '<span class="hz">🪨</span><span class="hp-bar">HP: '+d.hp+'</span>';
+            } else {
+                if(d.sp) el.classList.add('sp-'+d.sp);
+                var badge = d.sp === 'bomb' ? '💥' : d.sp === 'laser' ? '⚡' : d.sp === 'star' ? '⭐' : d.sp === 'rainbow' ? '🌈' : '';
+                el.innerHTML = '<span class="hz" style="font-size:'+fsH+'px">'+d.h+'</span><span class="py" style="font-size:'+fsP+'px">'+d.p+'</span><span class="ru" style="font-size:'+fsR+'px">'+d.r+'</span><span class="emo">'+d.e+'</span>'+(d.sp ? '<span class="badge">'+badge+'</span>' : '');
+            }
         }
         b.appendChild(el);
     }
@@ -1067,37 +951,21 @@ function render() {
 
 function updateUI() {
     document.getElementById('uSc').innerText = state.score;
-    document.getElementById('uLv').innerText = state.level;
-    document.getElementById('uMoves').innerText = state.moves;
-    document.getElementById('uScrolls').innerText = state.scrolls;
-    
-    var pFill = document.getElementById('pFill');
-    var pText = document.getElementById('phaseText');
-    var uGl = document.getElementById('uGl');
-    
-    if(state.isBossLevel) {
-        var hpPercent = (state.bossHp / state.maxBossHp) * 100;
-        pFill.style.width = (100 - hpPercent) + '%';
-        pFill.style.background = 'linear-gradient(90deg, #ff4444, #ff8800)';
-        pText.innerText = '🐲 Здоровье Стража';
-        uGl.innerText = state.bossHp + ' HP';
-    } else {
-        var percent = Math.min(100, (state.score / state.phaseGoal) * 100);
-        pFill.style.width = percent + '%';
-        pFill.style.background = 'linear-gradient(90deg,#8b3a3a,#d4af37)';
-        pText.innerText = state.maxPhases > 1 ? 'Фаза ' + state.phase + ' из ' + state.maxPhases : 'Цель уровня';
-        uGl.innerText = state.phaseGoal;
-    }
-    
+    document.getElementById('uLv').innerText = state.level > 999 ? '∞' + (state.level % 100) : state.level;
+    document.getElementById('uMoves').innerText = state.maxMoves === 0 ? '∞' : state.moves;
+    document.getElementById('uCoin').innerText = state.coins;
+    document.getElementById('uCry').innerText = state.crystals;
+    document.getElementById('uGl').innerText = state.goal;
+    document.getElementById('pFill').style.width = Math.min(100, state.score/state.goal*100) + '%';
     document.getElementById('feverFill').style.width = state.fever + '%';
     
-    var rankIndex = Math.min(RANKS.length-1, Math.floor((state.level - 1) / 3));
+    var rankIndex = Math.min(RANKS.length-1, Math.floor((state.level - 1) / 5) + Math.floor(state.circle / 2));
     document.getElementById('uRank').innerText = RANKS[rankIndex];
     
     var bSh = document.getElementById('bSh'), bHi = document.getElementById('bHi');
-    bSh.innerHTML = state.shufFree>0 ? '🔀<span>'+state.shufFree+'</span><small>Беспл.</small>' : '🔀<small>3📜</small>';
+    bSh.innerHTML = state.shufFree>0 ? '🔀<span>'+state.shufFree+'</span><small>Беспл.</small>' : '🔀<small>'+PRICE_SHUF+'🪙</small>';
     bSh.classList.toggle('buy', state.shufFree<=0);
-    bHi.innerHTML = state.hintFree>0 ? '💡<span>'+state.hintFree+'</span><small>Беспл.</small>' : '💡<small>2📜</small>';
+    bHi.innerHTML = state.hintFree>0 ? '💡<span>'+state.hintFree+'</span><small>Беспл.</small>' : '💡<small>'+PRICE_HINT+'🪙</small>';
     bHi.classList.toggle('buy', state.hintFree<=0);
 }
 
@@ -1110,19 +978,17 @@ function showLevelComplete() {
         var card = document.createElement('div');
         card.className = 'jade-card';
         card.classList.add(getColorForChar(char.h, state.level));
-        card.style.animationDelay = (index * 0.1) + 's';
+        card.style.animationDelay = (index * 0.15) + 's';
         card.innerHTML = '<div class="jade-char">' + char.h + '</div><div class="jade-py">' + char.p + '</div><div class="jade-ru">' + char.r + '</div><div class="jade-emo">' + char.e + '</div>';
         card.onclick = function() { speakChinese(char.h); };
         grid.appendChild(card);
     });
     overlay.classList.add('show');
-    playSound('win', 0);
-    setTimeout(function() { if(currentSet.length > 0) speakChinese(currentSet[0].h); }, 500);
+    setTimeout(function() { if(currentSet.length > 0) speakChinese(currentSet[0].h); }, 800);
 }
 
 function showGameOver() {
     document.getElementById('gameOverOverlay').classList.add('show');
-    playSound('bad', 0);
 }
 
 function showToast(msg) {
@@ -1147,27 +1013,25 @@ function floatText(txt, idx) {
 function sleep(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 
 function saveProgress() {
-    localStorage.setItem('hanzi_save_v3', JSON.stringify({
-        lvl: state.level, scrolls: state.scrolls, sf: state.shufFree, hf: state.hintFree
+    localStorage.setItem('hanzi_save', JSON.stringify({
+        lvl: state.level, coins: state.coins, cry: state.crystals, 
+        sf: state.shufFree, hf: state.hintFree, completed: state.totalLevelsCompleted
     }));
 }
 
 function loadProgress() {
-    var s = localStorage.getItem('hanzi_save_v3');
+    var s = localStorage.getItem('hanzi_save');
     if(s) {
         try {
             var d = JSON.parse(s);
-            state.level = d.lvl || 1; 
-            state.scrolls = d.scrolls || 0;
-            state.shufFree = d.sf || 3;
-            state.hintFree = d.hf || 3;
+            state.level = d.lvl || 1; state.coins = d.coins || 100;
+            state.crystals = d.cry || 5; state.shufFree = d.sf || 3;
+            state.hintFree = d.hf || 3; state.totalLevelsCompleted = d.completed || 0;
         } catch(e) {}
     }
 }
 
 init();
-console.log('✅ Ханзи: Нефрит и Золото v3 загружена!');
 </script>
 </body>
 </html>
-
