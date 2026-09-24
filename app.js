@@ -172,7 +172,7 @@ const DB = [
 ["九","jiǔ","девять","9️⃣",[["九月","jiǔ yuè","сентябрь"],["第九","dì jiǔ","девятый"],["九十","jiǔ shí","девяносто"],["十九","shí jiǔ","девятнадцать"],["九点","jiǔ diǎn","девять часов"]]],
 ["十","shí","десять","🔟",[["十月","shí yuè","октябрь"],["第十","dì shí","десятый"],["十分","shí fēn","очень"],["十字","shí zì","крест"],["十足","shí zú","полный"]]]
 
-];
+
 // ============================================================
 //  ЧАСТЬ 2: ИЕРÓГЛИФЫ 101–200
 //  Эмоции, чувства, работа, деньги, город, транспорт
@@ -953,6 +953,56 @@ function getRandomChars(count) {
     }
     return shuffled.slice(0, count);
 }
+
+console.log('✅ app.js: загружено ' + DB.length + ' иероглифов');
+console.log('📝 Всего слов: ' + getAllWords().length);
+// ============================================================
+//  АВТООЧИСТКА БАЗЫ ОТ ДУБЛИКАТОВ (встроенная)
+// ============================================================
+(function cleanDB() {
+    var originalLength = DB.length;
+    var seen = Object.create(null);
+    var unique = [];
+    var removed = [];
+    
+    for (var i = 0; i < DB.length; i++) {
+        var ch = DB[i][0];
+        if (seen[ch]) {
+            removed.push(ch);
+            continue;
+        }
+        seen[ch] = true;
+        
+        // Чистим вложенные слова от повторов
+        if (Array.isArray(DB[i][4])) {
+            var wseen = Object.create(null);
+            var cleanWords = [];
+            for (var j = 0; j < DB[i][4].length; j++) {
+                var w = DB[i][4][j];
+                if (w && w[0] && !wseen[w[0]]) {
+                    wseen[w[0]] = true;
+                    cleanWords.push(w);
+                }
+            }
+            DB[i][4] = cleanWords;
+        }
+        unique.push(DB[i]);
+    }
+    
+    // Перезаписываем массив
+    DB.length = 0;
+    for (var k = 0; k < unique.length; k++) {
+        DB.push(unique[k]);
+    }
+    
+    console.log('🧹 Очистка базы:');
+    console.log('   Было иероглифов: ' + originalLength);
+    console.log('   Стало уникальных: ' + DB.length);
+    console.log('   Удалено дубликатов: ' + removed.length);
+    if (removed.length > 0) {
+        console.log('   Список удалённых: ' + removed.join(', '));
+    }
+})();
 
 console.log('✅ app.js: загружено ' + DB.length + ' иероглифов');
 console.log('📝 Всего слов: ' + getAllWords().length);
