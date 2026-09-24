@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0a0f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>🀄 Ханзи: Нефрит и Золото</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;}
@@ -15,7 +18,8 @@
         .logo{font-size:1rem;font-weight:800;color:#d4af37;text-shadow:0 2px 4px rgba(0,0,0,.5);letter-spacing:1px;}
         .rank{font-size:.55rem;color:#a89f91;letter-spacing:2px;text-transform:uppercase;margin-top:1px;font-weight:600;}
         .stats{display:flex;gap:4px;flex-wrap:wrap;}
-        .stat{background:rgba(20,20,25,.6);border:1px solid rgba(212,175,55,.3);border-radius:5px;padding:3px 8px;font-size:.6rem;display:flex;align-items:center;gap:3px;backdrop-filter:blur(4px);}
+        .stat{background:rgba(20,20,25,.6);border:1px solid rgba(212,175,55,.3);border-radius:5px;padding:3px 8px;font-size:.6rem;display:flex;align-items:center;gap:3px;backdrop-filter:blur(4px);transition:transform .2s;}
+        .stat.pulse{transform:scale(1.15);}
         .stat b{font-size:.75rem;color:#e8dcc5;}
         .c-gold{color:#d4af37!important;} .c-grn{color:#5da399!important;} .c-cyan{color:#7fb5b0!important;} .c-pur{color:#9b72aa!important;}
 
@@ -23,8 +27,6 @@
         .pt{height:4px;background:rgba(0,0,0,.4);border-radius:3px;overflow:hidden;border:1px solid rgba(255,255,255,.05);}
         .pf{height:100%;background:linear-gradient(90deg,#8b3a3a,#d4af37);transition:width .5s ease-out;box-shadow:0 0 10px rgba(212,175,55,.3);}
         .pl{display:flex;justify-content:space-between;font-size:.55rem;color:#8c8276;margin-top:2px;font-weight:600;}
-        
-        /* Шкала просветления */
         .fever-bar{height:3px;background:rgba(212,175,55,0.1);border-radius:2px;margin-top:4px;overflow:hidden;}
         .fever-fill{height:100%;width:0%;background:linear-gradient(90deg,#ffd700,#ff8c00);box-shadow:0 0 8px #ffd700;transition:width 0.3s ease;}
 
@@ -38,8 +40,6 @@
             box-shadow:0 15px 40px rgba(0,0,0,.6), inset 0 0 30px rgba(0,0,0,.4);
             transition: filter 0.5s, box-shadow 0.5s;
         }
-        
-        /* Режим Просветления */
         .fever-mode {
             filter: brightness(1.15) drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
             animation: feverPulse 1s infinite alternate;
@@ -55,18 +55,23 @@
             display:flex;flex-direction:column;align-items:center;justify-content:center;
             cursor:pointer;
             border:1px solid rgba(212,175,55,.25);
-            box-shadow: inset 1px 1px 2px rgba(255,255,255,.15), inset -1px -1px 2px rgba(0,0,0,.3), 2px 3px 6px rgba(0,0,0,.4);
-            transition: transform 0.25s cubic-bezier(.4,1.8,.6,1);
+            box-shadow: 
+                inset 2px 2px 4px rgba(255,255,255,.18),
+                inset -2px -2px 4px rgba(0,0,0,.4),
+                0 3px 6px rgba(0,0,0,.5),
+                0 0 0 1px rgba(212,175,55,.1);
+            transition: transform 0.25s cubic-bezier(.4,1.8,.6,1), box-shadow .2s;
             overflow:visible;
+            background-blend-mode: overlay;
         }
         .c::after{
-            content:'';position:absolute;top:0;left:0;right:0;height:45%;
-            background:linear-gradient(to bottom, rgba(255,255,255,.08), transparent);
+            content:'';position:absolute;top:0;left:0;right:0;height:50%;
+            background:linear-gradient(to bottom, rgba(255,255,255,.12), transparent);
             border-radius:8px 8px 50% 50%;
             pointer-events:none;
         }
+        .c:hover{transform:translateY(-2px) scale(1.02);}
 
-        /* Препятствие: Камень */
         .c.stone {
             background: linear-gradient(145deg, #5a5a5a, #3a3a3a) !important;
             border: 2px solid #7a7a7a;
@@ -79,7 +84,6 @@
             background: rgba(0,0,0,0.7); color: #ff6b6b; padding: 1px 4px; border-radius: 3px; border: 1px solid #ff6b6b;
         }
 
-        /* Цветовые группы (сокращено для примера, используются те же 80+ оттенков) */
         .c0{background:linear-gradient(145deg,#c47a5a,#8a4a2a);} .c1{background:linear-gradient(145deg,#d4886a,#a05a3a);}
         .c2{background:linear-gradient(145deg,#b06a4a,#7a3a2a);} .c3{background:linear-gradient(145deg,#8a4a3a,#5a2a1a);}
         .c10{background:linear-gradient(145deg,#5a9a7a,#2a6a4a);} .c11{background:linear-gradient(145deg,#6aaa8a,#3a7a5a);}
@@ -88,9 +92,8 @@
         .c40{background:linear-gradient(145deg,#8a5a8a,#4a2a5a);} .c41{background:linear-gradient(145deg,#9a6a9a,#5a3a6a);}
         .c60{background:linear-gradient(145deg,#8a8a8a,#5a5a5a);} .c61{background:linear-gradient(145deg,#9a9a9a,#6a6a6a);}
 
-        /* Эффекты уровня */
         .level-effect-1 .c{animation:velvet 3s ease-in-out infinite alternate;border-color:rgba(255,240,230,0.08);}
-        @keyframes velvet{0%{box-shadow:0 0 20px rgba(200,180,160,0.03)}100%{box-shadow:0 0 35px rgba(200,180,160,0.08)}}
+        @keyframes velvet{0%{box-shadow:0 0 20px rgba(200,180,160,0.03), inset 2px 2px 4px rgba(255,255,255,.18), inset -2px -2px 4px rgba(0,0,0,.4), 0 3px 6px rgba(0,0,0,.5);}100%{box-shadow:0 0 35px rgba(200,180,160,0.08), inset 2px 2px 4px rgba(255,255,255,.18), inset -2px -2px 4px rgba(0,0,0,.4), 0 3px 6px rgba(0,0,0,.5);}}
         .level-effect-doram-gold .c::before {
             content:'';position:absolute;inset:0;border-radius:8px;
             background: radial-gradient(circle at 40% 50%, rgba(212,175,55,0.05), transparent 60%);
@@ -98,18 +101,26 @@
         }
         @keyframes goldGlow{0%{opacity:0.1}100%{opacity:0.4}}
 
-        .c.sp-bomb{border:2px solid #d4af37;box-shadow:0 0 15px rgba(212,175,55,.4);}
-        .c.sp-laser{border:2px solid #7fb5b0;box-shadow:0 0 15px rgba(127,181,176,.4);}
-        .c.sp-star{border:2px solid #9b72aa;box-shadow:0 0 15px rgba(155,114,170,.4);}
-        .c.sp-rainbow{background:conic-gradient(#8b3a3a,#2d5a5a,#3a4a6b,#8a6d3b,#5a3a5a)!important;border:2px solid #d4af37!important;}
+        .c.sp-bomb{border:2px solid #d4af37;box-shadow:0 0 15px rgba(212,175,55,.5), inset 2px 2px 4px rgba(255,255,255,.18);}
+        .c.sp-laser{border:2px solid #7fb5b0;box-shadow:0 0 15px rgba(127,181,176,.5), inset 2px 2px 4px rgba(255,255,255,.18);}
+        .c.sp-star{border:2px solid #9b72aa;box-shadow:0 0 15px rgba(155,114,170,.5), inset 2px 2px 4px rgba(255,255,255,.18);}
+        .c.sp-rainbow{background:conic-gradient(#8b3a3a,#2d5a5a,#3a4a6b,#8a6d3b,#5a3a5a)!important;border:2px solid #d4af37!important;animation:rainbowSpin 4s linear infinite;}
+        @keyframes rainbowSpin{to{filter:hue-rotate(360deg);}}
 
-        .c .hz{font-size:1.4rem;font-weight:900;color:#f0e6d2;text-shadow:0 2px 4px rgba(0,0,0,.6),0 0 10px rgba(212,175,55,.1);z-index:2;line-height:1;}
-        .c .py{font-size:.45rem;color:rgba(240,230,210,.8);z-index:2;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.4);margin-top:1px;}
-        .c .ru{font-size:.45rem;font-weight:700;color:#f0e6d2;background:rgba(0,0,0,.35);padding:1px 4px;border-radius:3px;margin-top:1px;z-index:3;max-width:92%;text-align:center;word-wrap:break-word;line-height:1.1;border:1px solid rgba(212,175,55,.1);}
-        .c .emo{position:absolute;bottom:1px;left:2px;font-size:.45rem;opacity:.4;z-index:1;}
-        .c .badge{position:absolute;top:1px;right:2px;font-size:.6rem;z-index:4;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6));}
+        .c .hz{
+            font-size:1.4rem;font-weight:900;
+            background:linear-gradient(180deg,#fff8e7,#d4af37);
+            -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+            filter:drop-shadow(0 2px 3px rgba(0,0,0,.7)) drop-shadow(0 0 6px rgba(212,175,55,.2));
+            z-index:2;line-height:1;
+        }
+        .c .py{font-size:.45rem;color:rgba(240,230,210,.9);z-index:2;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.6);margin-top:1px;}
+        .c .ru{font-size:.45rem;font-weight:700;color:#f0e6d2;background:rgba(0,0,0,.4);padding:1px 4px;border-radius:3px;margin-top:1px;z-index:3;max-width:92%;text-align:center;word-wrap:break-word;line-height:1.1;border:1px solid rgba(212,175,55,.15);}
+        .c .emo{position:absolute;bottom:1px;left:2px;font-size:.5rem;opacity:.5;z-index:1;}
+        .c .badge{position:absolute;top:1px;right:2px;font-size:.6rem;z-index:4;filter:drop-shadow(0 1px 2px rgba(0,0,0,.7));animation:badgePulse 1.5s infinite;}
+        @keyframes badgePulse{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}
 
-        .c.sel{transform:scale(1.08);z-index:10;box-shadow:0 0 0 2px #d4af37,0 10px 25px rgba(0,0,0,.5);}
+        .c.sel{transform:scale(1.08);z-index:10;box-shadow:0 0 0 2px #d4af37, 0 10px 25px rgba(0,0,0,.5), 0 0 20px rgba(212,175,55,.4);}
         .c.gone{animation:pop 0.3s forwards;}
         @keyframes pop{to{transform:scale(0);opacity:0;}}
         .c.best{animation:pulse 1.5s infinite;}
@@ -120,20 +131,21 @@
         .bar{z-index:10;width:100%;max-width:600px;display:flex;gap:4px;justify-content:center;padding:4px 8px;flex-wrap:wrap;}
         .btn{padding:6px 10px;border:none;border-radius:6px;font-weight:700;font-size:.6rem;cursor:pointer;color:#e8dcc5;background:rgba(20,20,25,.6);border:1px solid rgba(212,175,55,.2);display:flex;align-items:center;gap:3px;transition:.2s;backdrop-filter:blur(4px);}
         .btn:active{transform:scale(.95);}
-        .btn.buy{border-color:rgba(212,175,55,.6);color:#d4af37;box-shadow:0 0 10px rgba(212,175,55,.1);}
+        .btn:hover{background:rgba(35,30,40,.7);}
+        .btn.buy{border-color:rgba(212,175,55,.6);color:#d4af37;box-shadow:0 0 10px rgba(212,175,55,.15);}
         .btn small{font-size:.5rem;opacity:.7;}
         .btn.restart{background:rgba(212,175,55,.15);border-color:rgba(212,175,55,.4);color:#d4af37;}
 
-        .overlay{position:fixed;inset:0;background:rgba(5,5,10,.95);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+        .overlay{position:fixed;inset:0;background:rgba(5,5,10,.95);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:20px;}
         .overlay.show{display:flex;}
-        .modal{background:linear-gradient(135deg,#1a1520,#0f0a15);border:1px solid rgba(212,175,55,.3);border-radius:16px;padding:30px;max-width:340px;width:90%;text-align:center;box-shadow:0 25px 50px rgba(0,0,0,.7);}
-        .modal h2{color:#d4af37;margin-bottom:10px;font-size:1.4rem;letter-spacing:1px;}
-        .modal p{font-size:.9rem;color:#a89f91;margin-bottom:20px;line-height:1.6;}
-        .modal button{background:linear-gradient(135deg,#8b3a3a,#5a2020);border:1px solid rgba(212,175,55,.4);padding:12px 30px;border-radius:8px;font-weight:bold;color:#f0e6d2;cursor:pointer;font-size:1rem;letter-spacing:1px;transition:.2s;margin:5px;}
-        .modal button:hover{box-shadow:0 0 15px rgba(139,58,58,.4);}
+        .modal{background:linear-gradient(135deg,#1a1520,#0f0a15);border:1px solid rgba(212,175,55,.3);border-radius:16px;padding:25px;max-width:340px;width:100%;text-align:center;box-shadow:0 25px 50px rgba(0,0,0,.7);}
+        .modal h2{color:#d4af37;margin-bottom:10px;font-size:1.3rem;letter-spacing:1px;}
+        .modal p{font-size:.85rem;color:#a89f91;margin-bottom:18px;line-height:1.5;}
+        .modal button{background:linear-gradient(135deg,#8b3a3a,#5a2020);border:1px solid rgba(212,175,55,.4);padding:11px 26px;border-radius:8px;font-weight:bold;color:#f0e6d2;cursor:pointer;font-size:.95rem;letter-spacing:1px;transition:.2s;margin:5px;}
+        .modal button:hover{box-shadow:0 0 15px rgba(139,58,58,.5);transform:translateY(-1px);}
         .modal button.secondary{background:linear-gradient(135deg,#4a4a4a,#2a2a2a);}
 
-        .fpts{position:absolute;pointer-events:none;z-index:50;font-weight:bold;color:#d4af37;text-shadow:0 2px 4px rgba(0,0,0,.6);animation:floatUp 1s forwards;}
+        .fpts{position:absolute;pointer-events:none;z-index:50;font-weight:bold;color:#d4af37;text-shadow:0 2px 4px rgba(0,0,0,.6), 0 0 8px rgba(212,175,55,.4);animation:floatUp 1s forwards;}
         @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1;}100%{transform:translateY(-40px) scale(1.2);opacity:0;}}
 
         .particle{position:fixed;pointer-events:none;z-index:1000;font-size:1.5rem;will-change:transform,opacity;animation:fly 1.2s ease-out forwards;}
@@ -142,16 +154,24 @@
         .shake{animation:shake 0.4s cubic-bezier(.36,.07,.19,.97) both;}
         @keyframes shake{10%,90%{transform:translate3d(-1px,0,0);}20%,80%{transform:translate3d(2px,0,0);}30%,50%,70%{transform:translate3d(-4px,0,0);}40%,60%{transform:translate3d(4px,0,0);}}
 
-        .jade-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));gap: 12px;margin-bottom: 25px;justify-content: center;}
+        .jade-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));gap: 12px;margin-bottom: 20px;justify-content: center;}
         .jade-card {border: 2px solid rgba(212,175,55,.5);border-radius: 12px;padding: 15px 5px;display: flex;flex-direction: column;align-items: center;justify-content: center;opacity: 0;transform: translateY(30px) scale(0.8);animation: jadePop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;box-shadow: 0 8px 20px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05);position: relative;overflow: hidden;cursor: pointer;transition: transform 0.2s;min-height: 110px;}
         .jade-card:active { transform: scale(0.95); }
-        .jade-card .jade-char { font-size: 3.2rem;font-weight: 900; color: #fff; text-shadow: 0 4px 8px rgba(0,0,0,0.6), 0 0 20px rgba(255,255,255,0.2); margin-bottom: 5px; z-index: 2; line-height: 1;}
+        .jade-card:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(0,0,0,0.6), inset 0 0 20px rgba(212,175,55,0.15); }
+        .jade-card .jade-char { font-size: 3rem;font-weight: 900; color: #fff; text-shadow: 0 4px 8px rgba(0,0,0,0.6), 0 0 20px rgba(255,255,255,0.2); margin-bottom: 5px; z-index: 2; line-height: 1;}
         .jade-card .jade-py { font-size: 1rem; color: rgba(255,255,255,0.9); font-weight: 700; margin-bottom: 4px; letter-spacing: 1px; z-index: 2;}
         .jade-card .jade-ru { font-size: 0.85rem; color: #ffd700; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); z-index: 2; text-align: center; white-space: normal; word-wrap: break-word; line-height: 1.2; max-width: 100%;}
         .jade-card .jade-emo { font-size: 1.5rem; position: absolute; bottom: 5px; right: 8px; opacity: 0.6; filter: grayscale(0.3); z-index: 1;}
         @keyframes jadePop {to { opacity: 1; transform: translateY(0) scale(1); }}
         
         .learning-tip {font-size: 0.8rem; color: #7fb5b0; margin-bottom: 15px; font-style: italic;}
+
+        /* Модалка магазина тем */
+        .theme-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px;}
+        .theme-btn{padding:12px;border-radius:10px;border:2px solid rgba(212,175,55,.3);background:rgba(20,20,25,.8);color:#e8dcc5;font-weight:700;font-size:.75rem;cursor:pointer;transition:.2s;}
+        .theme-btn.active{border-color:#d4af37;box-shadow:0 0 15px rgba(212,175,55,.3);}
+        .theme-btn.locked{opacity:.4;cursor:not-allowed;}
+        .theme-btn small{display:block;font-size:.6rem;color:#a89f91;margin-top:3px;font-weight:400;}
     </style>
 </head>
 <body>
@@ -164,11 +184,11 @@
     <div class="rank" id="uRank">Новичок</div>
   </div>
   <div class="stats">
-    <div class="stat">⭐<b class="c-gold" id="uSc">0</b></div>
+    <div class="stat" id="statSc">⭐<b class="c-gold" id="uSc">0</b></div>
     <div class="stat">🎯<b class="c-grn" id="uLv">1</b></div>
     <div class="stat">👣<b class="c-pur" id="uMoves">∞</b></div>
-    <div class="stat">🪙<b class="c-cyan" id="uCoin">100</b></div>
-    <div class="stat">💎<b class="c-pur" id="uCry">5</b></div>
+    <div class="stat" id="statCoin">🪙<b class="c-cyan" id="uCoin">100</b></div>
+    <div class="stat" id="statCry">💎<b class="c-pur" id="uCry">5</b></div>
   </div>
 </div>
 
@@ -183,8 +203,9 @@
 <div class="bar">
   <button class="btn" id="bSh" onclick="G.action('shuffle')">🔀<span id="cSh">3</span><small>Беспл.</small></button>
   <button class="btn" id="bHi" onclick="G.action('hint')">💡<span id="cHi">3</span><small>Беспл.</small></button>
-  <button class="btn" id="bBr" onclick="G.action('brush')">🖌️<small>10💎</small></button>
-  <button class="btn" id="bBm" onclick="G.action('bomb')">💥<small>5💎</small></button>
+  <button class="btn" id="bBr" onclick="G.action('brush')">🖌️<small>8💎</small></button>
+  <button class="btn" id="bBm" onclick="G.action('bomb')">💥<small>3💎</small></button>
+  <button class="btn" id="bTheme" onclick="G.showThemes()">🎨</button>
   <button class="btn restart" onclick="G.restart()">🔄</button>
 </div>
 
@@ -199,16 +220,16 @@
 <div class="overlay" id="levelCompleteOverlay">
   <div class="modal" style="max-width: 450px;">
     <h2>🏮 Уровень пройден!</h2>
-    <p class="learning-tip">💡 Нажмите на иероглиф, чтобы услышать произношение и закрепить знание</p>
+    <p class="learning-tip">💡 Нажмите на иероглиф, чтобы услышать произношение</p>
     <div class="jade-grid" id="jadeGrid"></div>
     <button onclick="G.nextLevelFromModal()">Продолжить ➜</button>
   </div>
 </div>
 
 <div class="overlay" id="gameOverOverlay">
-  <div class="modal" style="max-width: 350px;">
+  <div class="modal">
     <h2>⏳ Ходы закончились</h2>
-    <p>Не удалось достичь цели.<br>Попробуйте ещё раз или используйте кристаллы для продолжения.</p>
+    <p>Не удалось достичь цели.<br>Попробуйте ещё раз или используйте кристаллы.</p>
     <div style="display:flex;gap:10px;justify-content:center;margin-top:15px;flex-wrap:wrap;">
         <button class="secondary" onclick="G.restartLevel()">🔄 Заново</button>
         <button onclick="G.continueLevel()">+5 👣 (5💎)</button>
@@ -216,10 +237,19 @@
   </div>
 </div>
 
+<div class="overlay" id="themesOverlay">
+  <div class="modal" style="max-width: 400px;">
+    <h2>🎨 Темы оформления</h2>
+    <p style="font-size:.75rem;">Открываются по мере прохождения уровней</p>
+    <div class="theme-grid" id="themeGrid"></div>
+    <button class="secondary" onclick="G.closeThemes()">Закрыть</button>
+  </div>
+</div>
+
 <script src="app.js"></script>
 <script>
 // ============================================================
-//  ЗВУКОВОЙ ДВИЖОК И ТАКТИЛЬНАЯ ОТДАЧА
+//  ЗВУКОВОЙ ДВИЖОК И ОЗВУЧКА
 // ============================================================
 var audioCtx = null;
 function initAudio() {
@@ -269,23 +299,43 @@ function playSound(type, comboCount) {
     }
 }
 
+// --- Улучшенная озвучка с fallback ---
+var voiceReady = false;
+function pickVoice() {
+    var voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+    return voices.find(v => v.lang && v.lang.toLowerCase().startsWith('zh')) || null;
+}
+if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = pickVoice;
+    pickVoice();
+}
+
 function speakChinese(text) {
-    if ('speechSynthesis' in window) {
+    if (!('speechSynthesis' in window)) {
+        playChime(0);
+        return;
+    }
+    try {
         window.speechSynthesis.cancel();
-        var utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'zh-CN';
-        utterance.rate = 0.75;
-        utterance.pitch = 1.0;
-        var voices = window.speechSynthesis.getVoices();
-        var zhVoice = voices.find(v => v.lang.includes('zh'));
-        if (zhVoice) utterance.voice = zhVoice;
-        window.speechSynthesis.speak(utterance);
+        var utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'zh-CN';
+        utter.rate = 0.75;
+        utter.pitch = 1.0;
+        var zhVoice = pickVoice();
+        if (zhVoice) utter.voice = zhVoice;
+        utter.onerror = function() {
+            console.warn('TTS failed, fallback to chime');
+            playChime(0);
+        };
+        window.speechSynthesis.speak(utter);
+    } catch(e) {
+        console.warn('TTS exception:', e);
+        playChime(0);
     }
 }
-if ('speechSynthesis' in window) window.speechSynthesis.getVoices();
 
 // ============================================================
-//  БАЗА ИЕРОГЛИФОВ
+//  БАЗА УРОВНЕЙ
 // ============================================================
 var LEVELS = [];
 if (typeof DB !== 'undefined' && DB.length > 0) {
@@ -299,7 +349,6 @@ if (typeof DB !== 'undefined' && DB.length > 0) {
         LEVELS.push(set);
     }
 } else {
-    // Fallback demo data if app.js is missing
     LEVELS = [
         [{h:'你好',p:'nǐ hǎo',r:'Привет',e:'👋'},{h:'谢谢',p:'xièxie',r:'Спасибо',e:'🙏'},{h:'猫',p:'māo',r:'Кот',e:'🐱'},{h:'狗',p:'gǒu',r:'Собака',e:'🐶'},{h:'水',p:'shuǐ',r:'Вода',e:'💧'}],
         [{h:'火',p:'huǒ',r:'Огонь',e:'🔥'},{h:'山',p:'shān',r:'Гора',e:'⛰️'},{h:'月',p:'yuè',r:'Луна',e:'🌙'},{h:'日',p:'rì',r:'Солнце',e:'☀️'},{h:'人',p:'rén',r:'Человек',e:'🧍'}]
@@ -307,10 +356,18 @@ if (typeof DB !== 'undefined' && DB.length > 0) {
 }
 
 // ============================================================
-//  СОСТОЯНИЕ ИГРЫ
+//  СОСТОЯНИЕ
 // ============================================================
 var RANKS = ["Новичок","Ученик","Мастер","Эксперт","Гуру","Магистр","Мудрец","Император","Легенда","Бессмертный"];
 var NC = 6, NR = 8, TOT = NC * NR;
+
+var THEMES = [
+    { id: 'default', name: 'Нефрит',   unlockAt: 0,   hue: 210, bg: 'radial-gradient(circle at center, hsl(210,25%,8%), hsl(210,15%,4%))' },
+    { id: 'bamboo',  name: 'Бамбук',   unlockAt: 10,  hue: 130, bg: 'radial-gradient(circle at center, hsl(130,35%,10%), hsl(130,25%,4%))' },
+    { id: 'sunset',  name: 'Закат',    unlockAt: 25,  hue: 30,  bg: 'radial-gradient(circle at center, hsl(30,45%,10%), hsl(30,35%,4%))' },
+    { id: 'night',   name: 'Пекин',    unlockAt: 50,  hue: 240, bg: 'radial-gradient(circle at center, hsl(240,45%,10%), hsl(240,35%,4%))' },
+    { id: 'gold',    name: 'Золото',   unlockAt: 100, hue: 45,  bg: 'radial-gradient(circle at center, hsl(45,50%,12%), hsl(45,40%,5%))' }
+];
 
 var state = {
     board: [], score: 0, level: 1, goal: 800, 
@@ -320,10 +377,11 @@ var state = {
     circle: 1, totalLevelsCompleted: 0,
     moves: 0, maxMoves: 0,
     fever: 0, isFever: false,
-    brushActive: false
+    brushActive: false,
+    themeId: 'default'
 };
 
-var PRICE_HINT = 50, PRICE_SHUF = 80, PRICE_BOMB = 5;
+var PRICE_HINT = 30, PRICE_SHUF = 50, PRICE_BOMB = 3, PRICE_BRUSH = 8;
 var CHAR_COLOR_MAP = {};
 
 function getColorForChar(char, level) {
@@ -339,7 +397,7 @@ function getColorForChar(char, level) {
 }
 
 // ============================================================
-//  ЛОГИКА СОВПАДЕНИЙ И БУСТЕРОВ
+//  ПОИСК СОВПАДЕНИЙ (исправлен баг с камнями)
 // ============================================================
 function findAllCombinations(bd) {
     var results = [], used = {};
@@ -347,16 +405,25 @@ function findAllCombinations(bd) {
     for (var r = 0; r < NR; r++) {
         for (var c = 0; c <= NC - 3; c++) {
             var i = r * NC + c;
-            var ch = bd[i] && bd[i].type !== 'stone' ? bd[i].h : null;
-            if (!ch) continue;
+            var first = bd[i];
+            if (!first || first.type === 'stone') continue;
+            var ch = first.h;
             var len = 1;
-            while (c + len < NC && bd[i + len] && bd[i + len].h === ch && bd[i+len].type !== 'stone') len++;
+            while (c + len < NC) {
+                var nxt = bd[i + len];
+                if (!nxt || nxt.type === 'stone' || nxt.h !== ch) break;
+                len++;
+            }
             if (len >= 3) {
-                var ids = []; for (var k = 0; k < len; k++) ids.push(i + k);
+                var ids = [];
+                for (var k = 0; k < len; k++) ids.push(i + k);
                 var key = ids.join('-');
                 if (!used[key]) {
                     used[key] = true;
-                    results.push({ ids: ids, len: len, type: len >= 6 ? 'rainbow' : len >= 5 ? 'star' : len === 4 ? 'laser' : 'line', orient: 'h' });
+                    results.push({
+                        ids: ids, len: len, orient: 'h',
+                        type: len >= 6 ? 'rainbow' : len >= 5 ? 'star' : len === 4 ? 'laser' : 'line'
+                    });
                 }
             }
             c += len - 1;
@@ -366,16 +433,25 @@ function findAllCombinations(bd) {
     for (var c = 0; c < NC; c++) {
         for (var r = 0; r <= NR - 3; r++) {
             var i = r * NC + c;
-            var ch = bd[i] && bd[i].type !== 'stone' ? bd[i].h : null;
-            if (!ch) continue;
+            var first = bd[i];
+            if (!first || first.type === 'stone') continue;
+            var ch = first.h;
             var len = 1;
-            while (r + len < NR && bd[i + len * NC] && bd[i + len * NC].h === ch && bd[i+len*NC].type !== 'stone') len++;
+            while (r + len < NR) {
+                var nxt = bd[i + len * NC];
+                if (!nxt || nxt.type === 'stone' || nxt.h !== ch) break;
+                len++;
+            }
             if (len >= 3) {
-                var ids = []; for (var k = 0; k < len; k++) ids.push(i + k * NC);
+                var ids = [];
+                for (var k = 0; k < len; k++) ids.push(i + k * NC);
                 var key = ids.join('-');
                 if (!used[key]) {
                     used[key] = true;
-                    results.push({ ids: ids, len: len, type: len >= 6 ? 'rainbow' : len >= 5 ? 'star' : len === 4 ? 'laser' : 'line', orient: 'v' });
+                    results.push({
+                        ids: ids, len: len, orient: 'v',
+                        type: len >= 6 ? 'rainbow' : len >= 5 ? 'star' : len === 4 ? 'laser' : 'line'
+                    });
                 }
             }
             r += len - 1;
@@ -398,10 +474,12 @@ function findMatches() {
 }
 
 function hasMatch(idx) {
-    var r = Math.floor(idx / NC), c = idx % NC, ch = state.board[idx] && state.board[idx].type !== 'stone' ? state.board[idx].h : null;
-    if (!ch) return false;
-    if (c >= 2 && state.board[idx-1] && state.board[idx-1].h === ch && state.board[idx-2] && state.board[idx-2].h === ch) return true;
-    if (r >= 2 && state.board[idx-NC] && state.board[idx-NC].h === ch && state.board[idx-2*NC] && state.board[idx-2*NC].h === ch) return true;
+    var r = Math.floor(idx / NC), c = idx % NC;
+    var tile = state.board[idx];
+    if (!tile || tile.type === 'stone') return false;
+    var ch = tile.h;
+    if (c >= 2 && state.board[idx-1] && state.board[idx-1].h === ch && state.board[idx-1].type !== 'stone' && state.board[idx-2] && state.board[idx-2].h === ch && state.board[idx-2].type !== 'stone') return true;
+    if (r >= 2 && state.board[idx-NC] && state.board[idx-NC].h === ch && state.board[idx-NC].type !== 'stone' && state.board[idx-2*NC] && state.board[idx-2*NC].h === ch && state.board[idx-2*NC].type !== 'stone') return true;
     return false;
 }
 
@@ -449,10 +527,11 @@ function getRowCol(idx) {
 }
 
 // ============================================================
-//  ИГРОВОЙ ЦИКЛ
+//  ИНИЦИАЛИЗАЦИЯ
 // ============================================================
 function init() {
     loadProgress();
+    applyTheme();
     updateUI();
     startLevel();
     window.addEventListener('resize', calcSize);
@@ -462,6 +541,11 @@ function init() {
     b.addEventListener('pointerup', onUp);
     document.body.addEventListener('pointerdown', initAudio, {once:true});
     if(state.level === 1 && state.score === 0) G.showTut();
+}
+
+function applyTheme() {
+    var t = THEMES.find(x => x.id === state.themeId) || THEMES[0];
+    document.getElementById('bg').style.background = t.bg;
 }
 
 function startLevel() {
@@ -476,12 +560,11 @@ function startLevel() {
     var baseGoal = 800 + (state.level * 150);
     state.goal = Math.floor(baseGoal * (1 + (state.circle - 1) * 0.35));
     
-    // Сложность: ходы и камни
     state.maxMoves = state.level <= 2 ? 0 : 35 + (state.level * 2);
     state.moves = state.maxMoves;
     
-    var hue = ((state.level - 1) * 45) % 360;
-    document.getElementById('bg').style.background = 'radial-gradient(circle at center, hsl('+hue+',25%,8%) 0%, hsl('+hue+',15%,4%) 100%)';
+    var t = THEMES.find(x => x.id === state.themeId) || THEMES[0];
+    document.getElementById('bg').style.background = t.bg;
     
     var circleText = state.circle > 1 ? ' (Круг ' + state.circle + ')' : '';
     var levelText = state.level > 999 ? '∞ ' + (state.level % 100) : state.level;
@@ -495,7 +578,6 @@ function startLevel() {
         do { state.board[i] = randChar(); att++; } while(hasMatch(i) && att < 50);
     }
     
-    // Добавляем камни на высоких уровнях
     if(state.level >= 3) {
         var stoneCount = Math.min(8, Math.floor(state.level / 2));
         for(var i=0; i<stoneCount; i++) {
@@ -519,7 +601,16 @@ function randChar() {
     return { h:c.h, p:c.p, r:c.r, e:c.e, colorClass:getColorForChar(c.h, state.level), sp:null, type:'normal' };
 }
 
-async function resolve(matches, shapes) {
+// ============================================================
+//  РАЗРЕШЕНИЕ СОВПАДЕНИЙ (защита от рекурсии)
+// ============================================================
+async function resolve(matches, shapes, depth) {
+    depth = depth || 0;
+    if (depth > 20) {
+        console.warn('Слишком глубокая рекурсия resolve');
+        state.busy = false;
+        return;
+    }
     if(matches.length===0) { state.combo=0; checkWin(); return; }
     state.combo++;
     state.busy = true;
@@ -527,7 +618,6 @@ async function resolve(matches, shapes) {
     if(navigator.vibrate) navigator.vibrate(30);
     playSound('match', state.combo);
     
-    // Обучение: произношение и показ перевода при комбо
     var firstTile = state.board[matches[0]];
     if(firstTile && firstTile.type !== 'stone') {
         speakChinese(firstTile.h);
@@ -536,7 +626,6 @@ async function resolve(matches, shapes) {
         }
     }
     
-    // Активация бустеров
     var extraMatches = [];
     matches.forEach(idx => {
         var tile = state.board[idx];
@@ -557,7 +646,6 @@ async function resolve(matches, shapes) {
         }
     });
     
-    // Разрушение камней по соседству
     var stonesHit = [];
     matches.forEach(idx => {
         var neighbors = getNeighbors(idx);
@@ -579,7 +667,6 @@ async function resolve(matches, shapes) {
     state.score += pts;
     state.coins += Math.floor(allMatches.length / 3);
     
-    // Создание новых бустеров
     var shapesCopy = shapes.slice();
     for (var s = 0; s < shapesCopy.length; s++) {
         var shape = shapesCopy[s];
@@ -591,13 +678,11 @@ async function resolve(matches, shapes) {
                 else if (shape.type === 'star') boosterName = 'star';
                 else if (shape.type === 'rainbow') boosterName = 'rainbow';
                 state.board[midIdx].sp = boosterName;
-                // Убираем из allMatches, чтобы не удалить только что созданный бустер
                 allMatches = allMatches.filter(id => id !== midIdx);
             }
         }
     }
     
-    // Режим Просветления
     if(!state.isFever) {
         addFever(matches.length * 10);
     }
@@ -617,7 +702,7 @@ async function resolve(matches, shapes) {
     await sleep(350);
     
     var next = findMatches();
-    await resolve(next.matched, next.shapes);
+    await resolve(next.matched, next.shapes, depth + 1);
 }
 
 function addFever(amount) {
@@ -688,7 +773,7 @@ function checkWin() {
 }
 
 // ============================================================
-//  УПРАВЛЕНИЕ И ВВОД
+//  УПРАВЛЕНИЕ
 // ============================================================
 var dragStart = -1, isDrag = false, startX=0, startY=0;
 
@@ -708,7 +793,6 @@ function onDown(e) {
     var i = getIdx(e);
     if(i<0) return;
     
-    // Режим Кисти
     if(state.brushActive) {
         state.brushActive = false;
         document.body.style.cursor = 'default';
@@ -740,7 +824,8 @@ function onMove(e) {
 }
 
 async function onUp(e) { 
-    if(isDrag && dragStart>=0 && !state.busy) {
+    if(dragStart < 0) return;
+    if(isDrag && !state.busy) {
         var dx = e.clientX - startX, dy = e.clientY - startY;
         var target = -1, r = Math.floor(dragStart/NC), c = dragStart%NC;
         if(Math.abs(dx) > Math.abs(dy)) {
@@ -794,7 +879,7 @@ async function trySwap(a,b) {
 }
 
 // ============================================================
-//  ИНТЕРФЕЙС И БОСТЕРЫ
+//  G — ИГРОВЫЕ ДЕЙСТВИЯ
 // ============================================================
 var G = {
     action: function(type) {
@@ -813,19 +898,19 @@ var G = {
             } else { showToast("Не хватает монет!"); }
         }
         else if(type==='brush') {
-            if(state.crystals >= 10) {
-                state.crystals -= 10;
+            if(state.crystals >= PRICE_BRUSH) {
+                state.crystals -= PRICE_BRUSH;
                 state.brushActive = true;
                 document.body.style.cursor = 'crosshair';
-                showToast("🖌️ Выберите клетку для создания Радуги");
+                showToast("🖌️ Выберите клетку для Радуги");
                 playSound('bonus', 0);
             } else { showToast("Не хватает кристаллов!"); }
         }
         else if(type==='bomb') {
             if(state.crystals>=PRICE_BOMB) {
-                if(confirm("Установить бомбу за "+PRICE_BOMB+" 💎?")) {
-                    state.crystals-=PRICE_BOMB; placeBomb(); playSound('bonus', 0);
-                }
+                state.crystals-=PRICE_BOMB;
+                placeBomb();
+                playSound('bonus', 0);
             } else { showToast("Не хватает кристаллов!"); }
         }
         updateUI();
@@ -836,7 +921,10 @@ var G = {
             state.level = 1; state.coins = 100; state.crystals = 5;
             state.shufFree = 3; state.hintFree = 3; state.score = 0;
             state.circle = 1; state.totalLevelsCompleted = 0;
+            state.themeId = 'default';
             localStorage.removeItem('hanzi_save');
+            saveProgress();
+            applyTheme();
             startLevel();
             showToast("🔄 Игра перезапущена!");
         }
@@ -863,35 +951,76 @@ var G = {
         state.level++;
         state.shufFree = Math.min(state.shufFree+1, 5);
         state.hintFree = Math.min(state.hintFree+1, 5);
-        state.crystals += 2 + Math.floor(state.totalLevelsCompleted / 10);
+        var reward = 2 + Math.floor(state.totalLevelsCompleted / 5);
+        state.crystals += reward;
+        state.coins += 30 + state.level * 5;
         saveProgress();
-        showToast("🎉 Уровень пройден! +" + (2 + Math.floor(state.totalLevelsCompleted / 10)) + " 💎");
+        showToast("🎉 Уровень пройден! +" + reward + " 💎");
         setTimeout(startLevel, 500);
+    },
+    showThemes: function() {
+        var grid = document.getElementById('themeGrid');
+        grid.innerHTML = '';
+        THEMES.forEach(function(t) {
+            var unlocked = state.totalLevelsCompleted >= t.unlockAt;
+            var btn = document.createElement('button');
+            btn.className = 'theme-btn' + (state.themeId === t.id ? ' active' : '') + (unlocked ? '' : ' locked');
+            btn.innerHTML = t.name + '<small>' + (unlocked ? (state.themeId === t.id ? 'Активна' : 'Выбрать') : '🔒 Ур. ' + t.unlockAt) + '</small>';
+            if(unlocked) {
+                btn.onclick = function() {
+                    state.themeId = t.id;
+                    applyTheme();
+                    saveProgress();
+                    G.showThemes();
+                    showToast("🎨 Тема: " + t.name);
+                };
+            }
+            grid.appendChild(btn);
+        });
+        document.getElementById('themesOverlay').classList.add('show');
+    },
+    closeThemes: function() {
+        document.getElementById('themesOverlay').classList.remove('show');
     }
 };
 
+// ============================================================
+//  ПОДСКАЗКА (полноценная)
+// ============================================================
 function showHint() {
-    var allShapes = findAllCombinations(state.board);
-    var cells = document.querySelectorAll('.c');
-    for (var i = 0; i < allShapes.length; i++) {
-        var shape = allShapes[i];
-        if (shape.type !== 'line') {
-            shape.ids.forEach(id => {
-                if(cells[id]) { cells[id].classList.add('best'); setTimeout(()=>cells[id].classList.remove('best'), 2000); }
-            });
-            showToast("💡 Нашёл сложную форму!");
-            return;
-        }
+    var found = anyMove();
+    if (!found) {
+        showToast("💡 Нет ходов — перемешайте!");
+        reshuffleBoard();
+        return;
     }
-    showToast("💡 Попробуйте поменять соседние клетки");
+    var cells = document.querySelectorAll('.c');
+    found.forEach(idx => {
+        if (cells[idx]) {
+            cells[idx].classList.add('best');
+            setTimeout(() => cells[idx].classList.remove('best'), 2500);
+        }
+    });
+    showToast("💡 Попробуйте поменять эти клетки");
 }
 
+// ============================================================
+//  БОМБА (исправлен баг с камнями)
+// ============================================================
 function placeBomb() {
-    var idx = Math.floor(Math.random()*TOT);
-    if(state.board[idx] && state.board[idx].type !== 'stone') {
+    var attempts = 0, idx = -1;
+    do {
+        idx = Math.floor(Math.random() * TOT);
+        attempts++;
+    } while (attempts < 20 && (!state.board[idx] || state.board[idx].type === 'stone'));
+    
+    if (idx >= 0 && state.board[idx] && state.board[idx].type !== 'stone') {
         state.board[idx].sp = 'bomb';
         render();
-        setTimeout(()=> resolve(getArea(idx, 1), []), 500);
+        setTimeout(() => resolve(getArea(idx, 1), []), 500);
+    } else {
+        state.crystals += PRICE_BOMB;
+        showToast("⚠️ Не удалось поставить бомбу");
     }
 }
 
@@ -908,6 +1037,9 @@ function reshuffleBoard(silent) {
     if(!silent) { render(); updateUI(); }
 }
 
+// ============================================================
+//  РЕНДЕР
+// ============================================================
 var cellPx=0;
 function calcSize() {
     var ba=document.querySelector('.ba');
@@ -949,8 +1081,28 @@ function render() {
     }
 }
 
+// ============================================================
+//  UI
+// ============================================================
+var _lastScore = 0;
 function updateUI() {
-    document.getElementById('uSc').innerText = state.score;
+    // Анимированный счётчик
+    var el = document.getElementById('uSc');
+    var from = _lastScore;
+    var to = state.score;
+    _lastScore = to;
+    if(from !== to) {
+        var startTime = Date.now();
+        var duration = 400;
+        (function tick() {
+            var t = Math.min(1, (Date.now() - startTime) / duration);
+            el.innerText = Math.floor(from + (to - from) * t);
+            if (t < 1) requestAnimationFrame(tick);
+        })();
+    } else {
+        el.innerText = to;
+    }
+    
     document.getElementById('uLv').innerText = state.level > 999 ? '∞' + (state.level % 100) : state.level;
     document.getElementById('uMoves').innerText = state.maxMoves === 0 ? '∞' : state.moves;
     document.getElementById('uCoin').innerText = state.coins;
@@ -993,7 +1145,7 @@ function showGameOver() {
 
 function showToast(msg) {
     var el = document.createElement('div');
-    el.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);color:#d4af37;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:700;z-index:999;border:1px solid rgba(212,175,55,.3);animation:floatUp 2s forwards;pointer-events:none;';
+    el.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);color:#d4af37;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:700;z-index:999;border:1px solid rgba(212,175,55,.3);animation:floatUp 2s forwards;pointer-events:none;white-space:nowrap;';
     el.innerText = msg;
     document.body.appendChild(el);
     setTimeout(() => el.remove(), 2000);
@@ -1012,10 +1164,15 @@ function floatText(txt, idx) {
 
 function sleep(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 
+// ============================================================
+//  СОХРАНЕНИЕ
+// ============================================================
 function saveProgress() {
     localStorage.setItem('hanzi_save', JSON.stringify({
         lvl: state.level, coins: state.coins, cry: state.crystals, 
-        sf: state.shufFree, hf: state.hintFree, completed: state.totalLevelsCompleted
+        sf: state.shufFree, hf: state.hintFree, 
+        completed: state.totalLevelsCompleted,
+        theme: state.themeId
     }));
 }
 
@@ -1027,6 +1184,7 @@ function loadProgress() {
             state.level = d.lvl || 1; state.coins = d.coins || 100;
             state.crystals = d.cry || 5; state.shufFree = d.sf || 3;
             state.hintFree = d.hf || 3; state.totalLevelsCompleted = d.completed || 0;
+            state.themeId = d.theme || 'default';
         } catch(e) {}
     }
 }
