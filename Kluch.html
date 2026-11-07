@@ -1,1054 +1,721 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Собери иероглиф · 500 ключей</title>
-    <style>
-        * { box-sizing: border-box; font-family: system-ui, -apple-system, 'Segoe UI', 'Noto Sans CJK', 'Microsoft YaHei', sans-serif; -webkit-tap-highlight-color: transparent; }
-        html, body {
-            margin: 0; padding: 0;
-            height: 100%; height: 100dvh;
-            overflow: hidden;
-            overscroll-behavior: none;
-            touch-action: manipulation;
-        }
-        body {
-            background: radial-gradient(circle at 30% 10%, #4a6ef5, #1e2a6e 45%, #0d1330 100%);
-            color: #fff;
-            display: flex; justify-content: center;
-            padding: 4px 8px calc(4px + env(safe-area-inset-bottom));
-        }
-        .game {
-            width: 100%; max-width: 520px;
-            height: 100%;
-            display: flex; flex-direction: column;
-            gap: 5px;
-            min-height: 0;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Собери иероглиф · Ключи</title>
+<style>
+*{box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI','Noto Sans CJK','Microsoft YaHei',sans-serif;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%;height:100dvh;overflow:hidden;overscroll-behavior:none;touch-action:manipulation}
+body{background:radial-gradient(circle at 30% 10%,#4a6ef5,#1e2a6e 45%,#0d1330 100%);color:#fff;display:flex;justify-content:center;padding:4px 6px calc(4px + env(safe-area-inset-bottom))}
+.game{width:100%;max-width:560px;height:100%;display:flex;flex-direction:column;gap:6px;min-height:0}
 
-        /* Задание */
-        .task-card {
-            width: 100%;
-            background: linear-gradient(160deg, #ffffff, #d9e8ff);
-            border-radius: 20px;
-            padding: 6px 14px 4px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            box-shadow: 0 6px 0 #0c142b, 0 10px 24px rgba(0,0,0,0.55);
-            border: 3px solid #ffd966;
-            flex: 0 0 auto;
-            position: relative;
-            cursor: pointer;
-        }
-        .task-label {
-            font-size: 9px; color: #2b4a8a; letter-spacing: 2px; font-weight: 800;
-            text-transform: uppercase;
-        }
-        .task-pinyin {
-            font-size: clamp(26px, 7.5vh, 48px);
-            line-height: 1; font-weight: 800; color: #0b1530;
-            text-shadow: 0 4px 0 #b3c7ff;
-            letter-spacing: 1px;
-        }
-        .task-translation {
-            background: #0b1530; color: #ffe680;
-            font-size: clamp(12px, 3vh, 18px);
-            font-weight: 800;
-            padding: 2px 20px; border-radius: 60px;
-            box-shadow: 0 3px 0 #00000088;
-            margin-top: 3px;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-        }
-        .task-speaker {
-            position: absolute;
-            top: 8px; right: 10px;
-            font-size: 20px;
-            opacity: 0.7;
-        }
+/* Задание */
+.task-card{width:100%;background:linear-gradient(160deg,#fff,#d9e8ff);border-radius:18px;padding:6px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 5px 0 #0c142b,0 8px 20px rgba(0,0,0,.55);border:3px solid #ffd966;flex:0 0 auto;position:relative;cursor:pointer}
+.task-pinyin{font-size:clamp(30px,9vh,64px);line-height:1;font-weight:900;color:#0b1530;text-shadow:0 4px 0 #b3c7ff;letter-spacing:1px}
+.task-translation{background:#0b1530;color:#ffe680;font-size:clamp(13px,3vh,20px);font-weight:800;padding:2px 20px;border-radius:60px;box-shadow:0 3px 0 #00000088;margin-top:2px;white-space:nowrap}
+.task-speaker{position:absolute;top:8px;right:12px;font-size:20px;opacity:.6}
 
-        /* Счёт */
-        .score-bar {
-            width: 100%;
-            background: rgba(255,255,255,0.12);
-            border-radius: 14px; padding: 1px 14px;
-            border: 2px solid #7ee081;
-            display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 3px 0 #0c142b;
-            flex: 0 0 auto;
-        }
-        .score-label { font-size: 10px; color: #7ee081; letter-spacing: 2px; font-weight: 800; text-transform: uppercase; }
-        .score-value { font-size: 20px; line-height: 1.1; font-weight: 800; text-shadow: 0 2px 0 #1f5f2a; }
+/* Счёт */
+.score-bar{width:100%;background:rgba(255,255,255,.12);border-radius:12px;padding:2px 14px;border:2px solid #7ee081;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 0 #0c142b;flex:0 0 auto}
+.score-label{font-size:10px;color:#7ee081;letter-spacing:1px;font-weight:800}
+.score-value{font-size:20px;line-height:1.1;font-weight:800;text-shadow:0 2px 0 #1f5f2a}
 
-        /* Зона сборки */
-        .build-area {
-            width: 100%;
-            background: rgba(0,0,0,0.25);
-            border-radius: 18px;
-            padding: 4px 6px;
-            display: flex; align-items: center; justify-content: center;
-            gap: 4px; border: 2px solid rgba(255,255,255,0.15);
-            box-shadow: inset 0 3px 10px rgba(0,0,0,0.4), 0 4px 0 #0c142b;
-            flex: 0 0 auto;
-        }
-        .base-slot, .key-slot {
-            flex: 1 1 0;
-            max-width: 78px;
-            aspect-ratio: 0.9;
-            max-height: 78px;
-            border-radius: 14px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            position: relative;
-        }
-        .base-slot {
-            background: linear-gradient(160deg, #ffffff, #d9e8ff);
-            border: 3px solid #ffd966;
-            box-shadow: 0 4px 0 #0c142b, 0 0 14px #ffd96655;
-        }
-        .base-char {
-            font-size: clamp(28px, 6.5vh, 44px);
-            line-height: 1; color: #0b1530; font-weight: 600; text-shadow: 0 3px 0 #b3c7ff;
-        }
-        .base-label, .slot-label {
-            font-size: 7px; font-weight: 800; letter-spacing: 0.5px;
-            text-transform: uppercase; margin-top: 1px;
-        }
-        .base-label { color: #2b4a8a; }
-        .slot-label { color: #ffe680; }
-        .key-slot {
-            background: rgba(255,255,255,0.1); border: 3px dashed rgba(255,255,255,0.35);
-            transition: all 0.15s;
-        }
-        .key-slot.filled {
-            background: linear-gradient(160deg, #ffffff, #d9e8ff);
-            border: 3px solid #ffb347;
-            box-shadow: 0 4px 0 #0c142b, 0 0 18px #ffb347;
-        }
-        .key-slot .slot-char {
-            font-size: clamp(26px, 6vh, 42px);
-            color: rgba(255,255,255,0.25); font-weight: 600; line-height: 1;
-        }
-        .key-slot.filled .slot-char { color: #0b1530; text-shadow: 0 3px 0 #b3c7ff; }
-        .plus-sign { font-size: clamp(16px, 3.5vh, 24px); color: #ffd966; font-weight: 700; padding: 0 1px; }
-        .result-slot {
-            flex: 1.15 1 0;
-            max-width: 92px;
-            aspect-ratio: 0.9;
-            max-height: 92px;
-            border-radius: 16px;
-            background: linear-gradient(160deg, #1a2a4a, #0d1330);
-            border: 3px solid #4a6ef5;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            box-shadow: 0 4px 0 #0c142b, inset 0 0 16px #4a6ef544;
-            transition: all 0.2s;
-        }
-        .result-slot.correct {
-            border-color: #4caf50; box-shadow: 0 4px 0 #0c142b, 0 0 24px #4caf50;
-            background: linear-gradient(160deg, #1f5f2a, #0d3314);
-        }
-        .result-slot.wrong {
-            border-color: #f44336; box-shadow: 0 4px 0 #0c142b, 0 0 24px #f44336;
-            background: linear-gradient(160deg, #6b0f1a, #330d12);
-            animation: shake 0.35s;
-        }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-6px); }
-            75% { transform: translateX(6px); }
-        }
-        .result-char {
-            font-size: clamp(30px, 7vh, 52px);
-            font-weight: 700; color: #fff; text-shadow: 0 4px 0 #4a6ef5; line-height: 1;
-        }
-        .result-slot.correct .result-char { text-shadow: 0 4px 0 #4caf50; }
-        .result-slot.wrong .result-char { text-shadow: 0 4px 0 #f44336; }
-        .result-label { font-size: 7px; color: #aac7ff; font-weight: 800; margin-top: 1px; text-transform: uppercase; }
+/* Зона сборки */
+.build-area{width:100%;background:rgba(0,0,0,.28);border-radius:20px;padding:6px;display:flex;align-items:center;justify-content:center;gap:4px;border:2px solid rgba(255,255,255,.18);box-shadow:inset 0 4px 12px rgba(0,0,0,.45),0 4px 0 #0c142b;flex:0 0 auto}
+.base-slot,.key-slot{flex:1 1 0;max-width:100px;aspect-ratio:1/1;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;container-type:size}
+.base-slot{background:linear-gradient(160deg,#fff,#d9e8ff);border:3px solid #ffd966;box-shadow:0 4px 0 #0c142b,0 0 16px #ffd96666}
+.base-char{font-size:75cqmin;line-height:1;color:#0b1530;font-weight:600;text-shadow:0 2px 0 #b3c7ff}
+.base-label,.slot-label{font-size:8px;font-weight:800;text-transform:uppercase;margin-top:2px}
+.base-label{color:#2b4a8a}
+.slot-label{color:#ffe680}
+.plus-sign{font-size:clamp(20px,4vh,28px);color:#ffd966;font-weight:700}
+.key-slot{background:rgba(255,255,255,.1);border:3px dashed rgba(255,255,255,.4);transition:all .15s}
+.key-slot.filled{background:linear-gradient(160deg,#fff,#d9e8ff);border:3px solid #ffb347;box-shadow:0 4px 0 #0c142b,0 0 20px #ffb347}
+.key-slot .slot-char{font-size:70cqmin;color:rgba(255,255,255,.3);font-weight:600;line-height:1}
+.key-slot.filled .slot-char{color:#0b1530;text-shadow:0 2px 0 #b3c7ff}
 
-        /* Сообщение */
-        .message {
-            width: 100%; min-height: 26px;
-            background: rgba(255,255,255,0.14);
-            border-radius: 40px; padding: 3px 12px;
-            font-size: clamp(10px, 2.3vh, 14px);
-            font-weight: 700; color: #fff8d6; text-align: center;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.2);
-            line-height: 1.2;
-            flex: 0 0 auto;
-        }
+.result-slot{flex:1.15 1 0;max-width:115px;aspect-ratio:1/1;border-radius:18px;background:linear-gradient(160deg,#1a2a4a,#0d1330);border:3px solid #4a6ef5;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 0 #0c142b,inset 0 0 16px #4a6ef544;transition:all .2s;container-type:size}
+.result-slot.correct{border-color:#4caf50;box-shadow:0 4px 0 #0c142b,0 0 28px #4caf50;background:linear-gradient(160deg,#1f5f2a,#0d3314)}
+.result-slot.wrong{border-color:#f44336;box-shadow:0 4px 0 #0c142b,0 0 28px #f44336;background:linear-gradient(160deg,#6b0f1a,#330d12);animation:shake .35s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.result-char{font-size:80cqmin;font-weight:700;color:#fff;text-shadow:0 3px 0 #4a6ef5;line-height:1}
+.result-slot.correct .result-char{text-shadow:0 3px 0 #4caf50}
+.result-slot.wrong .result-char{text-shadow:0 3px 0 #f44336}
+.result-label{font-size:8px;color:#aac7ff;font-weight:800;margin-top:1px;text-transform:uppercase}
 
-        /* Сетка ключей */
-        .keys-wrap {
-            flex: 1 1 auto;
-            min-height: 0;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .keys-grid {
-            width: 100%; height: 100%;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 5px;
-        }
-        .key-btn {
-            background: linear-gradient(145deg, #ffffff, #e2ecff);
-            border-radius: 14px;
-            padding: 1px 2px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 0 #0a1122, 0 6px 12px rgba(0,0,0,0.45);
-            border: 2.5px solid #ffb347;
-            transition: transform 0.06s, box-shadow 0.1s, border-color 0.12s, background 0.12s;
-            user-select: none; position: relative;
-            overflow: hidden; min-height: 0;
-        }
-        .key-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #0a1122, 0 4px 8px rgba(0,0,0,0.4); }
-        .key-btn.selected {
-            border-color: #4a6ef5; box-shadow: 0 4px 0 #0a1122, 0 0 16px #4a6ef5;
-            background: linear-gradient(145deg, #d9e8ff, #b8d0ff);
-        }
-        .key-btn.correct {
-            border-color: #4caf50; background: linear-gradient(145deg, #d4ffd4, #a8e6a8);
-            box-shadow: 0 4px 0 #1f5f2a, 0 0 20px #4caf50;
-        }
-        .key-btn.wrong {
-            border-color: #f44336; background: linear-gradient(145deg, #ffd4d4, #ffaaaa);
-            box-shadow: 0 4px 0 #6b0f1a, 0 0 20px #f44336;
-        }
-        .key-btn.disabled { opacity: 0.35; pointer-events: none; }
-        .key-symbol {
-            font-size: clamp(22px, 5.5vh, 38px);
-            line-height: 1; color: #101c3a; font-weight: 600;
-            text-shadow: 0 2px 0 #b3c7ff;
-        }
-        .key-pinyin {
-            font-size: clamp(8px, 1.7vh, 11px);
-            color: #1e40af; font-weight: 700;
-            font-style: italic; line-height: 1.1; margin-top: 1px;
-            white-space: nowrap;
-        }
-        .key-desc {
-            font-size: clamp(7px, 1.5vh, 10px);
-            font-weight: 700; color: #2b4a8a; background: #ffecb3;
-            padding: 0 5px; border-radius: 30px; margin-top: 1px;
-            white-space: nowrap; max-width: 100%;
-            overflow: hidden; text-overflow: ellipsis; line-height: 1.2;
-        }
+/* Сообщение */
+.message{width:100%;min-height:28px;background:rgba(255,255,255,.14);border-radius:40px;padding:4px 12px;font-size:clamp(11px,2.5vh,14px);font-weight:700;color:#fff8d6;text-align:center;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 2px 5px rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.2);flex:0 0 auto}
 
-        /* Кнопки */
-        .actions { width: 100%; display: flex; gap: 6px; flex: 0 0 auto; }
-        .btn {
-            border: none; color: white; font-weight: 800;
-            padding: 6px 4px; border-radius: 40px; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 1px;
-            transition: transform 0.06s, box-shadow 0.1s;
-            font-size: clamp(12px, 2.5vh, 16px);
-            display: flex; align-items: center; justify-content: center; gap: 4px;
-        }
-        .btn:active { transform: translateY(4px); }
-        .check-btn {
-            flex: 1;
-            background: linear-gradient(180deg, #4caf50, #2e7d32);
-            box-shadow: 0 5px 0 #1f5f2a, 0 8px 18px rgba(0,0,0,0.4);
-            text-shadow: 0 2px 0 #1f5f2a;
-        }
-        .check-btn:active { box-shadow: 0 1px 0 #1f5f2a, 0 4px 10px rgba(0,0,0,0.4); }
-        .check-btn:disabled { opacity: 0.5; pointer-events: none; box-shadow: 0 3px 0 #1f5f2a; }
-        .reset-btn {
-            flex: 0.5;
-            background: linear-gradient(180deg, #ff7b54, #e63946);
-            box-shadow: 0 5px 0 #6b0f1a, 0 8px 18px rgba(0,0,0,0.4);
-            text-shadow: 0 2px 0 #6b0f1a;
-        }
-        .reset-btn:active { box-shadow: 0 1px 0 #6b0f1a, 0 4px 10px rgba(0,0,0,0.4); }
+/* Сетка ключей */
+.keys-wrap{flex:1 1 auto;min-height:0;width:100%;display:flex;align-items:center;justify-content:center}
+.keys-grid{width:100%;height:100%;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:8px;max-height:400px;margin:auto}
 
-        @media (max-height: 640px) {
-            .score-bar { display: none; }
-            .task-label { display: none; }
-        }
-        @media (max-height: 520px) {
-            .key-desc { display: none; }
-            .build-area { padding: 3px; }
-        }
-    </style>
+/* Карточки ключей */
+.key-btn{background:linear-gradient(145deg,#fff,#e2ecff);border-radius:16px;padding:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 5px 0 #0a1122,0 8px 16px rgba(0,0,0,.45);border:3px solid #ffb347;transition:transform .06s,box-shadow .1s,border-color .12s,background .12s;user-select:none;position:relative;container-type:size}
+.key-btn:active{transform:translateY(4px);box-shadow:0 1px 0 #0a1122,0 4px 8px rgba(0,0,0,.4)}
+.key-btn.selected{border-color:#4a6ef5;box-shadow:0 5px 0 #0a1122,0 0 20px #4a6ef5;background:linear-gradient(145deg,#d9e8ff,#b8d0ff)}
+.key-btn.correct{border-color:#4caf50;background:linear-gradient(145deg,#d4ffd4,#a8e6a8);box-shadow:0 5px 0 #1f5f2a,0 0 24px #4caf50}
+.key-btn.wrong{border-color:#f44336;background:linear-gradient(145deg,#ffd4d4,#ffaaaa);box-shadow:0 5px 0 #6b0f1a,0 0 24px #f44336}
+.key-btn.disabled{opacity:.35;pointer-events:none}
+
+/* Размеры шрифтов привязаны к размеру самой карточки (cqi = container inline size) */
+.key-symbol{font-size:60cqi;line-height:1;color:#101c3a;font-weight:600;text-shadow:0 2px 0 #b3c7ff;margin-top:5cqi}
+.key-pinyin{font-size:14cqi;color:#1e40af;font-weight:800;font-style:italic;line-height:1.1;margin-top:2cqi}
+.key-desc{font-size:12cqi;font-weight:700;color:#2b4a8a;background:#ffecb3;padding:0 6cqi;border-radius:30px;margin-top:2cqi;white-space:nowrap;max-width:90%;overflow:hidden;text-overflow:ellipsis}
+
+/* Кнопки */
+.actions{width:100%;display:flex;gap:8px;flex:0 0 auto}
+.btn{border:none;color:#fff;font-weight:800;padding:10px 4px;border-radius:40px;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:transform .06s,box-shadow .1s;font-size:clamp(13px,2.8vh,16px);display:flex;align-items:center;justify-content:center;gap:6px}
+.btn:active{transform:translateY(4px)}
+.check-btn{flex:1;background:linear-gradient(180deg,#4caf50,#2e7d32);box-shadow:0 5px 0 #1f5f2a,0 8px 18px rgba(0,0,0,.4);text-shadow:0 2px 0 #1f5f2a}
+.check-btn:active{box-shadow:0 1px 0 #1f5f2a,0 4px 10px rgba(0,0,0,.4)}
+.check-btn:disabled{opacity:.5;pointer-events:none;box-shadow:0 3px 0 #1f5f2a}
+.reset-btn{flex:.4;background:linear-gradient(180deg,#ff7b54,#e63946);box-shadow:0 5px 0 #6b0f1a,0 8px 18px rgba(0,0,0,.4);text-shadow:0 2px 0 #6b0f1a;font-size:20px}
+.reset-btn:active{box-shadow:0 1px 0 #6b0f1a,0 4px 10px rgba(0,0,0,.4)}
+
+@media (max-height:600px){
+  .score-bar{display:none}
+  .keys-grid{max-height:300px}
+}
+</style>
 </head>
 <body>
-    <div class="game">
-        <!-- Задание: 🔊 тап для прослушивания -->
-        <div class="task-card" id="taskCard">
-            <div class="task-label">🎯 НАЙДИ ИЕРОГЛИФ</div>
-            <div class="task-pinyin" id="taskPinyin">bīng</div>
-            <div class="task-translation" id="taskTranslation">лёд</div>
-            <div class="task-speaker">🔊</div>
-        </div>
+<div class="game">
+  <div class="task-card" id="taskCard">
+    <div class="task-pinyin" id="taskPinyin">zhèng</div>
+    <div class="task-translation" id="taskTranslation">политика</div>
+    <div class="task-speaker">🔊</div>
+  </div>
 
-        <!-- Счёт -->
-        <div class="score-bar">
-            <div class="score-label">⭐ ОЧКИ</div>
-            <div class="score-value" id="scoreValue">0</div>
-        </div>
+  <div class="score-bar">
+    <div class="score-label">⭐ ОЧКИ</div>
+    <div class="score-value" id="scoreValue">0</div>
+  </div>
 
-        <!-- Зона сборки -->
-        <div class="build-area">
-            <div class="base-slot">
-                <div class="base-char" id="baseChar">冫</div>
-                <div class="base-label">ОСНОВА</div>
-            </div>
-            <div class="plus-sign">+</div>
-            <div class="key-slot" id="keySlot">
-                <div class="slot-char" id="keySlotChar">?</div>
-                <div class="slot-label">КЛЮЧ</div>
-            </div>
-            <div class="plus-sign">=</div>
-            <div class="result-slot" id="resultSlot">
-                <div class="result-char" id="resultChar">?</div>
-                <div class="result-label">РЕЗУЛЬТАТ</div>
-            </div>
-        </div>
-
-        <!-- Сообщение -->
-        <div class="message" id="message">Выбери ключ</div>
-
-        <!-- Ключи -->
-        <div class="keys-wrap">
-            <div class="keys-grid" id="keysGrid"></div>
-        </div>
-
-        <!-- Кнопки -->
-        <div class="actions">
-            <button class="btn check-btn" id="checkBtn" disabled>✓ ПРОВЕРИТЬ</button>
-            <button class="btn reset-btn" id="resetBtn">⟲</button>
-        </div>
+  <div class="build-area">
+    <div class="base-slot">
+      <div class="base-char" id="baseChar">正</div>
+      <div class="base-label">ОСНОВА</div>
     </div>
+    <div class="plus-sign">+</div>
+    <div class="key-slot" id="keySlot">
+      <div class="slot-char" id="keySlotChar">?</div>
+      <div class="slot-label">КЛЮЧ</div>
+    </div>
+    <div class="plus-sign">=</div>
+    <div class="result-slot" id="resultSlot">
+      <div class="result-char" id="resultChar">?</div>
+      <div class="result-label">РЕЗУЛЬТАТ</div>
+    </div>
+  </div>
 
-    <script>
-        (function() {
-            // ========== БАЗА КЛЮЧЕЙ: 550+ записей с пиньинем и переводом ==========
-            const KEY_DATA = {
-                // Ключи-основы
-                '冫': ['bīng', 'лёд'], '水': ['shuǐ', 'вода'], '氵': ['shuǐ', 'вода'],
-                '木': ['mù', 'дерево'], '日': ['rì', 'солнце'], '月': ['yuè', 'луна'],
-                '火': ['huǒ', 'огонь'], '土': ['tǔ', 'земля'], '王': ['wáng', 'король'],
-                '石': ['shí', 'камень'], '目': ['mù', 'глаз'], '禾': ['hé', 'зерно'],
-                '虫': ['chóng', 'насекомое'], '鱼': ['yú', 'рыба'], '鸟': ['niǎo', 'птица'],
-                '金': ['jīn', 'золото'], '纟': ['sī', 'нить'], '艹': ['cǎo', 'трава'],
-                '竹': ['zhú', 'бамбук'], '雨': ['yǔ', 'дождь'], '宀': ['mián', 'крыша'],
-                '广': ['guǎng', 'навес'], '门': ['mén', 'дверь'], '辶': ['chuò', 'движение'],
-                '女': ['nǚ', 'женщина'], '子': ['zǐ', 'ребёнок'], '口': ['kǒu', 'рот'],
-                '手': ['shǒu', 'рука'], '足': ['zú', 'нога'], '心': ['xīn', 'сердце'],
-                '攵': ['pū', 'удар'], '方': ['fāng', 'квадрат'], '白': ['bái', 'белый'],
-                '立': ['lì', 'стоять'], '山': ['shān', 'гора'], '田': ['tián', 'поле'],
-                '力': ['lì', 'сила'], '大': ['dà', 'большой'], '小': ['xiǎo', 'маленький'],
-                '人': ['rén', 'человек'], '又': ['yòu', 'снова'], '刀': ['dāo', 'нож'],
-                '亻': ['rén', 'человек'], '扌': ['shǒu', 'рука'], '忄': ['xīn', 'сердце'],
-                '讠': ['yán', 'речь'], '饣': ['shí', 'еда'], '马': ['mǎ', 'конь'],
-                '车': ['chē', 'машина'], '食': ['shí', 'еда'], '羽': ['yǔ', 'перо'],
-                '贝': ['bèi', 'раковина'], '见': ['jiàn', 'видеть'], '言': ['yán', 'слово'],
+  <div class="message" id="message">Выбери ключ</div>
 
-                // Правые ключи-компоненты
-                '令': ['lìng', 'приказ'], '东': ['dōng', 'восток'], '奏': ['zòu', 'играть'],
-                '欠': ['qiàn', 'недостаток'], '夬': ['guài', 'решимость'], '工': ['gōng', 'работа'],
-                '可': ['kě', 'можно'], '胡': ['hú', 'варвар'], '每': ['měi', 'каждый'],
-                '乂': ['yì', 'резать'], '十': ['shí', 'десять'], '也': ['yě', 'тоже'],
-                '易': ['yì', 'легко'], '少': ['shǎo', 'мало'], '气': ['qì', 'воздух'],
-                '勾': ['gōu', 'крюк'], '对': ['duì', 'пара'], '公': ['gōng', 'общество'],
-                '兆': ['zhào', 'знак'], '风': ['fēng', 'ветер'], '卯': ['mǎo', 'заяц'],
-                '交': ['jiāo', 'пересечение'], '寸': ['cùn', 'мера'], '才': ['cái', 'талант'],
-                '反': ['fǎn', 'против'], '支': ['zhī', 'ветвь'], '艮': ['gèn', 'граница'],
-                '青': ['qīng', 'синий'], '音': ['yīn', 'звук'], '爰': ['yuán', 'там'],
-                '乍': ['zhà', 'вдруг'], '西': ['xī', 'запад'], '乞': ['qǐ', 'просить'],
-                '曷': ['hé', 'почему'], '昌': ['chāng', 'процветать'], '巴': ['bā', 'жажда'],
-                '那': ['nà', 'тот'], '牙': ['yá', 'зуб'], '未': ['wèi', 'ещё не'],
-                '乎': ['hū', 'вопрос'], '及': ['jí', 'достигать'], '且': ['qiě', 'и'],
-                '生': ['shēng', 'жизнь'], '昏': ['hūn', 'сумерки'], '台': ['tái', 'платформа'],
-                '乃': ['nǎi', 'же'], '尔': ['ěr', 'ты'], '主': ['zhǔ', 'хозяин'],
-                '舌': ['shé', 'язык'], '吾': ['wú', 'я'], '兑': ['duì', 'обмен'],
-                '射': ['shè', 'стрелять'], '司': ['sī', 'управлять'], '化': ['huà', 'превращаться'],
-                '早': ['zǎo', 'рано'], '约': ['yuē', 'договор'], '采': ['cǎi', 'собирать'],
-                '监': ['jiān', 'надзор'], '录': ['lù', 'запись'], '氏': ['shì', 'род'],
-                '戋': ['jiān', 'малый'], '冬': ['dōng', 'зима'], '亡': ['wáng', 'гибель'],
-                '曼': ['màn', 'длинный'], '丁': ['dīng', 'гвоздь'], '戈': ['gē', 'копьё'],
-                '隹': ['zhuī', 'птица'], '是': ['shì', 'быть'], '奂': ['huàn', 'обильный'],
-                '元': ['yuán', 'начало'], '求': ['qiú', 'искать'], '里': ['lǐ', 'внутри'],
-                '码': ['mǎ', 'код'], '专': ['zhuān', 'специальный'], '破': ['pò', 'ломать'],
-                '皮': ['pí', 'кожа'], '更': ['gèng', 'ещё'], '看': ['kàn', 'смотреть'],
-                '垂': ['chuí', 'свисать'], '民': ['mín', 'народ'], '中': ['zhōng', 'середина'],
-                '斗': ['dǒu', 'ковш'], '秋': ['qiū', 'осень'], '蚊': ['wén', 'комар'],
-                '文': ['wén', 'письмо'], '蚂': ['mǎ', 'муравей'], '义': ['yì', 'справедл.'],
-                '蛇': ['shé', 'змея'], '它': ['tā', 'оно'], '鲜': ['xiān', 'свежий'],
-                '羊': ['yáng', 'овца'], '鲤': ['lǐ', 'карп'], '鲸': ['jīng', 'кит'],
-                '京': ['jīng', 'столица'], '鸡': ['jī', 'курица'], '鸭': ['yā', 'утка'],
-                '甲': ['jiǎ', 'панцирь'], '鹅': ['é', 'гусь'], '我': ['wǒ', 'я'],
-                '钱': ['qián', 'деньги'], '银': ['yín', 'серебро'], '铁': ['tiě', 'железо'],
-                '失': ['shī', 'терять'], '铜': ['tóng', 'медь'], '同': ['tóng', 'одинаковый'],
-                '笑': ['xiào', 'смеяться'], '夭': ['yāo', 'молодой'], '笔': ['bǐ', 'кисть'],
-                '毛': ['máo', 'шерсть'], '答': ['dá', 'отвечать'], '合': ['hé', 'соединять'],
-                '第': ['dì', 'порядок'], '弟': ['dì', 'брат'], '雪': ['xuě', 'снег'],
-                '彐': ['jì', 'пятачок'], '雾': ['wù', 'туман'], '务': ['wù', 'дело'],
-                '雷': ['léi', 'гром'], '家': ['jiā', 'семья'], '豕': ['shǐ', 'свинья'],
-                '安': ['ān', 'спокойный'], '字': ['zì', 'иероглиф'], '完': ['wán', 'закончить'],
-                '店': ['diàn', 'магазин'], '占': ['zhàn', 'занимать'], '床': ['chuáng', 'кровать'],
-                '座': ['zuò', 'сиденье'], '坐': ['zuò', 'сидеть'], '问': ['wèn', 'спрашивать'],
-                '间': ['jiān', 'промежуток'], '闻': ['wén', 'слышать'], '耳': ['ěr', 'ухо'],
-                '进': ['jìn', 'входить'], '井': ['jǐng', 'колодец'], '过': ['guò', 'проходить'],
-                '这': ['zhè', 'этот'], '送': ['sòng', 'дарить'], '关': ['guān', 'закрывать'],
-                '想': ['xiǎng', 'думать'], '相': ['xiāng', 'взаимно'], '意': ['yì', 'смысл'],
-                '思': ['sī', 'мысль'], '拿': ['ná', 'брать'], '掌': ['zhǎng', 'ладонь'],
-                '尚': ['shàng', 'ещё'], '跑': ['pǎo', 'бежать'], '包': ['bāo', 'обёртка'],
-                '跳': ['tiào', 'прыгать'], '路': ['lù', 'дорога'], '各': ['gè', 'каждый'],
-                '饭': ['fàn', 'еда'], '饮': ['yǐn', 'пить'], '饱': ['bǎo', 'сытый'],
-                '轮': ['lún', 'колесо'], '仑': ['lún', 'порядок'], '转': ['zhuǎn', 'поворачивать'],
-                '较': ['jiào', 'сравнивать'], '骑': ['qí', 'ехать верхом'], '奇': ['qí', 'странный'],
-                '驾': ['jià', 'управлять'], '加': ['jiā', 'добавлять'], '驰': ['chí', 'мчаться'],
-                '收': ['shōu', 'собирать'], '丩': ['jiū', 'вить'], '放': ['fàng', 'класть'],
-                '政': ['zhèng', 'политика'], '正': ['zhèng', 'прямой'], '族': ['zú', 'род'],
-                '矢': ['shǐ', 'стрела'], '的': ['de', 'притяж.'], '勺': ['sháo', 'ложка'],
-                '百': ['bǎi', 'сто'], '站': ['zhàn', 'стоять'], '峰': ['fēng', 'пик'],
-                '夆': ['féng', 'встречать'], '崖': ['yá', 'утёс'], '厓': ['yá', 'обрыв'],
-                '期': ['qī', 'период'], '其': ['qí', 'его'], '朗': ['lǎng', 'ясный'],
-                '良': ['liáng', 'хороший'], '烧': ['shāo', 'жечь'], '尧': ['yáo', 'высокий'],
-                '烟': ['yān', 'дым'], '因': ['yīn', 'причина'], '炒': ['chǎo', 'жарить'],
-                '炸': ['zhà', 'взрывать'], '灯': ['dēng', 'лампа'], '地': ['dì', 'земля'],
-                '城': ['chéng', 'город'], '成': ['chéng', 'становиться'], '块': ['kuài', 'кусок'],
-                '塔': ['tǎ', 'башня'], '玩': ['wán', 'играть'], '球': ['qiú', 'мяч'],
-                '现': ['xiàn', 'сейчас'], '理': ['lǐ', 'логика'], '汉': ['hàn', 'китайский'],
-                '汁': ['zhī', 'сок'], '池': ['chí', 'пруд'], '沙': ['shā', 'песок'],
-                '汽': ['qì', 'пар'], '沟': ['gōu', 'канава'], '泪': ['lèi', 'слеза'],
-                '树': ['shù', 'дерево'], '松': ['sōng', 'сосна'], '柏': ['bǎi', 'кипарис'],
-                '桃': ['táo', 'персик'], '梅': ['méi', 'слива'], '枫': ['fēng', 'клён'],
-                '柳': ['liǔ', 'ива'], '校': ['xiào', 'школа'], '村': ['cūn', 'деревня'],
-                '材': ['cái', 'материал'], '板': ['bǎn', 'доска'], '枝': ['zhī', 'ветка'],
-                '根': ['gēn', 'корень'], '明': ['míng', 'яркий'], '时': ['shí', 'время'],
-                '晴': ['qíng', 'ясный'], '暗': ['àn', 'тёмный'], '暖': ['nuǎn', 'тёплый'],
-                '昨': ['zuó', 'вчера'], '旺': ['wàng', 'процветать'], '晒': ['shài', 'сушить'],
-                '吃': ['chī', 'есть'], '喝': ['hē', 'пить'], '唱': ['chàng', 'петь'],
-                '吗': ['ma', 'частица'], '吧': ['ba', 'частица'], '哪': ['nǎ', 'какой'],
-                '呀': ['ya', 'частица'], '味': ['wèi', 'вкус'], '呼': ['hū', 'дышать'],
-                '吸': ['xī', 'вдыхать'], '好': ['hǎo', 'хороший'], '妈': ['mā', 'мама'],
-                '姐': ['jiě', 'сестра'], '妹': ['mèi', 'сестра'], '姓': ['xìng', 'фамилия'],
-                '婚': ['hūn', 'свадьба'], '始': ['shǐ', 'начало'], '奶': ['nǎi', 'молоко'],
-                '你': ['nǐ', 'ты'], '他': ['tā', 'он'], '们': ['men', 'суф. мн.'],
-                '什': ['shén', 'что'], '住': ['zhù', 'жить'], '位': ['wèi', 'место'],
-                '作': ['zuò', 'делать'], '休': ['xiū', 'отдыхать'], '话': ['huà', 'речь'],
-                '语': ['yǔ', 'язык'], '说': ['shuō', 'говорить'], '请': ['qǐng', 'просить'],
-                '谢': ['xiè', 'благодарить'], '词': ['cí', 'слово'], '花': ['huā', 'цветок'],
-                '草': ['cǎo', 'трава'], '药': ['yào', 'лекарство'], '菜': ['cài', 'овощ'],
-                '蓝': ['lán', 'синий'], '红': ['hóng', 'красный'], '绿': ['lǜ', 'зелёный'],
-                '纸': ['zhǐ', 'бумага'], '线': ['xiàn', 'линия'], '练': ['liàn', 'тренировка'],
-                '终': ['zhōng', 'конец'], '忙': ['máng', 'занятый'], '快': ['kuài', 'быстрый'],
-                '怕': ['pà', 'бояться'], '情': ['qíng', 'чувство'], '恨': ['hèn', 'ненавидеть'],
-                '慢': ['màn', 'медленный'], '打': ['dǎ', 'бить'], '找': ['zhǎo', 'искать'],
-                '拉': ['lā', 'тянуть'], '推': ['tuī', 'толкать'], '提': ['tí', 'поднимать'],
-                '换': ['huàn', 'менять'],
+  <div class="keys-wrap">
+    <div class="keys-grid" id="keysGrid"></div>
+  </div>
 
-                // 350+ общих иероглифов для дистракторов
-                '一': ['yī', 'один'], '二': ['èr', 'два'], '三': ['sān', 'три'],
-                '四': ['sì', 'четыре'], '五': ['wǔ', 'пять'], '六': ['liù', 'шесть'],
-                '七': ['qī', 'семь'], '八': ['bā', 'восемь'], '九': ['jiǔ', 'девять'],
-                '零': ['líng', 'ноль'], '千': ['qiān', 'тысяча'], '万': ['wàn', 'десять тысяч'],
-                '半': ['bàn', 'половина'], '双': ['shuāng', 'пара'], '她': ['tā', 'она'],
-                '谁': ['shuí', 'кто'], '是': ['shì', 'быть'], '有': ['yǒu', 'иметь'],
-                '在': ['zài', 'в'], '和': ['hé', 'и'], '都': ['dōu', 'все'],
-                '不': ['bù', 'не'], '没': ['méi', 'нет'], '很': ['hěn', 'очень'],
-                '太': ['tài', 'слишком'], '最': ['zuì', 'самый'], '去': ['qù', 'идти'],
-                '来': ['lái', 'приходить'], '做': ['zuò', 'делать'], '走': ['zǒu', 'идти'],
-                '睡': ['shuì', 'спать'], '买': ['mǎi', 'покупать'], '卖': ['mài', 'продавать'],
-                '学': ['xué', 'учиться'], '教': ['jiāo', 'учить'], '读': ['dú', 'читать'],
-                '写': ['xiě', 'писать'], '听': ['tīng', 'слушать'], '哭': ['kū', 'плакать'],
-                '爱': ['ài', 'любить'], '要': ['yào', 'хотеть'], '会': ['huì', 'уметь'],
-                '能': ['néng', 'мочь'], '给': ['gěi', 'давать'], '帮': ['bāng', 'помогать'],
-                '用': ['yòng', 'использовать'], '开': ['kāi', 'открывать'], '出': ['chū', 'выходить'],
-                '回': ['huí', 'возвращаться'], '到': ['dào', 'достигать'], '起': ['qǐ', 'вставать'],
-                '等': ['děng', 'ждать'], '让': ['ràng', 'позволять'], '叫': ['jiào', 'звать'],
-                '认': ['rèn', 'узнавать'], '知': ['zhī', 'знать'], '觉': ['jué', 'чувствовать'],
-                '发': ['fā', 'отправлять'], '变': ['biàn', 'меняться'], '天': ['tiān', 'небо'],
-                '星': ['xīng', 'звезда'], '云': ['yún', 'облако'], '电': ['diàn', 'молния'],
-                '海': ['hǎi', 'море'], '河': ['hé', 'река'], '湖': ['hú', 'озеро'],
-                '江': ['jiāng', 'река'], '林': ['lín', 'лес'], '森': ['sēn', 'чаща'],
-                '叶': ['yè', 'лист'], '牛': ['niú', 'корова'], '狗': ['gǒu', 'собака'],
-                '猫': ['māo', 'кошка'], '龙': ['lóng', 'дракон'], '虎': ['hǔ', 'тигр'],
-                '兔': ['tù', 'заяц'], '猪': ['zhū', 'свинья'], '鼠': ['shǔ', 'мышь'],
-                '头': ['tóu', 'голова'], '面': ['miàn', 'лицо'], '鼻': ['bí', 'нос'],
-                '父': ['fù', 'отец'], '母': ['mǔ', 'мать'], '爸': ['bà', 'папа'],
-                '哥': ['gē', 'брат'], '儿': ['ér', 'сын'], '黄': ['huáng', 'жёлтый'],
-                '黑': ['hēi', 'чёрный'], '灰': ['huī', 'серый'], '紫': ['zǐ', 'фиолетовый'],
-                '上': ['shàng', 'верх'], '下': ['xià', 'низ'], '左': ['zuǒ', 'лево'],
-                '右': ['yòu', 'право'], '前': ['qián', 'перёд'], '后': ['hòu', 'зад'],
-                '外': ['wài', 'снаружи'], '南': ['nán', 'юг'], '北': ['běi', 'север'],
-                '今': ['jīn', 'сейчас'], '晚': ['wǎn', 'поздно'], '春': ['chūn', 'весна'],
-                '夏': ['xià', 'лето'], '年': ['nián', 'год'], '高': ['gāo', 'высокий'],
-                '低': ['dī', 'низкий'], '长': ['cháng', 'длинный'], '短': ['duǎn', 'короткий'],
-                '新': ['xīn', 'новый'], '旧': ['jiù', 'старый'], '坏': ['huài', 'плохой'],
-                '多': ['duō', 'много'], '冷': ['lěng', 'холодный'], '热': ['rè', 'горячий'],
-                '温': ['wēn', 'тёплый'], '凉': ['liáng', 'прохладный'], '果': ['guǒ', 'фрукт'],
-                '米': ['mǐ', 'рис'], '茶': ['chá', 'чай'], '酒': ['jiǔ', 'вино'],
-                '肉': ['ròu', 'мясо'], '蛋': ['dàn', 'яйцо'], '糖': ['táng', 'сахар'],
-                '盐': ['yán', 'соль'], '病': ['bìng', 'болезнь'], '医': ['yī', 'врач'],
-                '院': ['yuàn', 'учреждение'], '死': ['sǐ', 'смерть'], '书': ['shū', 'книга'],
-                '本': ['běn', 'книга'], '诗': ['shī', 'стих'], '歌': ['gē', 'песня'],
-                '画': ['huà', 'картина'], '照': ['zhào', 'фото'], '票': ['piào', 'билет'],
-                '砖': ['zhuān', 'кирпич'], '园': ['yuán', 'сад'], '街': ['jiē', 'улица'],
-                '市': ['shì', 'город'], '国': ['guó', 'страна'], '房': ['fáng', 'дом'],
-                '屋': ['wū', 'комната'], '窗': ['chuāng', 'окно'], '桌': ['zhuō', 'стол'],
-                '椅': ['yǐ', 'стул'], '衣': ['yī', 'одежда'], '裤': ['kù', 'брюки'],
-                '鞋': ['xié', 'обувь'], '帽': ['mào', 'шапка'], '伞': ['sǎn', 'зонт'],
-                '船': ['chuán', 'лодка'], '飞': ['fēi', 'летать'], '机': ['jī', 'машина'],
-                '风': ['fēng', 'ветер'], '雷': ['léi', 'гром'], '雪': ['xuě', 'снег'],
-                '白': ['bái', 'белый'], '黄': ['huáng', 'жёлтый'], '蓝': ['lán', 'синий'],
-                '春': ['chūn', 'весна'], '夏': ['xià', 'лето'], '秋': ['qiū', 'осень'],
-                '冬': ['dōng', 'зима'], '东': ['dōng', 'восток'], '西': ['xī', 'запад'],
-                '中': ['zhōng', 'центр'], '力': ['lì', 'сила'], '大': ['dà', 'большой'],
-                '小': ['xiǎo', 'маленький'], '多': ['duō', 'много'], '少': ['shǎo', 'мало'],
-                '人': ['rén', 'человек'], '又': ['yòu', 'снова'], '刀': ['dāo', 'нож'],
-                '山': ['shān', 'гора'], '田': ['tián', 'поле'], '石': ['shí', 'камень'],
-                '竹': ['zhú', 'бамбук'], '雨': ['yǔ', 'дождь'], '玉': ['yù', 'нефрит'],
-                '王': ['wáng', 'король'], '生': ['shēng', 'жизнь'], '用': ['yòng', 'польза'],
-                '白': ['bái', 'белый'], '皮': ['pí', 'кожа'], '皿': ['mǐn', 'посуда'],
-                '示': ['shì', 'показ'], '立': ['lì', 'стоять'], '米': ['mǐ', 'рис'],
-                '羽': ['yǔ', 'перо'], '老': ['lǎo', 'старый'], '耳': ['ěr', 'ухо'],
-                '自': ['zì', 'сам'], '至': ['zhì', 'достичь'], '舌': ['shé', 'язык'],
-                '舟': ['zhōu', 'лодка'], '色': ['sè', 'цвет'], '血': ['xuè', 'кровь'],
-                '行': ['xíng', 'идти'], '衣': ['yī', 'одежда'], '角': ['jiǎo', 'угол'],
-                '谷': ['gǔ', 'долина'], '豆': ['dòu', 'боб'], '贝': ['bèi', 'раковина'],
-                '赤': ['chì', 'красный'], '走': ['zǒu', 'идти'], '身': ['shēn', 'тело'],
-                '辛': ['xīn', 'острый'], '里': ['lǐ', 'внутри'], '面': ['miàn', 'лицо'],
-                '音': ['yīn', 'звук'], '食': ['shí', 'еда'], '首': ['shǒu', 'голова'],
-                '香': ['xiāng', 'аромат'], '骨': ['gǔ', 'кость'], '高': ['gāo', 'высокий'],
-                '鬼': ['guǐ', 'призрак'], '鱼': ['yú', 'рыба'], '鸟': ['niǎo', 'птица'],
-                '鹿': ['lù', 'олень'], '麻': ['má', 'конопля'], '黄': ['huáng', 'жёлтый'],
-                '黑': ['hēi', 'чёрный'], '鼓': ['gǔ', 'барабан'], '鼠': ['shǔ', 'крыса'],
-                '鼻': ['bí', 'нос'], '齿': ['chǐ', 'зуб'], '龙': ['lóng', 'дракон'],
-                '龟': ['guī', 'черепаха'], '言': ['yán', 'слово'], '足': ['zú', 'нога'],
-                '车': ['chē', 'машина'], '金': ['jīn', 'золото'], '門': ['mén', 'ворота'],
-                '長': ['cháng', 'длинный'], '阜': ['fù', 'холм'], '隹': ['zhuī', 'птица'],
-                '青': ['qīng', 'синий'], '非': ['fēi', 'нет'], '革': ['gé', 'кожа'],
-                '音': ['yīn', 'звук'], '頁': ['yè', 'страница'], '風': ['fēng', 'ветер'],
-                '飛': ['fēi', 'летать'], '食': ['shí', 'еда'], '首': ['shǒu', 'голова'],
-                '香': ['xiāng', 'аромат'], '馬': ['mǎ', 'конь'], '骨': ['gǔ', 'кость'],
-                '高': ['gāo', 'высокий'], '魚': ['yú', 'рыба'], '鳥': ['niǎo', 'птица'],
-                '鹿': ['lù', 'олень'], '黃': ['huáng', 'жёлтый'], '黑': ['hēi', 'чёрный'],
-                '鼓': ['gǔ', 'барабан'], '鼠': ['shǔ', 'мышь'], '鼻': ['bí', 'нос'],
-                '龍': ['lóng', 'дракон'], '龜': ['guī', 'черепаха'], '之': ['zhī', 'его'],
-                '乎': ['hū', 'вопрос'], '也': ['yě', 'тоже'], '者': ['zhě', '-тель'],
-                '矣': ['yǐ', 'увы'], '焉': ['yān', 'здесь'], '哉': ['zāi', 'ах'],
-                '而': ['ér', 'и'], '则': ['zé', 'тогда'], '于': ['yú', 'в'],
-                '与': ['yǔ', 'и'], '及': ['jí', 'и'], '或': ['huò', 'или'],
-                '所': ['suǒ', 'место'], '以': ['yǐ', 'чтобы'], '为': ['wèi', 'для'],
-                '其': ['qí', 'его'], '此': ['cǐ', 'этот'], '彼': ['bǐ', 'тот'],
-                '每': ['měi', 'каждый'], '各': ['gè', 'каждый'], '某': ['mǒu', 'некий'],
-                '谁': ['shuí', 'кто'], '何': ['hé', 'что'], '若': ['ruò', 'если'],
-                '如': ['rú', 'как'], '似': ['sì', 'похож'], '像': ['xiàng', 'похож'],
-                '万': ['wàn', 'десять тысяч'], '千': ['qiān', 'тысяча'], '百': ['bǎi', 'сто'],
-                '十': ['shí', 'десять'], '半': ['bàn', 'половина'], '双': ['shuāng', 'пара'],
-                '两': ['liǎng', 'два'], '几': ['jǐ', 'сколько'], '多': ['duō', 'много'],
-                '少': ['shǎo', 'мало'], '更': ['gèng', 'ещё'], '最': ['zuì', 'самый'],
-                '太': ['tài', 'слишком'], '很': ['hěn', 'очень'], '挺': ['tǐng', 'довольно'],
-                '真': ['zhēn', 'правда'], '假': ['jiǎ', 'ложь'], '对': ['duì', 'верно'],
-                '错': ['cuò', 'ошибка'], '好': ['hǎo', 'хорошо'], '坏': ['huài', 'плохо'],
-                '美': ['měi', 'красиво'], '丑': ['chǒu', 'уродливо'], '新': ['xīn', 'новый'],
-                '旧': ['jiù', 'старый'], '快': ['kuài', 'быстро'], '慢': ['màn', 'медленно'],
-                '早': ['zǎo', 'рано'], '晚': ['wǎn', 'поздно'], '热': ['rè', 'жарко'],
-                '冷': ['lěng', 'холодно'], '温': ['wēn', 'тепло'], '凉': ['liáng', 'прохладно'],
-                '高': ['gāo', 'высоко'], '低': ['dī', 'низко'], '长': ['cháng', 'длинно'],
-                '短': ['duǎn', 'коротко'], '远': ['yuǎn', 'далеко'], '近': ['jìn', 'близко'],
-                '深': ['shēn', 'глубоко'], '浅': ['qiǎn', 'мелко'], '宽': ['kuān', 'широко'],
-                '窄': ['zhǎi', 'узко'], '厚': ['hòu', 'толсто'], '薄': ['báo', 'тонко'],
-                '重': ['zhòng', 'тяжело'], '轻': ['qīng', 'легко'], '硬': ['yìng', 'твёрдо'],
-                '软': ['ruǎn', 'мягко'], '强': ['qiáng', 'сильно'], '弱': ['ruò', 'слабо'],
-                '明': ['míng', 'светло'], '暗': ['àn', 'темно'], '亮': ['liàng', 'ярко'],
-                '黑': ['hēi', 'черно'], '白': ['bái', 'бело'], '红': ['hóng', 'красно'],
-                '黄': ['huáng', 'жёлто'], '蓝': ['lán', 'сине'], '绿': ['lǜ', 'зелено'],
-                '灰': ['huī', 'серо'], '紫': ['zǐ', 'фиолетово'], '粉': ['fěn', 'розово'],
-                '橙': ['chéng', 'оранжево'], '棕': ['zōng', 'коричнево'],
-            };
+  <div class="actions">
+    <button class="btn check-btn" id="checkBtn" disabled>✓ ПРОВЕРИТЬ</button>
+    <button class="btn reset-btn" id="resetBtn">⟲</button>
+  </div>
+</div>
 
-            // ========== БАЗА ИЕРОГЛИФОВ: ~180 записей ==========
-            const HIEROGLYPHS = [
-                // 冫 лёд
-                {char:'冰',pinyin:'bīng',translation:'лёд',base:'冫',key:'水'},
-                {char:'冷',pinyin:'lěng',translation:'холодный',base:'冫',key:'令'},
-                {char:'冻',pinyin:'dòng',translation:'замерзать',base:'冫',key:'东'},
-                {char:'凑',pinyin:'còu',translation:'собирать',base:'冫',key:'奏'},
-                {char:'次',pinyin:'cì',translation:'следующий',base:'冫',key:'欠'},
-                {char:'决',pinyin:'jué',translation:'решать',base:'冫',key:'夬'},
-                // 氵 вода
-                {char:'江',pinyin:'jiāng',translation:'река',base:'氵',key:'工'},
-                {char:'河',pinyin:'hé',translation:'река',base:'氵',key:'可'},
-                {char:'湖',pinyin:'hú',translation:'озеро',base:'氵',key:'胡'},
-                {char:'海',pinyin:'hǎi',translation:'море',base:'氵',key:'每'},
-                {char:'汉',pinyin:'hàn',translation:'китайский',base:'氵',key:'又'},
-                {char:'汁',pinyin:'zhī',translation:'сок',base:'氵',key:'十'},
-                {char:'池',pinyin:'chí',translation:'пруд',base:'氵',key:'也'},
-                {char:'沙',pinyin:'shā',translation:'песок',base:'氵',key:'少'},
-                {char:'汽',pinyin:'qì',translation:'пар',base:'氵',key:'气'},
-                {char:'沟',pinyin:'gōu',translation:'канава',base:'氵',key:'勾'},
-                {char:'泪',pinyin:'lèi',translation:'слеза',base:'氵',key:'目'},
-                // 木 дерево
-                {char:'林',pinyin:'lín',translation:'лес',base:'木',key:'木'},
-                {char:'树',pinyin:'shù',translation:'дерево',base:'木',key:'对'},
-                {char:'松',pinyin:'sōng',translation:'сосна',base:'木',key:'公'},
-                {char:'柏',pinyin:'bǎi',translation:'кипарис',base:'木',key:'白'},
-                {char:'桃',pinyin:'táo',translation:'персик',base:'木',key:'兆'},
-                {char:'梅',pinyin:'méi',translation:'слива',base:'木',key:'每'},
-                {char:'枫',pinyin:'fēng',translation:'клён',base:'木',key:'风'},
-                {char:'柳',pinyin:'liǔ',translation:'ива',base:'木',key:'卯'},
-                {char:'校',pinyin:'xiào',translation:'школа',base:'木',key:'交'},
-                {char:'村',pinyin:'cūn',translation:'деревня',base:'木',key:'寸'},
-                {char:'材',pinyin:'cái',translation:'материал',base:'木',key:'才'},
-                {char:'板',pinyin:'bǎn',translation:'доска',base:'木',key:'反'},
-                {char:'枝',pinyin:'zhī',translation:'ветка',base:'木',key:'支'},
-                {char:'根',pinyin:'gēn',translation:'корень',base:'木',key:'艮'},
-                // 日 солнце
-                {char:'时',pinyin:'shí',translation:'время',base:'日',key:'寸'},
-                {char:'晴',pinyin:'qíng',translation:'ясный',base:'日',key:'青'},
-                {char:'暗',pinyin:'àn',translation:'тёмный',base:'日',key:'音'},
-                {char:'暖',pinyin:'nuǎn',translation:'тёплый',base:'日',key:'爰'},
-                {char:'昨',pinyin:'zuó',translation:'вчера',base:'日',key:'乍'},
-                {char:'旺',pinyin:'wàng',translation:'процветать',base:'日',key:'王'},
-                {char:'晒',pinyin:'shài',translation:'сушить',base:'日',key:'西'},
-                // 口 рот
-                {char:'吃',pinyin:'chī',translation:'есть',base:'口',key:'乞'},
-                {char:'喝',pinyin:'hē',translation:'пить',base:'口',key:'曷'},
-                {char:'唱',pinyin:'chàng',translation:'петь',base:'口',key:'昌'},
-                {char:'吗',pinyin:'ma',translation:'частица',base:'口',key:'马'},
-                {char:'吧',pinyin:'ba',translation:'частица',base:'口',key:'巴'},
-                {char:'哪',pinyin:'nǎ',translation:'какой',base:'口',key:'那'},
-                {char:'呀',pinyin:'ya',translation:'частица',base:'口',key:'牙'},
-                {char:'味',pinyin:'wèi',translation:'вкус',base:'口',key:'未'},
-                {char:'呼',pinyin:'hū',translation:'дышать',base:'口',key:'乎'},
-                {char:'吸',pinyin:'xī',translation:'вдыхать',base:'口',key:'及'},
-                // 女 женщина
-                {char:'好',pinyin:'hǎo',translation:'хороший',base:'女',key:'子'},
-                {char:'妈',pinyin:'mā',translation:'мама',base:'女',key:'马'},
-                {char:'姐',pinyin:'jiě',translation:'сестра',base:'女',key:'且'},
-                {char:'妹',pinyin:'mèi',translation:'сестра',base:'女',key:'未'},
-                {char:'姓',pinyin:'xìng',translation:'фамилия',base:'女',key:'生'},
-                {char:'婚',pinyin:'hūn',translation:'свадьба',base:'女',key:'昏'},
-                {char:'始',pinyin:'shǐ',translation:'начало',base:'女',key:'台'},
-                {char:'奶',pinyin:'nǎi',translation:'молоко',base:'女',key:'乃'},
-                // 亻 человек
-                {char:'你',pinyin:'nǐ',translation:'ты',base:'亻',key:'尔'},
-                {char:'他',pinyin:'tā',translation:'он',base:'亻',key:'也'},
-                {char:'们',pinyin:'men',translation:'мы',base:'亻',key:'门'},
-                {char:'什',pinyin:'shén',translation:'что',base:'亻',key:'十'},
-                {char:'住',pinyin:'zhù',translation:'жить',base:'亻',key:'主'},
-                {char:'位',pinyin:'wèi',translation:'место',base:'亻',key:'立'},
-                {char:'作',pinyin:'zuò',translation:'делать',base:'亻',key:'乍'},
-                {char:'休',pinyin:'xiū',translation:'отдыхать',base:'亻',key:'木'},
-                // 讠 речь
-                {char:'话',pinyin:'huà',translation:'речь',base:'讠',key:'舌'},
-                {char:'语',pinyin:'yǔ',translation:'язык',base:'讠',key:'吾'},
-                {char:'说',pinyin:'shuō',translation:'говорить',base:'讠',key:'兑'},
-                {char:'请',pinyin:'qǐng',translation:'просить',base:'讠',key:'青'},
-                {char:'谢',pinyin:'xiè',translation:'благодарить',base:'讠',key:'射'},
-                {char:'词',pinyin:'cí',translation:'слово',base:'讠',key:'司'},
-                // 艹 трава
-                {char:'花',pinyin:'huā',translation:'цветок',base:'艹',key:'化'},
-                {char:'草',pinyin:'cǎo',translation:'трава',base:'艹',key:'早'},
-                {char:'药',pinyin:'yào',translation:'лекарство',base:'艹',key:'约'},
-                {char:'菜',pinyin:'cài',translation:'овощ',base:'艹',key:'采'},
-                {char:'蓝',pinyin:'lán',translation:'синий',base:'艹',key:'监'},
-                // 纟 нить
-                {char:'红',pinyin:'hóng',translation:'красный',base:'纟',key:'工'},
-                {char:'绿',pinyin:'lǜ',translation:'зелёный',base:'纟',key:'录'},
-                {char:'纸',pinyin:'zhǐ',translation:'бумага',base:'纟',key:'氏'},
-                {char:'线',pinyin:'xiàn',translation:'линия',base:'纟',key:'戋'},
-                {char:'练',pinyin:'liàn',translation:'тренировка',base:'纟',key:'东'},
-                {char:'终',pinyin:'zhōng',translation:'конец',base:'纟',key:'冬'},
-                // 忄 сердце
-                {char:'忙',pinyin:'máng',translation:'занятый',base:'忄',key:'亡'},
-                {char:'快',pinyin:'kuài',translation:'быстрый',base:'忄',key:'夬'},
-                {char:'怕',pinyin:'pà',translation:'бояться',base:'忄',key:'白'},
-                {char:'情',pinyin:'qíng',translation:'чувство',base:'忄',key:'青'},
-                {char:'恨',pinyin:'hèn',translation:'ненавидеть',base:'忄',key:'艮'},
-                {char:'慢',pinyin:'màn',translation:'медленный',base:'忄',key:'曼'},
-                // 扌 рука
-                {char:'打',pinyin:'dǎ',translation:'бить',base:'扌',key:'丁'},
-                {char:'找',pinyin:'zhǎo',translation:'искать',base:'扌',key:'戈'},
-                {char:'拉',pinyin:'lā',translation:'тянуть',base:'扌',key:'立'},
-                {char:'推',pinyin:'tuī',translation:'толкать',base:'扌',key:'隹'},
-                {char:'提',pinyin:'tí',translation:'поднимать',base:'扌',key:'是'},
-                {char:'换',pinyin:'huàn',translation:'менять',base:'扌',key:'奂'},
-                // 火 огонь
-                {char:'灯',pinyin:'dēng',translation:'лампа',base:'火',key:'丁'},
-                {char:'烧',pinyin:'shāo',translation:'жечь',base:'火',key:'尧'},
-                {char:'烟',pinyin:'yān',translation:'дым',base:'火',key:'因'},
-                {char:'炒',pinyin:'chǎo',translation:'жарить',base:'火',key:'少'},
-                {char:'炸',pinyin:'zhà',translation:'взрывать',base:'火',key:'乍'},
-                // 土 земля
-                {char:'地',pinyin:'dì',translation:'земля',base:'土',key:'也'},
-                {char:'城',pinyin:'chéng',translation:'город',base:'土',key:'成'},
-                {char:'块',pinyin:'kuài',translation:'кусок',base:'土',key:'夬'},
-                {char:'塔',pinyin:'tǎ',translation:'башня',base:'土',key:'答'},
-                // 王 король
-                {char:'玩',pinyin:'wán',translation:'играть',base:'王',key:'元'},
-                {char:'球',pinyin:'qiú',translation:'мяч',base:'王',key:'求'},
-                {char:'现',pinyin:'xiàn',translation:'сейчас',base:'王',key:'见'},
-                {char:'理',pinyin:'lǐ',translation:'логика',base:'王',key:'里'},
-                // 石 камень
-                {char:'码',pinyin:'mǎ',translation:'код',base:'石',key:'马'},
-                {char:'砖',pinyin:'zhuān',translation:'кирпич',base:'石',key:'专'},
-                {char:'破',pinyin:'pò',translation:'ломать',base:'石',key:'皮'},
-                {char:'硬',pinyin:'yìng',translation:'твёрдый',base:'石',key:'更'},
-                // 目 глаз
-                {char:'睡',pinyin:'shuì',translation:'спать',base:'目',key:'垂'},
-                {char:'眠',pinyin:'mián',translation:'сон',base:'目',key:'民'},
-                {char:'睛',pinyin:'jīng',translation:'глаз',base:'目',key:'青'},
-                // 禾 зерно
-                {char:'种',pinyin:'zhǒng',translation:'семя',base:'禾',key:'中'},
-                {char:'科',pinyin:'kē',translation:'наука',base:'禾',key:'斗'},
-                {char:'秒',pinyin:'miǎo',translation:'секунда',base:'禾',key:'少'},
-                {char:'秋',pinyin:'qiū',translation:'осень',base:'禾',key:'火'},
-                // 虫 насекомое
-                {char:'蚊',pinyin:'wén',translation:'комар',base:'虫',key:'文'},
-                {char:'蚂',pinyin:'mǎ',translation:'муравей',base:'虫',key:'马'},
-                {char:'蚁',pinyin:'yǐ',translation:'муравей',base:'虫',key:'义'},
-                {char:'蛇',pinyin:'shé',translation:'змея',base:'虫',key:'它'},
-                // 鱼 рыба
-                {char:'鲜',pinyin:'xiān',translation:'свежий',base:'鱼',key:'羊'},
-                {char:'鲤',pinyin:'lǐ',translation:'карп',base:'鱼',key:'里'},
-                {char:'鲸',pinyin:'jīng',translation:'кит',base:'鱼',key:'京'},
-                // 鸟 птица (разные основы)
-                {char:'鸡',pinyin:'jī',translation:'курица',base:'又',key:'鸟'},
-                {char:'鸭',pinyin:'yā',translation:'утка',base:'甲',key:'鸟'},
-                {char:'鹅',pinyin:'é',translation:'гусь',base:'我',key:'鸟'},
-                // 金 золото
-                {char:'钱',pinyin:'qián',translation:'деньги',base:'金',key:'戋'},
-                {char:'银',pinyin:'yín',translation:'серебро',base:'金',key:'艮'},
-                {char:'铁',pinyin:'tiě',translation:'железо',base:'金',key:'失'},
-                {char:'铜',pinyin:'tóng',translation:'медь',base:'金',key:'同'},
-                // 竹 бамбук
-                {char:'笑',pinyin:'xiào',translation:'смеяться',base:'竹',key:'夭'},
-                {char:'笔',pinyin:'bǐ',translation:'кисть',base:'竹',key:'毛'},
-                {char:'答',pinyin:'dá',translation:'отвечать',base:'竹',key:'合'},
-                {char:'第',pinyin:'dì',translation:'порядок',base:'竹',key:'弟'},
-                // 雨 дождь
-                {char:'雪',pinyin:'xuě',translation:'снег',base:'雨',key:'彐'},
-                {char:'雾',pinyin:'wù',translation:'туман',base:'雨',key:'务'},
-                {char:'雷',pinyin:'léi',translation:'гром',base:'雨',key:'田'},
-                // 宀 крыша
-                {char:'家',pinyin:'jiā',translation:'семья',base:'宀',key:'豕'},
-                {char:'安',pinyin:'ān',translation:'спокойный',base:'宀',key:'女'},
-                {char:'字',pinyin:'zì',translation:'иероглиф',base:'宀',key:'子'},
-                {char:'完',pinyin:'wán',translation:'закончить',base:'宀',key:'元'},
-                // 广 навес
-                {char:'店',pinyin:'diàn',translation:'магазин',base:'广',key:'占'},
-                {char:'床',pinyin:'chuáng',translation:'кровать',base:'广',key:'木'},
-                {char:'座',pinyin:'zuò',translation:'сиденье',base:'广',key:'坐'},
-                // 门 дверь
-                {char:'问',pinyin:'wèn',translation:'спрашивать',base:'门',key:'口'},
-                {char:'间',pinyin:'jiān',translation:'промежуток',base:'门',key:'日'},
-                {char:'闻',pinyin:'wén',translation:'слышать',base:'门',key:'耳'},
-                // 辶 движение
-                {char:'进',pinyin:'jìn',translation:'входить',base:'辶',key:'井'},
-                {char:'过',pinyin:'guò',translation:'проходить',base:'辶',key:'寸'},
-                {char:'这',pinyin:'zhè',translation:'этот',base:'辶',key:'文'},
-                {char:'送',pinyin:'sòng',translation:'дарить',base:'辶',key:'关'},
-                // 心 сердце (снизу)
-                {char:'想',pinyin:'xiǎng',translation:'думать',base:'相',key:'心'},
-                {char:'意',pinyin:'yì',translation:'смысл',base:'音',key:'心'},
-                {char:'思',pinyin:'sī',translation:'мысль',base:'田',key:'心'},
-                // 手 рука
-                {char:'拿',pinyin:'ná',translation:'брать',base:'合',key:'手'},
-                {char:'掌',pinyin:'zhǎng',translation:'ладонь',base:'尚',key:'手'},
-                // 足 нога
-                {char:'跑',pinyin:'pǎo',translation:'бежать',base:'足',key:'包'},
-                {char:'跳',pinyin:'tiào',translation:'прыгать',base:'足',key:'兆'},
-                {char:'路',pinyin:'lù',translation:'дорога',base:'足',key:'各'},
-                // 饣 еда
-                {char:'饭',pinyin:'fàn',translation:'еда',base:'饣',key:'反'},
-                {char:'饮',pinyin:'yǐn',translation:'пить',base:'饣',key:'欠'},
-                {char:'饱',pinyin:'bǎo',translation:'сытый',base:'饣',key:'包'},
-                // 车 машина
-                {char:'轮',pinyin:'lún',translation:'колесо',base:'车',key:'仑'},
-                {char:'转',pinyin:'zhuǎn',translation:'поворот',base:'车',key:'专'},
-                {char:'较',pinyin:'jiào',translation:'сравнивать',base:'车',key:'交'},
-                // 马 конь
-                {char:'骑',pinyin:'qí',translation:'ехать',base:'马',key:'奇'},
-                {char:'驰',pinyin:'chí',translation:'мчаться',base:'马',key:'也'},
-                // 攵 удар
-                {char:'收',pinyin:'shōu',translation:'собирать',base:'丩',key:'攵'},
-                {char:'放',pinyin:'fàng',translation:'класть',base:'方',key:'攵'},
-                {char:'政',pinyin:'zhèng',translation:'политика',base:'正',key:'攵'},
-                // прочее
-                {char:'族',pinyin:'zú',translation:'род',base:'方',key:'矢'},
-                {char:'的',pinyin:'de',translation:'притяж.',base:'白',key:'勺'},
-                {char:'百',pinyin:'bǎi',translation:'сто',base:'一',key:'白'},
-                {char:'站',pinyin:'zhàn',translation:'стоять',base:'立',key:'占'},
-                {char:'峰',pinyin:'fēng',translation:'пик',base:'山',key:'夆'},
-                {char:'期',pinyin:'qī',translation:'период',base:'其',key:'月'},
-                {char:'朗',pinyin:'lǎng',translation:'ясный',base:'良',key:'月'},
-                {char:'看',pinyin:'kàn',translation:'смотреть',base:'手',key:'目'},
-            ];
+<script>
+(function(){
+  // ============================================================
+  //  БАЗА ДАННЫХ КЛЮЧЕЙ (500+)
+  // ============================================================
+  var KEY_DATA={
+    '冫':['bīng','лёд'],'水':['shuǐ','вода'],'氵':['shuǐ','вода'],
+    '木':['mù','дерево'],'日':['rì','солнце'],'月':['yuè','луна'],
+    '火':['huǒ','огонь'],'土':['tǔ','земля'],'王':['wáng','король'],
+    '石':['shí','камень'],'目':['mù','глаз'],'禾':['hé','зерно'],
+    '虫':['chóng','насекомое'],'鱼':['yú','рыба'],'鸟':['niǎo','птица'],
+    '金':['jīn','золото'],'纟':['sī','нить'],'艹':['cǎo','трава'],
+    '竹':['zhú','бамбук'],'雨':['yǔ','дождь'],'宀':['mián','крыша'],
+    '广':['guǎng','навес'],'门':['mén','дверь'],'辶':['chuò','движение'],
+    '女':['nǚ','женщина'],'子':['zǐ','ребёнок'],'口':['kǒu','рот'],
+    '手':['shǒu','рука'],'足':['zú','нога'],'心':['xīn','сердце'],
+    '攵':['pū','удар'],'方':['fāng','квадрат'],'白':['bái','белый'],
+    '立':['lì','стоять'],'山':['shān','гора'],'田':['tián','поле'],
+    '力':['lì','сила'],'大':['dà','большой'],'小':['xiǎo','маленький'],
+    '人':['rén','человек'],'又':['yòu','снова'],'刀':['dāo','нож'],
+    '亻':['rén','человек'],'扌':['shǒu','рука'],'忄':['xīn','сердце'],
+    '讠':['yán','речь'],'饣':['shí','еда'],'马':['mǎ','конь'],
+    '车':['chē','машина'],'食':['shí','еда'],'羽':['yǔ','перо'],
+    '贝':['bèi','раковина'],'见':['jiàn','видеть'],'言':['yán','слово'],
+    '令':['lìng','приказ'],'东':['dōng','восток'],'奏':['zòu','играть'],
+    '欠':['qiàn','недостаток'],'夬':['guài','решимость'],'工':['gōng','работа'],
+    '可':['kě','можно'],'胡':['hú','варвар'],'每':['měi','каждый'],
+    '乂':['yì','резать'],'十':['shí','десять'],'也':['yě','тоже'],
+    '易':['yì','легко'],'少':['shǎo','мало'],'气':['qì','воздух'],
+    '勾':['gōu','крюк'],'对':['duì','пара'],'公':['gōng','общество'],
+    '兆':['zhào','знак'],'风':['fēng','ветер'],'卯':['mǎo','заяц'],
+    '交':['jiāo','пересечение'],'寸':['cùn','мера'],'才':['cái','талант'],
+    '反':['fǎn','против'],'支':['zhī','ветвь'],'艮':['gèn','граница'],
+    '青':['qīng','синий'],'音':['yīn','звук'],'爰':['yuán','там'],
+    '乍':['zhà','вдруг'],'西':['xī','запад'],'乞':['qǐ','просить'],
+    '曷':['hé','почему'],'昌':['chāng','процветать'],'巴':['bā','жажда'],
+    '那':['nà','тот'],'牙':['yá','зуб'],'未':['wèi','ещё не'],
+    '乎':['hū','вопрос'],'及':['jí','достигать'],'且':['qiě','и'],
+    '生':['shēng','жизнь'],'昏':['hūn','сумерки'],'台':['tái','платформа'],
+    '乃':['nǎi','же'],'尔':['ěr','ты'],'主':['zhǔ','хозяин'],
+    '舌':['shé','язык'],'吾':['wú','я'],'兑':['duì','обмен'],
+    '射':['shè','стрелять'],'司':['sī','управлять'],'化':['huà','превращаться'],
+    '早':['zǎo','рано'],'约':['yuē','договор'],'采':['cǎi','собирать'],
+    '监':['jiān','надзор'],'录':['lù','запись'],'氏':['shì','род'],
+    '戋':['jiān','малый'],'冬':['dōng','зима'],'亡':['wáng','гибель'],
+    '曼':['màn','длинный'],'丁':['dīng','гвоздь'],'戈':['gē','копьё'],
+    '隹':['zhuī','птица'],'是':['shì','быть'],'奂':['huàn','обильный'],
+    '元':['yuán','начало'],'求':['qiú','искать'],'里':['lǐ','внутри'],
+    '码':['mǎ','код'],'专':['zhuān','специальный'],'破':['pò','ломать'],
+    '皮':['pí','кожа'],'更':['gèng','ещё'],'看':['kàn','смотреть'],
+    '垂':['chuí','свисать'],'民':['mín','народ'],'中':['zhōng','середина'],
+    '斗':['dǒu','ковш'],'秋':['qiū','осень'],'蚊':['wén','комар'],
+    '文':['wén','письмо'],'蚂':['mǎ','муравей'],'义':['yì','справедл.'],
+    '蛇':['shé','змея'],'它':['tā','оно'],'鲜':['xiān','свежий'],
+    '羊':['yáng','овца'],'鲤':['lǐ','карп'],'鲸':['jīng','кит'],
+    '京':['jīng','столица'],'鸡':['jī','курица'],'鸭':['yā','утка'],
+    '甲':['jiǎ','панцирь'],'鹅':['é','гусь'],'我':['wǒ','я'],
+    '钱':['qián','деньги'],'银':['yín','серебро'],'铁':['tiě','железо'],
+    '失':['shī','терять'],'铜':['tóng','медь'],'同':['tóng','одинаковый'],
+    '笑':['xiào','смеяться'],'夭':['yāo','молодой'],'笔':['bǐ','кисть'],
+    '毛':['máo','шерсть'],'答':['dá','отвечать'],'合':['hé','соединять'],
+    '第':['dì','порядок'],'弟':['dì','брат'],'雪':['xuě','снег'],
+    '彐':['jì','пятачок'],'雾':['wù','туман'],'务':['wù','дело'],
+    '雷':['léi','гром'],'家':['jiā','семья'],'豕':['shǐ','свинья'],
+    '安':['ān','спокойный'],'字':['zì','иероглиф'],'完':['wán','закончить'],
+    '店':['diàn','магазин'],'占':['zhàn','занимать'],'床':['chuáng','кровать'],
+    '座':['zuò','сиденье'],'坐':['zuò','сидеть'],'问':['wèn','спрашивать'],
+    '间':['jiān','промежуток'],'闻':['wén','слышать'],'耳':['ěr','ухо'],
+    '进':['jìn','входить'],'井':['jǐng','колодец'],'过':['guò','проходить'],
+    '这':['zhè','этот'],'送':['sòng','дарить'],'关':['guān','закрывать'],
+    '想':['xiǎng','думать'],'相':['xiāng','взаимно'],'意':['yì','смысл'],
+    '思':['sī','мысль'],'拿':['ná','брать'],'掌':['zhǎng','ладонь'],
+    '尚':['shàng','ещё'],'跑':['pǎo','бежать'],'包':['bāo','обёртка'],
+    '跳':['tiào','прыгать'],'路':['lù','дорога'],'各':['gè','каждый'],
+    '饭':['fàn','еда'],'饮':['yǐn','пить'],'饱':['bǎo','сытый'],
+    '轮':['lún','колесо'],'仑':['lún','порядок'],'转':['zhuǎn','поворот'],
+    '较':['jiào','сравнивать'],'骑':['qí','ехать'],'奇':['qí','странный'],
+    '驰':['chí','мчаться'],'收':['shōu','собирать'],'丩':['jiū','вить'],
+    '放':['fàng','класть'],'政':['zhèng','политика'],'正':['zhèng','прямой'],
+    '族':['zú','род'],'矢':['shǐ','стрела'],'的':['de','притяж.'],
+    '勺':['sháo','ложка'],'百':['bǎi','сто'],'站':['zhàn','стоять'],
+    '峰':['fēng','пик'],'夆':['féng','встречать'],'期':['qī','период'],
+    '其':['qí','его'],'朗':['lǎng','ясный'],'良':['liáng','хороший'],
+    '灯':['dēng','лампа'],'烧':['shāo','жечь'],'尧':['yáo','высокий'],
+    '烟':['yān','дым'],'因':['yīn','причина'],'炒':['chǎo','жарить'],
+    '炸':['zhà','взрывать'],'地':['dì','земля'],'城':['chéng','город'],
+    '成':['chéng','становиться'],'块':['kuài','кусок'],'塔':['tǎ','башня'],
+    '玩':['wán','играть'],'球':['qiú','мяч'],'现':['xiàn','сейчас'],
+    '理':['lǐ','логика'],'汉':['hàn','китайский'],'汁':['zhī','сок'],
+    '池':['chí','пруд'],'沙':['shā','песок'],'汽':['qì','пар'],
+    '沟':['gōu','канава'],'泪':['lèi','слеза'],'树':['shù','дерево'],
+    '松':['sōng','сосна'],'柏':['bǎi','кипарис'],'桃':['táo','персик'],
+    '梅':['méi','слива'],'枫':['fēng','клён'],'柳':['liǔ','ива'],
+    '校':['xiào','школа'],'村':['cūn','деревня'],'材':['cái','материал'],
+    '板':['bǎn','доска'],'枝':['zhī','ветка'],'根':['gēn','корень'],
+    '明':['míng','яркий'],'时':['shí','время'],'晴':['qíng','ясный'],
+    '暗':['àn','тёмный'],'暖':['nuǎn','тёплый'],'昨':['zuó','вчера'],
+    '旺':['wàng','процветать'],'晒':['shài','сушить'],'吃':['chī','есть'],
+    '喝':['hē','пить'],'唱':['chàng','петь'],'吗':['ma','частица'],
+    '吧':['ba','частица'],'哪':['nǎ','какой'],'呀':['ya','частица'],
+    '味':['wèi','вкус'],'呼':['hū','дышать'],'吸':['xī','вдыхать'],
+    '好':['hǎo','хороший'],'妈':['mā','мама'],'姐':['jiě','сестра'],
+    '妹':['mèi','сестра'],'姓':['xìng','фамилия'],'婚':['hūn','свадьба'],
+    '始':['shǐ','начало'],'奶':['nǎi','молоко'],'你':['nǐ','ты'],
+    '他':['tā','он'],'们':['men','мы'],'什':['shén','что'],
+    '住':['zhù','жить'],'位':['wèi','место'],'作':['zuò','делать'],
+    '休':['xiū','отдыхать'],'话':['huà','речь'],'语':['yǔ','язык'],
+    '说':['shuō','говорить'],'请':['qǐng','просить'],'谢':['xiè','благодарить'],
+    '词':['cí','слово'],'花':['huā','цветок'],'草':['cǎo','трава'],
+    '药':['yào','лекарство'],'菜':['cài','овощ'],'蓝':['lán','синий'],
+    '红':['hóng','красный'],'绿':['lǜ','зелёный'],'纸':['zhǐ','бумага'],
+    '线':['xiàn','линия'],'练':['liàn','тренировка'],'终':['zhōng','конец'],
+    '忙':['máng','занятый'],'快':['kuài','быстрый'],'怕':['pà','бояться'],
+    '情':['qíng','чувство'],'恨':['hèn','ненавидеть'],'慢':['màn','медленный'],
+    '打':['dǎ','бить'],'找':['zhǎo','искать'],'拉':['lā','тянуть'],
+    '推':['tuī','толкать'],'提':['tí','поднимать'],'换':['huàn','менять'],
+    '一':['yī','один'],'二':['èr','два'],'三':['sān','три'],
+    '四':['sì','четыре'],'五':['wǔ','пять'],'六':['liù','шесть'],
+    '七':['qī','семь'],'八':['bā','восемь'],'九':['jiǔ','девять'],
+    '零':['líng','ноль'],'千':['qiān','тысяча'],'万':['wàn','десять тысяч'],
+    '半':['bàn','половина'],'双':['shuāng','пара'],'她':['tā','она'],
+    '谁':['shuí','кто'],'是':['shì','быть'],'有':['yǒu','иметь'],
+    '在':['zài','в'],'和':['hé','и'],'都':['dōu','все'],
+    '不':['bù','не'],'没':['méi','нет'],'很':['hěn','очень'],
+    '太':['tài','слишком'],'最':['zuì','самый'],'去':['qù','идти'],
+    '来':['lái','приходить'],'做':['zuò','делать'],'走':['zǒu','идти'],
+    '睡':['shuì','спать'],'买':['mǎi','покупать'],'卖':['mài','продавать'],
+    '学':['xué','учиться'],'教':['jiāo','учить'],'读':['dú','читать'],
+    '写':['xiě','писать'],'听':['tīng','слушать'],'哭':['kū','плакать'],
+    '爱':['ài','любить'],'要':['yào','хотеть'],'会':['huì','уметь'],
+    '能':['néng','мочь'],'给':['gěi','давать'],'帮':['bāng','помогать'],
+    '用':['yòng','использовать'],'开':['kāi','открывать'],'出':['chū','выходить'],
+    '回':['huí','возвращаться'],'到':['dào','достигать'],'起':['qǐ','вставать'],
+    '等':['děng','ждать'],'让':['ràng','позволять'],'叫':['jiào','звать'],
+    '认':['rèn','узнавать'],'知':['zhī','знать'],'觉':['jué','чувствовать'],
+    '发':['fā','отправлять'],'变':['biàn','меняться'],'天':['tiān','небо'],
+    '星':['xīng','звезда'],'云':['yún','облако'],'电':['diàn','молния'],
+    '海':['hǎi','море'],'河':['hé','река'],'湖':['hú','озеро'],
+    '江':['jiāng','река'],'林':['lín','лес'],'森':['sēn','чаща'],
+    '叶':['yè','лист'],'牛':['niú','корова'],'狗':['gǒu','собака'],
+    '猫':['māo','кошка'],'龙':['lóng','дракон'],'虎':['hǔ','тигр'],
+    '兔':['tù','заяц'],'猪':['zhū','свинья'],'鼠':['shǔ','мышь'],
+    '头':['tóu','голова'],'面':['miàn','лицо'],'鼻':['bí','нос'],
+    '父':['fù','отец'],'母':['mǔ','мать'],'爸':['bà','папа'],
+    '哥':['gē','брат'],'儿':['ér','сын'],'黄':['huáng','жёлтый'],
+    '黑':['hēi','чёрный'],'灰':['huī','серый'],'紫':['zǐ','фиолетовый'],
+    '上':['shàng','верх'],'下':['xià','низ'],'左':['zuǒ','лево'],
+    '右':['yòu','право'],'前':['qián','перёд'],'后':['hòu','зад'],
+    '外':['wài','снаружи'],'南':['nán','юг'],'北':['běi','север'],
+    '今':['jīn','сейчас'],'晚':['wǎn','поздно'],'春':['chūn','весна'],
+    '夏':['xià','лето'],'年':['nián','год'],'高':['gāo','высокий'],
+    '低':['dī','низкий'],'长':['cháng','длинный'],'短':['duǎn','короткий'],
+    '新':['xīn','новый'],'旧':['jiù','старый'],'坏':['huài','плохой'],
+    '多':['duō','много'],'冷':['lěng','холодный'],'热':['rè','горячий'],
+    '温':['wēn','тёплый'],'凉':['liáng','прохладный'],'果':['guǒ','фрукт'],
+    '米':['mǐ','рис'],'茶':['chá','чай'],'酒':['jiǔ','вино'],
+    '肉':['ròu','мясо'],'蛋':['dàn','яйцо'],'糖':['táng','сахар'],
+    '盐':['yán','соль'],'病':['bìng','болезнь'],'医':['yī','врач'],
+    '院':['yuàn','учреждение'],'死':['sǐ','смерть'],'书':['shū','книга'],
+    '本':['běn','книга'],'诗':['shī','стих'],'歌':['gē','песня'],
+    '画':['huà','картина'],'照':['zhào','фото'],'票':['piào','билет'],
+    '园':['yuán','сад'],'街':['jiē','улица'],'市':['shì','город'],
+    '国':['guó','страна'],'房':['fáng','дом'],'屋':['wū','комната'],
+    '窗':['chuāng','окно'],'桌':['zhuō','стол'],'椅':['yǐ','стул'],
+    '衣':['yī','одежда'],'裤':['kù','брюки'],'鞋':['xié','обувь'],
+    '帽':['mào','шапка'],'伞':['sǎn','зонт'],'船':['chuán','лодка'],
+    '飞':['fēi','летать'],'机':['jī','машина'],'之':['zhī','его'],
+    '者':['zhě','-тель'],'而':['ér','и'],'则':['zé','тогда'],
+    '于':['yú','в'],'与':['yǔ','и'],'或':['huò','или'],
+    '所':['suǒ','место'],'以':['yǐ','чтобы'],'为':['wèi','для'],
+    '此':['cǐ','этот'],'彼':['bǐ','тот'],'某':['mǒu','некий'],
+    '何':['hé','что'],'若':['ruò','если'],'如':['rú','как'],
+    '似':['sì','похож'],'像':['xiàng','похож'],'两':['liǎng','два'],
+    '几':['jǐ','сколько'],'更':['gèng','ещё'],'挺':['tǐng','довольно'],
+    '真':['zhēn','правда'],'假':['jiǎ','ложь'],'对':['duì','верно'],
+    '错':['cuò','ошибка'],'美':['měi','красиво'],'丑':['chǒu','уродливо'],
+    '深':['shēn','глубоко'],'浅':['qiǎn','мелко'],'宽':['kuān','широко'],
+    '窄':['zhǎi','узко'],'厚':['hòu','толсто'],'薄':['báo','тонко'],
+    '重':['zhòng','тяжело'],'轻':['qīng','легко'],'硬':['yìng','твёрдо'],
+    '软':['ruǎn','мягко'],'强':['qiáng','сильно'],'弱':['ruò','слабо'],
+    '亮':['liàng','ярко'],'粉':['fěn','розово'],'橙':['chéng','оранжево'],
+    '棕':['zōng','коричнево']
+  };
 
-            // ========== СОСТОЯНИЕ ==========
-            let score = 0;
-            let currentGoal = null;
-            let selectedKey = null;
-            let roundActive = true;
-            let cardsOnTable = [];
-            const ALL_KEYS = Object.keys(KEY_DATA);
+  var HIEROGLYPHS=[
+    {char:'冰',pinyin:'bīng',translation:'лёд',base:'冫',key:'水'},
+    {char:'冷',pinyin:'lěng',translation:'холодный',base:'冫',key:'令'},
+    {char:'冻',pinyin:'dòng',translation:'замерзать',base:'冫',key:'东'},
+    {char:'凑',pinyin:'còu',translation:'собирать',base:'冫',key:'奏'},
+    {char:'次',pinyin:'cì',translation:'следующий',base:'冫',key:'欠'},
+    {char:'决',pinyin:'jué',translation:'решать',base:'冫',key:'夬'},
+    {char:'江',pinyin:'jiāng',translation:'река',base:'氵',key:'工'},
+    {char:'河',pinyin:'hé',translation:'река',base:'氵',key:'可'},
+    {char:'湖',pinyin:'hú',translation:'озеро',base:'氵',key:'胡'},
+    {char:'海',pinyin:'hǎi',translation:'море',base:'氵',key:'每'},
+    {char:'汉',pinyin:'hàn',translation:'китайский',base:'氵',key:'又'},
+    {char:'汁',pinyin:'zhī',translation:'сок',base:'氵',key:'十'},
+    {char:'池',pinyin:'chí',translation:'пруд',base:'氵',key:'也'},
+    {char:'沙',pinyin:'shā',translation:'песок',base:'氵',key:'少'},
+    {char:'汽',pinyin:'qì',translation:'пар',base:'氵',key:'气'},
+    {char:'沟',pinyin:'gōu',translation:'канава',base:'氵',key:'勾'},
+    {char:'泪',pinyin:'lèi',translation:'слеза',base:'氵',key:'目'},
+    {char:'林',pinyin:'lín',translation:'лес',base:'木',key:'木'},
+    {char:'树',pinyin:'shù',translation:'дерево',base:'木',key:'对'},
+    {char:'松',pinyin:'sōng',translation:'сосна',base:'木',key:'公'},
+    {char:'柏',pinyin:'bǎi',translation:'кипарис',base:'木',key:'白'},
+    {char:'桃',pinyin:'táo',translation:'персик',base:'木',key:'兆'},
+    {char:'梅',pinyin:'méi',translation:'слива',base:'木',key:'每'},
+    {char:'枫',pinyin:'fēng',translation:'клён',base:'木',key:'风'},
+    {char:'柳',pinyin:'liǔ',translation:'ива',base:'木',key:'卯'},
+    {char:'校',pinyin:'xiào',translation:'школа',base:'木',key:'交'},
+    {char:'村',pinyin:'cūn',translation:'деревня',base:'木',key:'寸'},
+    {char:'材',pinyin:'cái',translation:'материал',base:'木',key:'才'},
+    {char:'板',pinyin:'bǎn',translation:'доска',base:'木',key:'反'},
+    {char:'枝',pinyin:'zhī',translation:'ветка',base:'木',key:'支'},
+    {char:'根',pinyin:'gēn',translation:'корень',base:'木',key:'艮'},
+    {char:'时',pinyin:'shí',translation:'время',base:'日',key:'寸'},
+    {char:'晴',pinyin:'qíng',translation:'ясный',base:'日',key:'青'},
+    {char:'暗',pinyin:'àn',translation:'тёмный',base:'日',key:'音'},
+    {char:'暖',pinyin:'nuǎn',translation:'тёплый',base:'日',key:'爰'},
+    {char:'昨',pinyin:'zuó',translation:'вчера',base:'日',key:'乍'},
+    {char:'旺',pinyin:'wàng',translation:'процветать',base:'日',key:'王'},
+    {char:'晒',pinyin:'shài',translation:'сушить',base:'日',key:'西'},
+    {char:'吃',pinyin:'chī',translation:'есть',base:'口',key:'乞'},
+    {char:'喝',pinyin:'hē',translation:'пить',base:'口',key:'曷'},
+    {char:'唱',pinyin:'chàng',translation:'петь',base:'口',key:'昌'},
+    {char:'吗',pinyin:'ma',translation:'частица',base:'口',key:'马'},
+    {char:'吧',pinyin:'ba',translation:'частица',base:'口',key:'巴'},
+    {char:'哪',pinyin:'nǎ',translation:'какой',base:'口',key:'那'},
+    {char:'呀',pinyin:'ya',translation:'частица',base:'口',key:'牙'},
+    {char:'味',pinyin:'wèi',translation:'вкус',base:'口',key:'未'},
+    {char:'呼',pinyin:'hū',translation:'дышать',base:'口',key:'乎'},
+    {char:'吸',pinyin:'xī',translation:'вдыхать',base:'口',key:'及'},
+    {char:'好',pinyin:'hǎo',translation:'хороший',base:'女',key:'子'},
+    {char:'妈',pinyin:'mā',translation:'мама',base:'女',key:'马'},
+    {char:'姐',pinyin:'jiě',translation:'сестра',base:'女',key:'且'},
+    {char:'妹',pinyin:'mèi',translation:'сестра',base:'女',key:'未'},
+    {char:'姓',pinyin:'xìng',translation:'фамилия',base:'女',key:'生'},
+    {char:'婚',pinyin:'hūn',translation:'свадьба',base:'女',key:'昏'},
+    {char:'始',pinyin:'shǐ',translation:'начало',base:'女',key:'台'},
+    {char:'奶',pinyin:'nǎi',translation:'молоко',base:'女',key:'乃'},
+    {char:'你',pinyin:'nǐ',translation:'ты',base:'亻',key:'尔'},
+    {char:'他',pinyin:'tā',translation:'он',base:'亻',key:'也'},
+    {char:'们',pinyin:'men',translation:'мы',base:'亻',key:'门'},
+    {char:'什',pinyin:'shén',translation:'что',base:'亻',key:'十'},
+    {char:'住',pinyin:'zhù',translation:'жить',base:'亻',key:'主'},
+    {char:'位',pinyin:'wèi',translation:'место',base:'亻',key:'立'},
+    {char:'作',pinyin:'zuò',translation:'делать',base:'亻',key:'乍'},
+    {char:'休',pinyin:'xiū',translation:'отдыхать',base:'亻',key:'木'},
+    {char:'话',pinyin:'huà',translation:'речь',base:'讠',key:'舌'},
+    {char:'语',pinyin:'yǔ',translation:'язык',base:'讠',key:'吾'},
+    {char:'说',pinyin:'shuō',translation:'говорить',base:'讠',key:'兑'},
+    {char:'请',pinyin:'qǐng',translation:'просить',base:'讠',key:'青'},
+    {char:'谢',pinyin:'xiè',translation:'благодарить',base:'讠',key:'射'},
+    {char:'词',pinyin:'cí',translation:'слово',base:'讠',key:'司'},
+    {char:'花',pinyin:'huā',translation:'цветок',base:'艹',key:'化'},
+    {char:'草',pinyin:'cǎo',translation:'трава',base:'艹',key:'早'},
+    {char:'药',pinyin:'yào',translation:'лекарство',base:'艹',key:'约'},
+    {char:'菜',pinyin:'cài',translation:'овощ',base:'艹',key:'采'},
+    {char:'蓝',pinyin:'lán',translation:'синий',base:'艹',key:'监'},
+    {char:'红',pinyin:'hóng',translation:'красный',base:'纟',key:'工'},
+    {char:'绿',pinyin:'lǜ',translation:'зелёный',base:'纟',key:'录'},
+    {char:'纸',pinyin:'zhǐ',translation:'бумага',base:'纟',key:'氏'},
+    {char:'线',pinyin:'xiàn',translation:'линия',base:'纟',key:'戋'},
+    {char:'练',pinyin:'liàn',translation:'тренировка',base:'纟',key:'东'},
+    {char:'终',pinyin:'zhōng',translation:'конец',base:'纟',key:'冬'},
+    {char:'忙',pinyin:'máng',translation:'занятый',base:'忄',key:'亡'},
+    {char:'快',pinyin:'kuài',translation:'быстрый',base:'忄',key:'夬'},
+    {char:'怕',pinyin:'pà',translation:'бояться',base:'忄',key:'白'},
+    {char:'情',pinyin:'qíng',translation:'чувство',base:'忄',key:'青'},
+    {char:'恨',pinyin:'hèn',translation:'ненавидеть',base:'忄',key:'艮'},
+    {char:'慢',pinyin:'màn',translation:'медленный',base:'忄',key:'曼'},
+    {char:'打',pinyin:'dǎ',translation:'бить',base:'扌',key:'丁'},
+    {char:'找',pinyin:'zhǎo',translation:'искать',base:'扌',key:'戈'},
+    {char:'拉',pinyin:'lā',translation:'тянуть',base:'扌',key:'立'},
+    {char:'推',pinyin:'tuī',translation:'толкать',base:'扌',key:'隹'},
+    {char:'提',pinyin:'tí',translation:'поднимать',base:'扌',key:'是'},
+    {char:'换',pinyin:'huàn',translation:'менять',base:'扌',key:'奂'},
+    {char:'灯',pinyin:'dēng',translation:'лампа',base:'火',key:'丁'},
+    {char:'烧',pinyin:'shāo',translation:'жечь',base:'火',key:'尧'},
+    {char:'烟',pinyin:'yān',translation:'дым',base:'火',key:'因'},
+    {char:'炒',pinyin:'chǎo',translation:'жарить',base:'火',key:'少'},
+    {char:'炸',pinyin:'zhà',translation:'взрывать',base:'火',key:'乍'},
+    {char:'地',pinyin:'dì',translation:'земля',base:'土',key:'也'},
+    {char:'城',pinyin:'chéng',translation:'город',base:'土',key:'成'},
+    {char:'块',pinyin:'kuài',translation:'кусок',base:'土',key:'夬'},
+    {char:'塔',pinyin:'tǎ',translation:'башня',base:'土',key:'答'},
+    {char:'玩',pinyin:'wán',translation:'играть',base:'王',key:'元'},
+    {char:'球',pinyin:'qiú',translation:'мяч',base:'王',key:'求'},
+    {char:'现',pinyin:'xiàn',translation:'сейчас',base:'王',key:'见'},
+    {char:'理',pinyin:'lǐ',translation:'логика',base:'王',key:'里'},
+    {char:'码',pinyin:'mǎ',translation:'код',base:'石',key:'马'},
+    {char:'破',pinyin:'pò',translation:'ломать',base:'石',key:'皮'},
+    {char:'硬',pinyin:'yìng',translation:'твёрдый',base:'石',key:'更'},
+    {char:'睡',pinyin:'shuì',translation:'спать',base:'目',key:'垂'},
+    {char:'眠',pinyin:'mián',translation:'сон',base:'目',key:'民'},
+    {char:'睛',pinyin:'jīng',translation:'глаз',base:'目',key:'青'},
+    {char:'种',pinyin:'zhǒng',translation:'семя',base:'禾',key:'中'},
+    {char:'科',pinyin:'kē',translation:'наука',base:'禾',key:'斗'},
+    {char:'秒',pinyin:'miǎo',translation:'секунда',base:'禾',key:'少'},
+    {char:'秋',pinyin:'qiū',translation:'осень',base:'禾',key:'火'},
+    {char:'蚊',pinyin:'wén',translation:'комар',base:'虫',key:'文'},
+    {char:'蚂',pinyin:'mǎ',translation:'муравей',base:'虫',key:'马'},
+    {char:'蚁',pinyin:'yǐ',translation:'муравей',base:'虫',key:'义'},
+    {char:'蛇',pinyin:'shé',translation:'змея',base:'虫',key:'它'},
+    {char:'鲜',pinyin:'xiān',translation:'свежий',base:'鱼',key:'羊'},
+    {char:'鲤',pinyin:'lǐ',translation:'карп',base:'鱼',key:'里'},
+    {char:'鲸',pinyin:'jīng',translation:'кит',base:'鱼',key:'京'},
+    {char:'鸡',pinyin:'jī',translation:'курица',base:'又',key:'鸟'},
+    {char:'鸭',pinyin:'yā',translation:'утка',base:'甲',key:'鸟'},
+    {char:'鹅',pinyin:'é',translation:'гусь',base:'我',key:'鸟'},
+    {char:'钱',pinyin:'qián',translation:'деньги',base:'金',key:'戋'},
+    {char:'银',pinyin:'yín',translation:'серебро',base:'金',key:'艮'},
+    {char:'铁',pinyin:'tiě',translation:'железо',base:'金',key:'失'},
+    {char:'铜',pinyin:'tóng',translation:'медь',base:'金',key:'同'},
+    {char:'笑',pinyin:'xiào',translation:'смеяться',base:'竹',key:'夭'},
+    {char:'笔',pinyin:'bǐ',translation:'кисть',base:'竹',key:'毛'},
+    {char:'答',pinyin:'dá',translation:'отвечать',base:'竹',key:'合'},
+    {char:'第',pinyin:'dì',translation:'порядок',base:'竹',key:'弟'},
+    {char:'雪',pinyin:'xuě',translation:'снег',base:'雨',key:'彐'},
+    {char:'雾',pinyin:'wù',translation:'туман',base:'雨',key:'务'},
+    {char:'雷',pinyin:'léi',translation:'гром',base:'雨',key:'田'},
+    {char:'家',pinyin:'jiā',translation:'семья',base:'宀',key:'豕'},
+    {char:'安',pinyin:'ān',translation:'спокойный',base:'宀',key:'女'},
+    {char:'字',pinyin:'zì',translation:'иероглиф',base:'宀',key:'子'},
+    {char:'完',pinyin:'wán',translation:'закончить',base:'宀',key:'元'},
+    {char:'店',pinyin:'diàn',translation:'магазин',base:'广',key:'占'},
+    {char:'床',pinyin:'chuáng',translation:'кровать',base:'广',key:'木'},
+    {char:'座',pinyin:'zuò',translation:'сиденье',base:'广',key:'坐'},
+    {char:'问',pinyin:'wèn',translation:'спрашивать',base:'门',key:'口'},
+    {char:'间',pinyin:'jiān',translation:'промежуток',base:'门',key:'日'},
+    {char:'闻',pinyin:'wén',translation:'слышать',base:'门',key:'耳'},
+    {char:'进',pinyin:'jìn',translation:'входить',base:'辶',key:'井'},
+    {char:'过',pinyin:'guò',translation:'проходить',base:'辶',key:'寸'},
+    {char:'这',pinyin:'zhè',translation:'этот',base:'辶',key:'文'},
+    {char:'送',pinyin:'sòng',translation:'дарить',base:'辶',key:'关'},
+    {char:'想',pinyin:'xiǎng',translation:'думать',base:'相',key:'心'},
+    {char:'意',pinyin:'yì',translation:'смысл',base:'音',key:'心'},
+    {char:'思',pinyin:'sī',translation:'мысль',base:'田',key:'心'},
+    {char:'拿',pinyin:'ná',translation:'брать',base:'合',key:'手'},
+    {char:'掌',pinyin:'zhǎng',translation:'ладонь',base:'尚',key:'手'},
+    {char:'跑',pinyin:'pǎo',translation:'бежать',base:'足',key:'包'},
+    {char:'跳',pinyin:'tiào',translation:'прыгать',base:'足',key:'兆'},
+    {char:'路',pinyin:'lù',translation:'дорога',base:'足',key:'各'},
+    {char:'饭',pinyin:'fàn',translation:'еда',base:'饣',key:'反'},
+    {char:'饮',pinyin:'yǐn',translation:'пить',base:'饣',key:'欠'},
+    {char:'饱',pinyin:'bǎo',translation:'сытый',base:'饣',key:'包'},
+    {char:'轮',pinyin:'lún',translation:'колесо',base:'车',key:'仑'},
+    {char:'转',pinyin:'zhuǎn',translation:'поворот',base:'车',key:'专'},
+    {char:'较',pinyin:'jiào',translation:'сравнивать',base:'车',key:'交'},
+    {char:'骑',pinyin:'qí',translation:'ехать',base:'马',key:'奇'},
+    {char:'驰',pinyin:'chí',translation:'мчаться',base:'马',key:'也'},
+    {char:'收',pinyin:'shōu',translation:'собирать',base:'丩',key:'攵'},
+    {char:'放',pinyin:'fàng',translation:'класть',base:'方',key:'攵'},
+    {char:'政',pinyin:'zhèng',translation:'политика',base:'正',key:'攵'},
+    {char:'族',pinyin:'zú',translation:'род',base:'方',key:'矢'},
+    {char:'的',pinyin:'de',translation:'притяж.',base:'白',key:'勺'},
+    {char:'百',pinyin:'bǎi',translation:'сто',base:'一',key:'白'},
+    {char:'站',pinyin:'zhàn',translation:'стоять',base:'立',key:'占'},
+    {char:'峰',pinyin:'fēng',translation:'пик',base:'山',key:'夆'},
+    {char:'期',pinyin:'qī',translation:'период',base:'其',key:'月'},
+    {char:'朗',pinyin:'lǎng',translation:'ясный',base:'良',key:'月'},
+    {char:'看',pinyin:'kàn',translation:'смотреть',base:'手',key:'目'},
+  ];
 
-            // DOM
-            const taskCardEl = document.getElementById('taskCard');
-            const taskPinyinEl = document.getElementById('taskPinyin');
-            const taskTranslationEl = document.getElementById('taskTranslation');
-            const scoreValueEl = document.getElementById('scoreValue');
-            const baseCharEl = document.getElementById('baseChar');
-            const keySlotChar = document.getElementById('keySlotChar');
-            const keySlot = document.getElementById('keySlot');
-            const resultSlot = document.getElementById('resultSlot');
-            const resultChar = document.getElementById('resultChar');
-            const messageEl = document.getElementById('message');
-            const keysGrid = document.getElementById('keysGrid');
-            const checkBtn = document.getElementById('checkBtn');
-            const resetBtn = document.getElementById('resetBtn');
+  var score=0;
+  var currentGoal=null;
+  var selectedKey=null;
+  var roundActive=true;
+  var cardsOnTable=[];
+  var ALL_KEYS=Object.keys(KEY_DATA);
 
-            // ========== ОЗВУЧКА ==========
-            let zhVoice = null;
-            function initVoices() {
-                if (!('speechSynthesis' in window)) return;
-                const voices = speechSynthesis.getVoices();
-                zhVoice = voices.find(v => v.lang === 'zh-CN') ||
-                          voices.find(v => v.lang.startsWith('zh')) ||
-                          null;
-            }
-            if ('speechSynthesis' in window) {
-                speechSynthesis.onvoiceschanged = initVoices;
-                initVoices();
-            }
-            function speak(text) {
-                if (!('speechSynthesis' in window)) return;
-                try {
-                    speechSynthesis.cancel();
-                    const u = new SpeechSynthesisUtterance(text);
-                    u.lang = 'zh-CN';
-                    u.rate = 0.75;
-                    u.pitch = 1;
-                    if (zhVoice) u.voice = zhVoice;
-                    speechSynthesis.speak(u);
-                } catch(e) {}
-            }
-            function playDing() {
-                try {
-                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                    const o = ctx.createOscillator();
-                    const g = ctx.createGain();
-                    o.connect(g); g.connect(ctx.destination);
-                    o.frequency.setValueAtTime(880, ctx.currentTime);
-                    o.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.15);
-                    g.gain.setValueAtTime(0.12, ctx.currentTime);
-                    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-                    o.start(ctx.currentTime);
-                    o.stop(ctx.currentTime + 0.4);
-                } catch(e) {}
-            }
-            function playBuzz() {
-                try {
-                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                    const o = ctx.createOscillator();
-                    const g = ctx.createGain();
-                    o.connect(g); g.connect(ctx.destination);
-                    o.type = 'sawtooth';
-                    o.frequency.setValueAtTime(180, ctx.currentTime);
-                    o.frequency.exponentialRampToValueAtTime(90, ctx.currentTime + 0.3);
-                    g.gain.setValueAtTime(0.08, ctx.currentTime);
-                    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
-                    o.start(ctx.currentTime);
-                    o.stop(ctx.currentTime + 0.35);
-                } catch(e) {}
-            }
+  var taskCardEl=document.getElementById('taskCard');
+  var taskPinyinEl=document.getElementById('taskPinyin');
+  var taskTranslationEl=document.getElementById('taskTranslation');
+  var scoreValueEl=document.getElementById('scoreValue');
+  var baseCharEl=document.getElementById('baseChar');
+  var keySlotChar=document.getElementById('keySlotChar');
+  var keySlot=document.getElementById('keySlot');
+  var resultSlot=document.getElementById('resultSlot');
+  var resultChar=document.getElementById('resultChar');
+  var messageEl=document.getElementById('message');
+  var keysGrid=document.getElementById('keysGrid');
+  var checkBtn=document.getElementById('checkBtn');
+  var resetBtn=document.getElementById('resetBtn');
 
-            // ========== УТИЛИТЫ ==========
-            function shuffle(arr) {
-                const a = [...arr];
-                for (let i = a.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [a[i], a[j]] = [a[j], a[i]];
-                }
-                return a;
-            }
-            function getPinyin(char) { return KEY_DATA[char] ? KEY_DATA[char][0] : '?'; }
-            function getDesc(char) { return KEY_DATA[char] ? KEY_DATA[char][1] : '?'; }
+  var zhVoice=null;
+  function initVoices() {
+    if(!('speechSynthesis' in window)) return;
+    var voices=speechSynthesis.getVoices();
+    zhVoice=voices.find(function(v){return v.lang==='zh-CN'||v.lang.startsWith('zh');})||null;
+  }
+  if('speechSynthesis' in window) {
+    speechSynthesis.onvoiceschanged=initVoices;
+    initVoices();
+  }
+  function speak(text) {
+    if(!('speechSynthesis' in window)) return;
+    try {
+      speechSynthesis.cancel();
+      var u=new SpeechSynthesisUtterance(text);
+      u.lang='zh-CN';u.rate=0.75;u.pitch=1;
+      if(zhVoice) u.voice=zhVoice;
+      speechSynthesis.speak(u);
+    } catch(e){}
+  }
+  function playDing() {
+    try {
+      var ctx=new(window.AudioContext||window.webkitAudioContext)();
+      var o=ctx.createOscillator();var g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.frequency.setValueAtTime(880,ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(1320,ctx.currentTime+0.15);
+      g.gain.setValueAtTime(0.12,ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.4);
+      o.start(ctx.currentTime);o.stop(ctx.currentTime+0.4);
+    } catch(e){}
+  }
+  function playBuzz() {
+    try {
+      var ctx=new(window.AudioContext||window.webkitAudioContext)();
+      var o=ctx.createOscillator();var g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.type='sawtooth';
+      o.frequency.setValueAtTime(180,ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(90,ctx.currentTime+0.3);
+      g.gain.setValueAtTime(0.08,ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.35);
+      o.start(ctx.currentTime);o.stop(ctx.currentTime+0.35);
+    } catch(e){}
+  }
 
-            // ========== ГЕНЕРАЦИЯ РАУНДА ==========
-            function generateRound() {
-                const goal = HIEROGLYPHS[Math.floor(Math.random() * HIEROGLYPHS.length)];
-                currentGoal = goal;
+  function shuffle(arr) {
+    var a=arr.slice();
+    for(var i=a.length-1;i>0;i--){
+      var j=Math.floor(Math.random()*(i+1));
+      var t=a[i];a[i]=a[j];a[j]=t;
+    }
+    return a;
+  }
+  function getPinyin(c){return KEY_DATA[c]?KEY_DATA[c][0]:'?';}
+  function getDesc(c){return KEY_DATA[c]?KEY_DATA[c][1]:'?';}
 
-                const correctKey = goal.key;
-                const wrongPool = ALL_KEYS.filter(k => k !== correctKey && k !== goal.base);
-                const selectedWrong = shuffle(wrongPool).slice(0, 5);
+  function generateRound() {
+    var goal=HIEROGLYPHS[Math.floor(Math.random()*HIEROGLYPHS.length)];
+    currentGoal=goal;
+    var correctKey=goal.key;
+    var wrongPool=ALL_KEYS.filter(function(k){return k!==correctKey&&k!==goal.base;});
+    var selectedWrong=shuffle(wrongPool).slice(0,5);
+    var cards=[correctKey].concat(selectedWrong);
+    cardsOnTable=shuffle(cards);
+    selectedKey=null;
+    roundActive=true;
+    taskPinyinEl.textContent=goal.pinyin;
+    taskTranslationEl.textContent=goal.translation;
+    baseCharEl.textContent=goal.base;
+    updateSlot();
+    updateResultSlot(null);
+    updateMessage('Тапни 🔊. Выбери ключ к «'+goal.base+'»','neutral');
+    updateScore();
+    renderCards();
+    updateCheckBtn();
+  }
 
-                let cards = [correctKey, ...selectedWrong];
-                cards = shuffle(cards);
-                cardsOnTable = cards;
+  function renderCards() {
+    keysGrid.innerHTML='';
+    cardsOnTable.forEach(function(keyChar){
+      var btn=document.createElement('div');
+      btn.className='key-btn';
+      btn.dataset.key=keyChar;
+      btn.innerHTML='<div class="key-symbol">'+keyChar+'</div>'+
+        '<div class="key-pinyin">'+getPinyin(keyChar)+'</div>'+
+        '<div class="key-desc">'+getDesc(keyChar)+'</div>';
+      btn.addEventListener('click',function(){onCardClick(keyChar);});
+      keysGrid.appendChild(btn);
+    });
+  }
 
-                selectedKey = null;
-                roundActive = true;
+  function onCardClick(keyChar) {
+    if(!roundActive) {
+      updateMessage('⏸ Раунд завершён. Нажми «⟲»','warning');
+      return;
+    }
+    if(selectedKey===keyChar) {
+      selectedKey=null;
+      updateSlot();
+      updateResultSlot(null);
+      updateCardSelection();
+      updateCheckBtn();
+      updateMessage('Выбери ключ к «'+currentGoal.base+'»','neutral');
+      return;
+    }
+    selectedKey=keyChar;
+    updateSlot();
+    updateResultSlot(null);
+    updateCardSelection();
+    updateCheckBtn();
+    updateMessage('Нажми «ПРОВЕРИТЬ»','neutral');
+  }
 
-                taskPinyinEl.textContent = goal.pinyin;
-                taskTranslationEl.textContent = goal.translation;
-                baseCharEl.textContent = goal.base;
-                updateSlot();
-                updateResultSlot(null);
-                updateMessage(`Тапни 🔊, чтобы услышать. Выбери ключ к «${goal.base}»`, 'neutral');
-                updateScore();
-                renderCards();
-                updateCheckBtn();
-            }
+  function updateSlot() {
+    if(selectedKey) {
+      keySlotChar.textContent=selectedKey;
+      keySlot.classList.add('filled');
+    } else {
+      keySlotChar.textContent='?';
+      keySlot.classList.remove('filled');
+    }
+  }
+  function updateResultSlot(result) {
+    if(!result) {
+      resultChar.textContent='?';
+      resultSlot.classList.remove('correct','wrong');
+      return;
+    }
+    resultChar.textContent=result.char;
+    resultSlot.classList.remove('correct','wrong');
+    resultSlot.classList.add(result.correct?'correct':'wrong');
+  }
+  function updateCardSelection() {
+    keysGrid.querySelectorAll('.key-btn').forEach(function(btn){
+      btn.classList.toggle('selected',btn.dataset.key===selectedKey);
+    });
+  }
+  function updateMessage(text,type) {
+    messageEl.textContent=text;
+    if(type==='correct') messageEl.style.background='rgba(76, 175, 80, 0.45)';
+    else if(type==='wrong') messageEl.style.background='rgba(244, 67, 54, 0.45)';
+    else if(type==='warning') messageEl.style.background='rgba(255, 180, 50, 0.4)';
+    else messageEl.style.background='rgba(255,255,255,0.14)';
+  }
+  function updateScore(){scoreValueEl.textContent=score;}
+  function updateCheckBtn(){checkBtn.disabled=(selectedKey===null||!roundActive);}
 
-            // ========== ОТРИСОВКА КАРТОЧЕК ==========
-            function renderCards() {
-                keysGrid.innerHTML = '';
-                cardsOnTable.forEach((keyChar) => {
-                    const btn = document.createElement('div');
-                    btn.className = 'key-btn';
-                    btn.dataset.key = keyChar;
-                    btn.innerHTML = `
-                        <div class="key-symbol">${keyChar}</div>
-                        <div class="key-pinyin">${getPinyin(keyChar)}</div>
-                        <div class="key-desc">${getDesc(keyChar)}</div>
-                    `;
-                    btn.addEventListener('click', () => onCardClick(keyChar));
-                    keysGrid.appendChild(btn);
-                });
-            }
+  function checkAnswer() {
+    if(!roundActive||selectedKey===null) return;
+    var goal=currentGoal;
+    var isCorrect=(selectedKey===goal.key);
+    if(isCorrect) {
+      roundActive=false;
+      score+=100;
+      updateScore();
+      updateResultSlot({char:goal.char,correct:true});
+      updateMessage('✅ '+goal.char+' ('+goal.pinyin+') — '+goal.translation+'! +100','correct');
+      playDing();
+      setTimeout(function(){speak(goal.char);},150);
+      keysGrid.querySelectorAll('.key-btn').forEach(function(btn){
+        if(btn.dataset.key===goal.key) btn.classList.add('correct');
+        else btn.classList.add('disabled');
+      });
+      if(navigator.vibrate) navigator.vibrate(50);
+      updateCheckBtn();
+      setTimeout(function(){generateRound();},2000);
+    } else {
+      roundActive=false;
+      updateResultSlot({char:'✗',correct:false});
+      var formed=HIEROGLYPHS.find(function(h){return h.base===goal.base&&h.key===selectedKey;});
+      if(formed) {
+        updateMessage('❌ Получился «'+formed.char+'» ('+formed.pinyin+'). Нужен «'+goal.char+'» ('+goal.pinyin+', '+goal.translation+')','wrong');
+      } else {
+        updateMessage('❌ Не тот ключ. Нужен «'+goal.char+'» ('+goal.pinyin+', '+goal.translation+')','wrong');
+      }
+      playBuzz();
+      keysGrid.querySelectorAll('.key-btn').forEach(function(btn){
+        if(btn.dataset.key===goal.key) btn.classList.add('correct');
+        else if(btn.dataset.key===selectedKey) btn.classList.add('wrong');
+        else btn.classList.add('disabled');
+      });
+      if(navigator.vibrate) navigator.vibrate([60, 40, 60]);
+      updateCheckBtn();
+      setTimeout(function(){generateRound();},2600);
+    }
+  }
 
-            // ========== КЛИК ПО КАРТОЧКЕ ==========
-            function onCardClick(keyChar) {
-                if (!roundActive) {
-                    updateMessage('⏸ Раунд завершён. Нажми «⟲»', 'warning');
-                    return;
-                }
-                if (selectedKey === keyChar) {
-                    selectedKey = null;
-                    updateSlot();
-                    updateResultSlot(null);
-                    updateCardSelection();
-                    updateCheckBtn();
-                    updateMessage(`Выбери ключ к «${currentGoal.base}»`, 'neutral');
-                    return;
-                }
-                selectedKey = keyChar;
-                updateSlot();
-                updateResultSlot(null);
-                updateCardSelection();
-                updateCheckBtn();
-                updateMessage('Нажми «ПРОВЕРИТЬ»', 'neutral');
-            }
+  function fullReset() {
+    score=0;
+    updateScore();
+    generateRound();
+    if(navigator.vibrate) navigator.vibrate(25);
+  }
 
-            // ========== UI ==========
-            function updateSlot() {
-                if (selectedKey) {
-                    keySlotChar.textContent = selectedKey;
-                    keySlot.classList.add('filled');
-                } else {
-                    keySlotChar.textContent = '?';
-                    keySlot.classList.remove('filled');
-                }
-            }
-            function updateResultSlot(result) {
-                if (!result) {
-                    resultChar.textContent = '?';
-                    resultSlot.classList.remove('correct', 'wrong');
-                    return;
-                }
-                resultChar.textContent = result.char;
-                resultSlot.classList.remove('correct', 'wrong');
-                resultSlot.classList.add(result.correct ? 'correct' : 'wrong');
-            }
-            function updateCardSelection() {
-                keysGrid.querySelectorAll('.key-btn').forEach(btn => {
-                    btn.classList.toggle('selected', btn.dataset.key === selectedKey);
-                });
-            }
-            function updateMessage(text, type) {
-                messageEl.textContent = text;
-                if (type === 'correct') messageEl.style.background = 'rgba(76, 175, 80, 0.45)';
-                else if (type === 'wrong') messageEl.style.background = 'rgba(244, 67, 54, 0.45)';
-                else if (type === 'warning') messageEl.style.background = 'rgba(255, 180, 50, 0.4)';
-                else messageEl.style.background = 'rgba(255,255,255,0.14)';
-            }
-            function updateScore() { scoreValueEl.textContent = score; }
-            function updateCheckBtn() {
-                checkBtn.disabled = (selectedKey === null || !roundActive);
-            }
-
-            // ========== ПРОВЕРКА ==========
-            function checkAnswer() {
-                if (!roundActive || selectedKey === null) return;
-                const goal = currentGoal;
-                const isCorrect = (selectedKey === goal.key);
-
-                if (isCorrect) {
-                    roundActive = false;
-                    score += 100;
-                    updateScore();
-                    updateResultSlot({ char: goal.char, correct: true });
-                    updateMessage(`✅ ${goal.char} (${goal.pinyin}) — ${goal.translation}! +100`, 'correct');
-
-                    // Озвучка + дзынь
-                    playDing();
-                    setTimeout(() => speak(goal.char), 150);
-
-                    keysGrid.querySelectorAll('.key-btn').forEach(btn => {
-                        if (btn.dataset.key === goal.key) btn.classList.add('correct');
-                        else btn.classList.add('disabled');
-                    });
-                    if (navigator.vibrate) navigator.vibrate(50);
-                    updateCheckBtn();
-                    setTimeout(() => generateRound(), 2000);
-                } else {
-                    roundActive = false;
-                    updateResultSlot({ char: '✗', correct: false });
-
-                    const formed = HIEROGLYPHS.find(h => h.base === goal.base && h.key === selectedKey);
-                    if (formed) {
-                        updateMessage(`❌ Получился «${formed.char}» (${formed.pinyin}, ${formed.translation}). Нужен «${goal.char}» (${goal.pinyin}, ${goal.translation})`, 'wrong');
-                    } else {
-                        updateMessage(`❌ Не тот ключ. Нужен «${goal.char}» (${goal.pinyin}, ${goal.translation})`, 'wrong');
-                    }
-
-                    playBuzz();
-                    keysGrid.querySelectorAll('.key-btn').forEach(btn => {
-                        if (btn.dataset.key === goal.key) btn.classList.add('correct');
-                        else if (btn.dataset.key === selectedKey) btn.classList.add('wrong');
-                        else btn.classList.add('disabled');
-                    });
-                    if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
-                    updateCheckBtn();
-                    setTimeout(() => generateRound(), 2600);
-                }
-            }
-
-            // ========== СБРОС ==========
-            function fullReset() {
-                score = 0;
-                updateScore();
-                generateRound();
-                if (navigator.vibrate) navigator.vibrate(25);
-            }
-
-            // ========== СТАРТ ==========
-            function init() {
-                checkBtn.addEventListener('click', checkAnswer);
-                resetBtn.addEventListener('click', fullReset);
-                // Тап по заданию — озвучка
-                taskCardEl.addEventListener('click', () => {
-                    if (currentGoal) {
-                        speak(currentGoal.char);
-                        playDing();
-                    }
-                });
-                generateRound();
-            }
-            init();
-        })();
-    </script>
+  function init() {
+    checkBtn.addEventListener('click',checkAnswer);
+    resetBtn.addEventListener('click',fullReset);
+    taskCardEl.addEventListener('click',function(){
+      if(currentGoal) {
+        speak(currentGoal.char);
+        playDing();
+      }
+    });
+    generateRound();
+  }
+  init();
+})();
+</script>
 </body>
 </html>
